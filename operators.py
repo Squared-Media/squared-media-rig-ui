@@ -7,6 +7,9 @@ blend_file = properties.blend_file
 lib_folder = properties.lib_folder
 collection_name = properties.collection_name
 
+rigID = properties.rigID
+
+
 
 class ImgPack(bpy.types.Operator):
     bl_idname = "squaredmedia.imgpack"
@@ -78,6 +81,7 @@ class KeyframeAllProperties(bpy.types.Operator):
         return {'FINISHED'}
 
 class LinkRig(bpy.types.Operator):
+
     bl_idname = "squaredmedia.link_rig"
     bl_label = "Check Rig File"
     bl_description = "Checks if the rig .blend file is present in the blend folder"
@@ -133,3 +137,41 @@ class LinkRig(bpy.types.Operator):
             return {'CANCELLED'}
 
         return {'FINISHED'}
+    
+class SetCamera(bpy.types.Operator):
+    bl_idname = "squaredmedia.set_camera" 
+    bl_label =   "sets Face Animation camera to be active"
+    
+
+    @classmethod
+    def poll(self, context):
+        obj = context.active_object
+        return obj and obj.get("rig_id") == rigID
+
+
+    def execute(self, context):
+        rig = bpy.context.active_object
+        SQM_Camera = rig["Cam"]
+        bpy.context.space_data.use_local_camera = True
+        bpy.context.space_data.camera = SQM_Camera
+        bpy.context.space_data.lock_camera = True
+        bpy.ops.view3d.view_camera()
+        return {"FINISHED"}
+    
+class ResetCamera(bpy.types.Operator):
+    bl_idname = "squaredmedia.reset_camera" 
+    bl_label="sets new camera to be active"
+ 
+    @classmethod
+    def poll(self, context):
+        obj = context.active_object
+        return obj and obj.get("rig_id") == rigID
+    
+   
+    def execute(self, context):
+        bpy.context.space_data.use_local_camera = False
+        bpy.context.space_data.lock_object = None
+        bpy.context.space_data.lock_camera = False
+        bpy.ops.view3d.view_camera()
+        return {"FINISHED"}
+  

@@ -20,13 +20,15 @@ class VisibilitySettingsUI(bpy.types.Panel):
         layout = self.layout
         layers = rig.data.collections_all
 
+
+
         # Body Visibility
         BodyBox = layout.box()
         BodyBox.label(text="Body Visibility")
         col = BodyBox.column()
         col.prop(rig.data.collections_all["Face"], "is_visible", text="Face Bones", toggle=True)
         col.prop(layers["Menu"], "is_visible", text="Menu", toggle=True)   
-        col.prop(layers["Debug"], "is_visible", text="Debug", toggle=True, icon = "SETTINGS")    
+        col.prop(layers["Debug"], "is_visible", text="Debug", toggle=True, icon = "SETTINGS")
 
         # IK Visibility
         box = layout.box()

@@ -16,6 +16,7 @@ class RigSettingsUI(bpy.types.Panel):
     def poll(self, context):
         obj = context.active_object
         return obj and obj.get("rig_id") == rigID
+    
     def draw(self,context):
         rig = bpy.context.active_object
         layout = self.layout  

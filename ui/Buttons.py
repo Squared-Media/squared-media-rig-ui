@@ -5,6 +5,7 @@ rigID = properties.rigID
 category = properties.category
 
 
+
 class ButtonsUI(bpy.types.Panel):
     bl_label = "Buttons"
     bl_idname = "OBJECT_PT_SquaredMediaButtons"
@@ -23,3 +24,9 @@ class ButtonsUI(bpy.types.Panel):
         HelperBox.label(text="Helper")
         HelperBox.operator("squaredmedia.keyframe_all_custom_properties")
         HelperBox.operator("squaredmedia.link_rig", text="Spawn New Rig")
+
+        if bpy.context.space_data.lock_camera:
+            HelperBox.operator("squaredmedia.reset_camera", text = "End Face Anim")
+        else:
+            HelperBox.operator("squaredmedia.set_camera", text = "Start Face Anim")
+

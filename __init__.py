@@ -1,5 +1,5 @@
 import bpy
-from .operators import ImgPack, ImgReload, KeyframeAllProperties,LinkRig 
+from .operators import ImgPack, ImgReload, KeyframeAllProperties, LinkRig, SetCamera, ResetCamera
 from .ui.UIHeader import UI_Header
 from .ui.SkinSettings import SkinSettingsUI
 from .ui.Buttons import ButtonsUI
@@ -29,6 +29,8 @@ classes = [
         ImgReload,
         KeyframeAllProperties,
         LinkRig,
+        SetCamera,
+        ResetCamera,
 
         #UI Classes
         UI_Header,
