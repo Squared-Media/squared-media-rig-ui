@@ -21,7 +21,7 @@ bl_info = {
 
 classes = [
         # Properties
-        #SQMRigProperties,
+        SQMRigProperties,
 
         # Operator classes
         ImgPack,
