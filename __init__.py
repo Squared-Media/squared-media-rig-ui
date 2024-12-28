@@ -49,10 +49,12 @@ classes = [
 def register():
     for i in classes:
         bpy.utils.register_class(i)
+    bpy.types.Scene.my_properties = bpy.props.PointerProperty(type=SQMRigProperties)
         
 def unregister():
     for i  in reversed(classes):
         bpy.utils.unregister_class(i)
+    del bpy.types.Scene.my_properties
 
 if __name__ == "__main__":
     register()
