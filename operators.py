@@ -58,21 +58,12 @@ class KeyframeAllProperties(bpy.types.Operator):
         
         frame = bpy.context.scene.frame_current  # Get the current frame
         
-        # Keyframe all custom properties on the armature object
-        for key in obj.keys():
-            if key not in '_RNA_UI' and "Visible" not in key:  # Exclude Blender's internal property group
-                try:
-                    obj.keyframe_insert(data_path=f'["{key}"]', frame=frame)
-                    self.report({'INFO'}, f"Keyframe added to armature property: {key}")
-                except:
-                    self.report({'WARNING'}, f"Failed to keyframe armature property: {key}")
-        
         # Keyframe all custom properties on the pose bones
         for bone in obj.pose.bones:
             for key in bone.keys():
                 if key not in '_RNA_UI' and "Visible" not in key:  # Exclude Blender's internal property group
                     try:
-                        bone.keyframe_insert(data_path=f'["{key}"]', frame=frame)
+                        bone.keyframe_insert(data_path=f'["{key}"]', frame=frame, keytype = 'GENERATED')
                         self.report({'INFO'}, f"Keyframe added to bone '{bone.name}' property: {key}")
                     except:
                         self.report({'WARNING'}, f"Failed to keyframe bone '{bone.name}' property: {key}")

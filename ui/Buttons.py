@@ -19,14 +19,12 @@ class ButtonsUI(bpy.types.Panel):
         return obj and obj.get("rig_id") == rigID
     
     
-    input_string: bpy.props.StringProperty(name="Name (optional)", default="")
     def draw(self, context):
         layout = self.layout
         HelperBox = layout.box()
         HelperBox.label(text="Helper")
         HelperBox.operator("squaredmedia.keyframe_all_custom_properties")
         HelperBox.operator("squaredmedia.link_rig", text="Spawn New Rig")
-        HelperBox.prop(self, input_string)
 
         if bpy.context.space_data.lock_camera:
             HelperBox.operator("squaredmedia.reset_camera", text = "End Face Anim")
