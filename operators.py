@@ -95,46 +95,31 @@ class LinkRig(bpy.types.Operator):
             self.report({'ERROR'}, f"Blend file not found: {rig_blend_path}")
             return {'CANCELLED'}
         
-        # Link the rig collection from the blend file
-        try:
-            with bpy.data.libraries.load(rig_blend_path, link=True) as (from_lib, to_lib):
-                to_lib.collections = [collection_name]
-            rig_collection = bpy.data.collections.get(collection_name)
             
-            if rig_collection:
-                # Link the collection into the scene if it's not already linked
-                if rig_collection not in context.scene.collection.children_recursive:
-                    context.scene.collection.children.link(rig_collection)
+        
+        bpy.ops.wm.link(
+            filepath=rig_blend_path,  # Path to the .blend file
+            directory=rig_blend_path + "/Collection/",  # Collection directory inside the blend file
+            filename=collection_name,  # Name of the collection to link
+        )
+        # Step 2: Create a basic override for the linked collection
+        bpy.ops.object.make_override_library()
 
-                # Applying the library override
-                try:
-                    col_users = bpy.data.user_map(subset=[rig_collection])[rig_collection]
-                    new_col = rig_collection.override_hierarchy_create(context.scene, context.view_layer, reference=None, do_fully_editable=True)
-                    if new_col is None:
-                        return {'CANCELLED'}
+        # Step 3: Create an override for custom properties (bones, armatures, etc.)
+        # First, we need to find the armature or objects with custom properties.
+        # Loop through all objects in the collection
+        linked_collection = bpy.data.collections.get(collection_name)
 
-                    # Unlink previous references to the collection if needed
-                    for user in col_users:
-                        if isinstance(user, bpy.types.Scene):
-                            if rig_collection in list(user.collection.children):
-                                user.collection.children.unlink(rig_collection)
-                        elif isinstance(user, bpy.types.Collection):
-                            if rig_collection in list(user.children):
-                                user.children.unlink(rig_collection)
-                    
-                    # Use the new overridden collection
-                    rig_collection = new_col
-                    self.report({'INFO'}, 'Collection linked and override applied.')
-                except Exception as e:
-                    self.report({'ERROR'}, f'Error applying override: {str(e)}')
-                    return {'CANCELLED'}                
-            else:
-                self.report({'ERROR'}, 'Collection not found in the .blend file.')
-                return {'CANCELLED'}
+        print(linked_collection)
 
-        except Exception as e:
-            self.report({'ERROR'}, f'Error linking or overriding: {str(e)}')
-            return {'CANCELLED'}
+        if not linked_collection:
+            raise RuntimeError(f"Collection {collection_name} not found.")
+        
+        
+        else:
+            print("No Armature Found")
+
+        
 
         return {'FINISHED'}
     
