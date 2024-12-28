@@ -26,11 +26,8 @@ class ButtonsUI(bpy.types.Panel):
         HelperBox.operator("squaredmedia.keyframe_all_custom_properties")
         HelperBox.operator("squaredmedia.link_rig", text="Spawn New Rig")
 
-
         if bpy.context.space_data.lock_camera:
             HelperBox.operator("squaredmedia.reset_camera", text = "End Face Anim")
         else:
             HelperBox.operator("squaredmedia.set_camera", text = "Start Face Anim")
-
-        HelperBox.operator("squaredmedia.get_updates", text="download updates")
 
