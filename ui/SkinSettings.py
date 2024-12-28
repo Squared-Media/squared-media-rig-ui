@@ -44,7 +44,7 @@ class SkinSettingsUI(bpy.types.Panel):
             EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
             
             
-                #Eye Color
+            #Eye Color
             ColorBox = EyesBox.box()
             ColorBox.label(text="Eye Color")
             ColorBox.prop(rig.pose.bones["Settings"],'["Heterochromia"]')  

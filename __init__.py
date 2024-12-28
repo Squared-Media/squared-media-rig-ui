@@ -7,9 +7,6 @@ from .ui.VisibilitySettings import VisibilitySettingsUI
 from .ui.RigSettings import RigSettingsUI, FaceSettings, ArmSettings, BodySettings, OptimisationSettings, LegSettings, RetargetingSettings, RoundnessSettings
 
 
-
-
-
 bl_info = {
     "name": "Squared Media Rig UI Addon",
     "description": "Adds RIG UI for Supported Rigs",
