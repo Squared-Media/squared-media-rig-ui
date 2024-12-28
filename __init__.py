@@ -11,7 +11,7 @@ bl_info = {
     "name": "Squared Media Rig UI Addon",
     "description": "Adds RIG UI for Supported Rigs",
     "author": "Squared Media, Fxnarji",
-    "version": (0, 14, 0),
+    "version": (0, 15, 0),
     "blender": (4, 3, 2),
     "location": "Npanel > SQMDefaultRig",
     "support": "COMMUNITY",
