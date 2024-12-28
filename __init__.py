@@ -1,5 +1,5 @@
 import bpy
-from .operators import ImgPack, ImgReload, KeyframeAllProperties, LinkRig, SetCamera, ResetCamera, InstallUpdates
+from .operators import ImgPack, ImgReload, KeyframeAllProperties, LinkRig, SetCamera, ResetCamera, OT_DownloadAndInstallAddon
 from .ui.UIHeader import UI_Header
 from .ui.SkinSettings import SkinSettingsUI
 from .ui.Buttons import ButtonsUI
@@ -28,7 +28,7 @@ classes = [
         LinkRig,
         SetCamera,
         ResetCamera,
-        InstallUpdates,
+        OT_DownloadAndInstallAddon,
 
         # UI Classes
         UI_Header,

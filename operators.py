@@ -148,7 +148,7 @@ class ResetCamera(bpy.types.Operator):
         bpy.ops.view3d.view_camera()
         return {"FINISHED"}
 
-class InstallUpdates(bpy.types.Operator):
+class OT_DownloadAndInstallAddon(bpy.types.Operator):
     """Download and install an addon from GitHub"""
     bl_idname = "squaredmedia.get_updates"
     bl_label = "Download and Install Addon"
