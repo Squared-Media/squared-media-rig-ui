@@ -1,5 +1,6 @@
 import bpy
 import os
+import urllib.request
 from .utils import is_packed
 from . import properties
 
@@ -146,4 +147,44 @@ class ResetCamera(bpy.types.Operator):
         bpy.context.space_data.lock_camera = False
         bpy.ops.view3d.view_camera()
         return {"FINISHED"}
-  
+
+class OT_DownloadAndInstallAddon(bpy.types.Operator):
+    """Download and install an addon from GitHub"""
+    bl_idname = "addon.download_and_install"
+    bl_label = "Download and Install Addon"
+    
+    url: bpy.props.StringProperty(
+        name="Download URL",
+        description="URL of the addon .zip file to download",
+        default="https://github.com/Fxnarji/squared-media-rig-ui/archive/refs/heads/main.zip "
+    )
+    
+    def execute(self, context):
+        try:
+            # Get Blender's addon directory
+            addon_dir = bpy.utils.user_resource('SCRIPTS')
+            if not addon_dir:
+                self.report({'ERROR'}, "Could not locate Blender's addon directory.")
+                return {'CANCELLED'}
+            
+            # Define the file path to save the downloaded .zip
+            file_path = os.path.join(addon_dir, "squared-media-rig-ui.zip")
+            
+            # Download the file
+            self.report({'INFO'}, f"Downloading addon from {self.url}...")
+            urllib.request.urlretrieve(self.url, file_path)
+            
+            # Install the addon
+            self.report({'INFO'}, "Installing the addon...")
+            bpy.ops.preferences.addon_install(filepath=file_path, overwrite=True)
+            
+            # Enable the addon (optional, replace 'your_addon_name' with the actual module name of your addon)
+            addon_name = "squared-media-rig-ui-main"  # Update with the name of the addon module
+            bpy.ops.preferences.addon_enable(module=addon_name)
+            
+            self.report({'INFO'}, "Addon downloaded, installed, and enabled.")
+            return {'FINISHED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to download or install addon: {e}")
+            return {'CANCELLED'}
+
