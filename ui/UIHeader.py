@@ -30,6 +30,8 @@ class UI_Header(bpy.types.Panel):
         if Mat_obj is None:
             error = layout.box()
             error.label(text="No Material Object Found!", icon = "ERROR")
+        
+        layout.operator("squaredmedia.get_updates")
 
 
 
