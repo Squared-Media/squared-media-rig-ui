@@ -5,7 +5,6 @@ from .ui.SkinSettings import SkinSettingsUI
 from .ui.Buttons import ButtonsUI
 from .ui.VisibilitySettings import VisibilitySettingsUI
 from .ui.RigSettings import RigSettingsUI, FaceSettings, ArmSettings, BodySettings, OptimisationSettings, LegSettings, RetargetingSettings, RoundnessSettings
-from .properties import SQMRigProperties
 
 bl_info = {
     "name": "Squared Media Rig UI Addon",
@@ -21,7 +20,6 @@ bl_info = {
 
 classes = [
         # Properties
-        #SQMRigProperties,
 
         # Operator classes
         ImgPack,
