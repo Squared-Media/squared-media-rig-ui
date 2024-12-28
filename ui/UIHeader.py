@@ -15,17 +15,21 @@ class UI_Header(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         header = layout.box()
-        header.label(text="SQM Rig", icon="RENDER_ANIMATION")
+        row = header.row()
+        row.label(text="SQM Rig", icon="RENDER_ANIMATION")
         
+        row.operator("squaredmedia.download_latest_version", text="Update Addon")
+
         rig = bpy.context.active_object  # Example: The active object is the rig
         Mat_obj = None
         if rig:
             Mat_obj = get_material_object(rig)
 
         if not context.active_object or context.active_object.get("rig_id") != rigID:
-            error = layout.box()
-            error.label(text = "No Compatible Rig Selected!", icon = "ERROR")
             layout.operator("squaredmedia.link_rig", text="Spawn New Rig")
+            error = layout.box()
+            error.label(text = "No Compatibled Rig Selected!", icon = "ERROR")
+           
         
         if Mat_obj is None:
             error = layout.box()
