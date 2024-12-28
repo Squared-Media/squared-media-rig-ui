@@ -85,6 +85,7 @@ class LinkRig(bpy.types.Operator):
     bl_idname = "squaredmedia.link_rig"
     bl_label = "Check Rig File"
     bl_description = "Checks if the rig .blend file is present in the blend folder"
+    bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
         # Define the path to the rig blend file
@@ -102,22 +103,17 @@ class LinkRig(bpy.types.Operator):
             directory=rig_blend_path + "/Collection/",  # Collection directory inside the blend file
             filename=collection_name,  # Name of the collection to link
         )
-        # Step 2: Create a basic override for the linked collection
+
+
         bpy.ops.object.make_override_library()
 
-        # Step 3: Create an override for custom properties (bones, armatures, etc.)
-        # First, we need to find the armature or objects with custom properties.
-        # Loop through all objects in the collection
         linked_collection = bpy.data.collections.get(collection_name)
+        linked_collection.name = "wadwad"
 
         print(linked_collection)
 
         if not linked_collection:
             raise RuntimeError(f"Collection {collection_name} not found.")
-        
-        
-        else:
-            print("No Armature Found")
 
         
 
