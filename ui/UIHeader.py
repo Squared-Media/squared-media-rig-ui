@@ -17,8 +17,9 @@ class UI_Header(bpy.types.Panel):
         header = layout.box()
         row = header.row()
         row.label(text="SQM Rig", icon="RENDER_ANIMATION")
-        
         row.operator("squaredmedia.download_latest_version", text="Update Addon")
+        
+        layout.operator("squaredmedia.check_update", text="check for updates", icon = "FILE_REFRESH")
 
         rig = bpy.context.active_object  # Example: The active object is the rig
         Mat_obj = None

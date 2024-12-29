@@ -1,8 +1,9 @@
 import bpy
 import os
 import urllib.request
-from .utils import is_packed
+from .utils import is_packed, get_addon_version, get_latest_github_release
 from . import properties
+
 
 blend_file = properties.blend_file
 lib_folder = properties.lib_folder
@@ -157,7 +158,7 @@ class GetUpdates(bpy.types.Operator):
         name="Download URL",
         description="URL of the addon .zip file to download",
         default="https://github.com/Fxnarji/squared-media-rig-ui/archive/refs/heads/main.zip "
-    )
+    )#type: ignore
     
     def execute(self, context):
         try:
@@ -188,3 +189,21 @@ class GetUpdates(bpy.types.Operator):
             self.report({'ERROR'}, f"Failed to download or install addon: {e}")
             return {'CANCELLED'}
 
+class CheckForUpdates(bpy.types.Operator):
+    """Check for updates"""
+    bl_idname = "squaredmedia.check_update"
+    bl_label = "Checks if there is a newer Version than installed"
+    
+    def execute(self, context):
+
+        local_version = get_addon_version()
+        latest_version = get_latest_github_release("Fxnarji","squared-media-rig-ui")
+
+        update = "up to date"
+        if local_version < latest_version:
+            update = "Update available!"
+
+        self.report({'INFO'}, f"current version: {local_version}. Available version: {latest_version}  {update}")
+
+
+        return{'FINISHED'}
