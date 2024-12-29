@@ -15,11 +15,11 @@ def get_material_object(rig):
 
 
 def get_addon_version():
-    return bpy.context.preferences.addons["squared-media-rig-ui"].preferences.addon_version
+    return bpy.context.preferences.addons["squared-media-rig-ui-main"].preferences.addon_version
 
 def get_latest_github_release(owner, repo):
     url = f"https://api.github.com/repos/{owner}/{repo}/tags"
-    token = bpy.context.preferences.addons["squared-media-rig-ui"].preferences.GithubToken
+    token = bpy.context.preferences.addons["squared-media-rig-ui-main"].preferences.GithubToken
     headers = {}
 
     # Add the Authorization header if a token is provided
