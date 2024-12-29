@@ -177,7 +177,7 @@ class GetUpdates(bpy.types.Operator):
                 self.report({'ERROR'}, "Could not locate Blender's addon directory.")
                 return {'CANCELLED'}
             
-            file_path = os.path.join(addon_dir, "squared-media-rig-ui.zip")
+            file_path = os.path.join(addon_dir, "squared-media-rig-ui-main.zip")
             urllib.request.urlretrieve(self.url, file_path)
             
             bpy.ops.preferences.addon_install(filepath=file_path, overwrite=True)
