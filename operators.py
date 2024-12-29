@@ -1,7 +1,7 @@
 import bpy
 import os
 import urllib.request
-from .utils import is_packed, get_addon_version, get_latest_github_release, is_update_available
+from .utils import is_packed, get_addon_version, get_latest_github_release
 from . import properties
 
 
