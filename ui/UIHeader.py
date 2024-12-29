@@ -1,5 +1,5 @@
 import bpy
-from ..utils import get_material_object
+from ..utils import get_material_object, is_update_available
 from .. import properties
 rigID = properties.rigID
 category = properties.category
@@ -21,7 +21,7 @@ class UI_Header(bpy.types.Panel):
         
         layout.operator("squaredmedia.check_update", text="check for updates", icon = "FILE_REFRESH")
 
-        rig = bpy.context.active_object  # Example: The active object is the rig
+        rig = bpy.context.active_object
         Mat_obj = None
         if rig:
             Mat_obj = get_material_object(rig)

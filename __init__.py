@@ -10,7 +10,7 @@ bl_info = {
     "name": "Squared Media Rig UI Addon",
     "description": "Adds RIG UI for Supported Rigs",
     "author": "Squared Media, Fxnarji",
-    "version": (1, 0, 1),
+    "version": (0, 1, 2),
     "blender": (4, 3, 2),
     "location": "Npanel > SQMDefaultRig",
     "support": "COMMUNITY",
@@ -19,18 +19,22 @@ bl_info = {
 
 class SQRMediaRigPreferences(bpy.types.AddonPreferences):
     bl_idname = __name__
-
-    # Example preferences
-    some_setting: bpy.props.BoolProperty(
-        name="Some Setting",
-        description="A simple boolean setting",
-        default=True) #type: ignore
-    
     addon_version = bl_info["version"]
+    CheckForUpdates: bpy.props.BoolProperty(default=True) #type: ignore
+    GithubToken:         bpy.props.StringProperty()
 
     def draw(self, context):
+
+        update_status = "test"
+
         layout = self.layout
-        layout.prop(self, "some_setting")
+        row = layout.row()
+        row.label(text="Check for updates on startup")
+        row.prop(self, "CheckForUpdates", text=f"{update_status}", toggle=True)
+
+        row=layout.row()
+        row.prop(self,"GithubToken")
+    
 
 classes = [
         # Properties
