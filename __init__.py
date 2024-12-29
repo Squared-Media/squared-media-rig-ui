@@ -62,7 +62,7 @@ classes = [
         LegSettings,
         RoundnessSettings,
         OptimisationSettings,
-        RetargetingSettings,
+        RetargetingSettings
 
     ]
 

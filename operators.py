@@ -163,26 +163,26 @@ class GetUpdates(bpy.types.Operator):
     )#type: ignore
     
     def execute(self, context):
-        if not is_update_available:
-            self.report({'INFO'}, "already up to date")
-            return {'CANCELLED'}
-        else:
-            latest_version = get_latest_github_release("Fxnarji","squared-media-rig-ui")
-            self.report({'INFO'}, f"downloading version: {latest_version}")
-
         try:
-            
+            # Get Blender's addon directory
             addon_dir = bpy.utils.user_resource('SCRIPTS')
             if not addon_dir:
                 self.report({'ERROR'}, "Could not locate Blender's addon directory.")
                 return {'CANCELLED'}
             
-            file_path = os.path.join(addon_dir, "squared-media-rig-ui-main.zip")
+            # Define the file path to save the downloaded .zip
+            file_path = os.path.join(addon_dir, "squared-media-rig-ui.zip")
+            
+            # Download the file
+            self.report({'INFO'}, f"Downloading addon from {self.url}...")
             urllib.request.urlretrieve(self.url, file_path)
             
+            # Install the addon
+            self.report({'INFO'}, "Installing the addon...")
             bpy.ops.preferences.addon_install(filepath=file_path, overwrite=True)
             
-            addon_name = "squared-media-rig-ui-main" 
+            # Enable the addon (optional, replace 'your_addon_name' with the actual module name of your addon)
+            addon_name = "squared-media-rig-ui-main"  # Update with the name of the addon module
             bpy.ops.preferences.addon_enable(module=addon_name)
             
             self.report({'INFO'}, "Addon downloaded, installed, and enabled.")
