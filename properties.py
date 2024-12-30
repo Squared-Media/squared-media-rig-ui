@@ -12,4 +12,4 @@ class UIProperties:
     category = "SQM Rig UI"
 
 class AddonProperties:
-    module_name = "squared-media-rig-ui"
+    module_name = "squared-media-rig-ui-main"
