@@ -7,7 +7,6 @@ from . import properties
 
 blend_file = properties.Paths.blend_file
 lib_folder = properties.Paths.lib_folder
-collection_name = properties.Paths.collection_name
 rigID = properties.RigProperties.rigID
 GitubRepo = properties.Paths.GitubRepo
 
@@ -78,10 +77,14 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
     bl_label = "Check Rig File"
     bl_description = "links the skin, armature and boneshapes into the current file"
     bl_options = {'REGISTER', 'UNDO'}
-    
+
+
+    collection_name: bpy.props.StringProperty(name="Collection Name", default="SQM Character Rig")#type: ignore
+
     def execute(self, context):
         rig_blend_path = os.path.join(os.path.dirname(__file__),lib_folder, blend_file)
-        
+        collection_name = self.collection_name
+
         if not os.path.exists(rig_blend_path):
             self.report({'ERROR'}, f"Blend file not found: {rig_blend_path}")
             return {'CANCELLED'}
@@ -173,3 +176,18 @@ class UPDATE_OT_install_latest(bpy.types.Operator):
         except Exception as e:
             self.report({'ERROR'}, f"Failed to download or install addon: {e}")
             return {'CANCELLED'}
+
+
+#debug Operator
+class EXPERIMENTAL_OT_Null(bpy.types.Operator):
+    bl_idname = "squaredmedia.null"
+    bl_label = "Null Operator"
+    bl_description = "This operator does nothing"
+
+    def execute(self, context):
+
+        prefs = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+
+
+        print(f"Current rig list: {prefs.DefaultImportOption}")
+        return {"FINISHED"}

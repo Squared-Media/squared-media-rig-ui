@@ -24,9 +24,6 @@ class VIEW3D_PT_rig_settings(bpy.types.Panel):
         header = layout.box()
         header.label(text="General Rig Settings")
 
-
-
-
 class VIEW3D_PT_face_settings(bpy.types.Panel):
     bl_label = "Face Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
@@ -260,7 +257,7 @@ class VIEW3D_PT_optimization_settings(bpy.types.Panel):
         
         layout = self.layout
 
-         # Potato Mode
+        # Potato Mode
         row = layout.row(align=False)
         row.prop(rig.pose.bones["Settings"], '["Potato Mode"]', toggle=True, text="High Quality Preview")
         
@@ -273,3 +270,5 @@ class VIEW3D_PT_optimization_settings(bpy.types.Panel):
         row.prop(rig.pose.bones["Settings"], '["SubD Viewport"]', toggle=True)
         row = layout.row(align=False)
         row.prop(rig.pose.bones["Settings"], '["SubD Render"]', toggle=True)
+
+
