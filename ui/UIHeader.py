@@ -1,10 +1,10 @@
 import bpy
-from ..utils import get_material_object, is_update_available
+from ..utils import get_material_object
 from .. import properties
-rigID = properties.rigID
-category = properties.category
+rigID = properties.RigProperties.rigID
+category = properties.UIProperties.category
          
-class UI_Header(bpy.types.Panel):
+class VIEW3D_PT_ui_Header(bpy.types.Panel):
     bl_label = "Squared Media Rig"
     bl_idname = "OBJECT_PT_SquaredMediaHeader"
     bl_space_type = "VIEW_3D"
@@ -18,8 +18,6 @@ class UI_Header(bpy.types.Panel):
         row = header.row()
         row.label(text="SQM Rig", icon="RENDER_ANIMATION")
         row.operator("squaredmedia.download_latest_version", text="Update Addon", icon="IMPORT")
-        
-        layout.operator("squaredmedia.check_update", text="check for updates", icon = "FILE_REFRESH")
 
         rig = bpy.context.active_object
         Mat_obj = None

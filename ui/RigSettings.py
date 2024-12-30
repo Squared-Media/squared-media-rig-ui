@@ -1,10 +1,10 @@
 import bpy
 from .. import properties
 
-rigID = properties.rigID
-category = properties.category
+rigID = properties.RigProperties.rigID
+category = properties.UIProperties.category
 
-class RigSettingsUI(bpy.types.Panel):
+class VIEW3D_PT_rig_settings(bpy.types.Panel):
     bl_label = "Rig Settings"
     bl_idname = "OBJECT_PT_SquaredMediaRigSettings"
     bl_space_type = "VIEW_3D"
@@ -27,7 +27,7 @@ class RigSettingsUI(bpy.types.Panel):
 
 
 
-class FaceSettings(bpy.types.Panel):
+class VIEW3D_PT_face_settings(bpy.types.Panel):
     bl_label = "Face Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaFaceSettings"
@@ -59,7 +59,7 @@ class FaceSettings(bpy.types.Panel):
             col.prop(rig.pose.bones["CTRL-EyeParent"],'["ParentToFace"]', text = "Head" , toggle=True)
             col.prop(rig.pose.bones["CTRL-EyeParent"], '["ParentToRoot"]', text = "Root" , toggle=True)
 
-class ArmSettings(bpy.types.Panel):
+class VIEW3D_PT_arm_settings(bpy.types.Panel):
     bl_label = "Arm Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaArmSettings"
@@ -93,7 +93,7 @@ class ArmSettings(bpy.types.Panel):
         col.prop(rig.pose.bones["DEF-Attachment.L"], '["Parent to Arm"]', text="Parent to Arm L")
         col.prop(rig.pose.bones["DEF-Attachment.R"], '["Parent to Arm"]', text="Parent to Arm R")
 
-class BodySettings(bpy.types.Panel):
+class VIEW3D_PT_body_settings(bpy.types.Panel):
     bl_label = "Body Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaBodySettings"
@@ -109,7 +109,7 @@ class BodySettings(bpy.types.Panel):
         col.prop(rig.pose.bones["CTRL-Head"], '["InheritRotation"]', toggle=True, text="Head Inherit Rotation")
         col.prop(rig.pose.bones["CTRL-Pelvis"], '["HipBone"]', toggle=True, text="Hip Bone")
 
-class LegSettings(bpy.types.Panel):
+class VIEW3D_PT_leg_settings(bpy.types.Panel):
     bl_label = "Leg Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaLegSettings"
@@ -165,7 +165,7 @@ class LegSettings(bpy.types.Panel):
             text_DetachLegR = "Detach Leg R"
         row.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Detach Leg R"]', toggle=True, text = text_DetachLegR, icon = Icon_DetachLegR)
 
-class RoundnessSettings(bpy.types.Panel):
+class VIEW3D_PT_roundness_settings(bpy.types.Panel):
     bl_label = "Roundness Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaRoundnessSettings"
@@ -225,7 +225,7 @@ class RoundnessSettings(bpy.types.Panel):
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Viewport Leg.L"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Render Leg.L"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
 
-class RetargetingSettings(bpy.types.Panel):
+class VIEW3D_PT_retargeting_settings(bpy.types.Panel):
     bl_label = "Retargeting Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaRetargetingSettings"
@@ -246,7 +246,7 @@ class RetargetingSettings(bpy.types.Panel):
         row.prop(rig.pose.bones["Settings"], '["Retargeting"]', toggle=True, icon = RetargetIcon)
         row.prop(rig.pose.bones["Settings"], '["Show Mixamo Rig"]', toggle=True)
 
-class OptimisationSettings(bpy.types.Panel):
+class VIEW3D_PT_optimization_settings(bpy.types.Panel):
     bl_label = "Optimisation Settings"
     bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaOptimisationSettings"

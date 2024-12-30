@@ -1,19 +1,18 @@
 import bpy
 import os
 import urllib.request
-from .utils import is_packed, get_addon_version, get_latest_github_release
+from .utils import is_packed
 from . import properties
 
 
-blend_file = properties.blend_file
-lib_folder = properties.lib_folder
-collection_name = properties.collection_name
+blend_file = properties.Paths.blend_file
+lib_folder = properties.Paths.lib_folder
+collection_name = properties.Paths.collection_name
+rigID = properties.RigProperties.rigID
+GitubRepo = properties.Paths.GitubRepo
 
-rigID = properties.rigID
 
-
-
-class ImgPack(bpy.types.Operator):
+class IMAGE_OT_pack(bpy.types.Operator):
     bl_idname = "squaredmedia.imgpack"
     bl_label = ""
     bl_description = "packs or unpacks textures"
@@ -31,7 +30,7 @@ class ImgPack(bpy.types.Operator):
             img.pack()
         return {"FINISHED"}
 
-class ImgReload(bpy.types.Operator):
+class IMAGE_OT_reload(bpy.types.Operator):
     bl_idname = "squaredmedia.imgreload"
     bl_label = ""
     bl_description = "refreshes texture"
@@ -42,7 +41,7 @@ class ImgReload(bpy.types.Operator):
         bpy.data.images[self.id_name].reload()
         return {"FINISHED"}
 
-class KeyframeAllProperties(bpy.types.Operator):
+class OBJECT_OT_keyframe_all_properties(bpy.types.Operator):
     """Add keyframes to all custom properties except those containing 'Visible'"""
     bl_idname = "squaredmedia.keyframe_all_custom_properties"
     bl_label = "Keyframe Custom Properties"
@@ -73,58 +72,55 @@ class KeyframeAllProperties(bpy.types.Operator):
         self.report({'INFO'}, f"Keyframed all custom properties in armature '{obj.name}'")
         return {'FINISHED'}
 
-class LinkRig(bpy.types.Operator):
-
+class COLLECTION_OT_link_rig_collection(bpy.types.Operator):
+    """links the skin, armature and boneshapes into the current file"""
     bl_idname = "squaredmedia.link_rig"
     bl_label = "Check Rig File"
-    bl_description = "Checks if the rig .blend file is present in the blend folder"
+    bl_description = "links the skin, armature and boneshapes into the current file"
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        # Define the path to the rig blend file
         rig_blend_path = os.path.join(os.path.dirname(__file__),lib_folder, blend_file)
         
-        # Check if the .blend file exists
         if not os.path.exists(rig_blend_path):
             self.report({'ERROR'}, f"Blend file not found: {rig_blend_path}")
             return {'CANCELLED'}
         
+         
+        # using blenders default operator to link collection
+        if properties.AddonProperties.addon.DefaultImportOption:
+            bpy.ops.wm.link(
+                filepath=rig_blend_path, 
+                directory=rig_blend_path + "/Collection/",  
+                filename=collection_name,
+            )
+            bpy.ops.object.make_override_library()
             
-        
-        bpy.ops.wm.link(
-            filepath=rig_blend_path,  # Path to the .blend file
-            directory=rig_blend_path + "/Collection/",  # Collection directory inside the blend file
-            filename=collection_name,  # Name of the collection to link
-        )
+            imported_collection = bpy.data.collections.get(collection_name)
+            imported_collection.name = "MAKE ME RENAMEABLE!!!"
+
+        elif SQM_Rig_Preferences.DefaultImportOption == 'APPEND':
+            bpy.ops.wm.append(
+                filepath=rig_blend_path, 
+                directory=rig_blend_path + "/Collection/",  
+                filename=collection_name,
+            )
 
 
-        bpy.ops.object.make_override_library()
-
-        linked_collection = bpy.data.collections.get(collection_name)
-        linked_collection.name = "wadwad"
-
-        print(linked_collection)
-
-        if not linked_collection:
+        if not imported_collection:
             raise RuntimeError(f"Collection {collection_name} not found.")
-
-        
 
         return {'FINISHED'}
     
-class SetCamera(bpy.types.Operator):
+class SCENE_OT_set_view_camera(bpy.types.Operator):
     bl_idname = "squaredmedia.set_camera" 
-    bl_label =   "sets Face Animation camera to be active"
-    
-
-    @classmethod
-    def poll(self, context):
-        obj = context.active_object
-        return obj and obj.get("rig_id") == rigID
+    bl_label ="sets Face Animation camera to be active"
 
 
     def execute(self, context):
         rig = bpy.context.active_object
+        
+        # since rig made by me and linked from addon structure itself, we know that rig will always have a custom property containing the face camera 
         SQM_Camera = rig["Cam"]
         bpy.context.space_data.use_local_camera = True
         bpy.context.space_data.camera = SQM_Camera
@@ -132,14 +128,9 @@ class SetCamera(bpy.types.Operator):
         bpy.ops.view3d.view_camera()
         return {"FINISHED"}
     
-class ResetCamera(bpy.types.Operator):
+class SCENE_OT_reset_view_camera(bpy.types.Operator):
     bl_idname = "squaredmedia.reset_camera" 
     bl_label="sets new camera to be active"
- 
-    @classmethod
-    def poll(self, context):
-        obj = context.active_object
-        return obj and obj.get("rig_id") == rigID
     
    
     def execute(self, context):
@@ -149,55 +140,33 @@ class ResetCamera(bpy.types.Operator):
         bpy.ops.view3d.view_camera()
         return {"FINISHED"}
 
-class GetUpdates(bpy.types.Operator):
+class UPDATE_OT_install_latest(bpy.types.Operator):
     """Download and install an addon from GitHub"""
     bl_idname = "squaredmedia.download_latest_version"
     bl_label = "Download and Install Addon"
     
-   
-
     url: bpy.props.StringProperty(
         name="Download URL",
         description="URL of the addon .zip file to download",
-        default="https://github.com/Fxnarji/squared-media-rig-ui/archive/refs/heads/main.zip "
+        default= GitubRepo
     )#type: ignore
     
     def execute(self, context):
         try:
-            # Get Blender's addon directory
+
             addon_dir = bpy.utils.user_resource('SCRIPTS')
             if not addon_dir:
                 self.report({'ERROR'}, "Could not locate Blender's addon directory.")
                 return {'CANCELLED'}
             
-            # Define the file path to save the downloaded .zip
-            file_path = os.path.join(addon_dir, "squared-media-rig-ui.zip")
+            file_path = os.path.join(addon_dir, properties.AddonProperties.module_name)
             
-            # Download the file
-            self.report({'INFO'}, f"Downloading addon from {self.url}...")
             urllib.request.urlretrieve(self.url, file_path)
-            
-            # Install the addon
-            self.report({'INFO'}, "Installing the addon...")
             bpy.ops.preferences.addon_install(filepath=file_path, overwrite=True)
-            
-            # Enable the addon (optional, replace 'your_addon_name' with the actual module name of your addon)
-            addon_name = "squared-media-rig-ui-main"  # Update with the name of the addon module
-            bpy.ops.preferences.addon_enable(module=addon_name)
+            bpy.ops.preferences.addon_enable(module=properties.AddonProperties.module_name)
             
             self.report({'INFO'}, "Addon downloaded, installed, and enabled.")
             return {'FINISHED'}
         except Exception as e:
             self.report({'ERROR'}, f"Failed to download or install addon: {e}")
             return {'CANCELLED'}
-
-class CheckForUpdates(bpy.types.Operator):
-    """Check for updates"""
-    bl_idname = "squaredmedia.check_update"
-    bl_label = "Checks if there is a newer Version than installed"
-    
-    def execute(self, context):
-        local_version = get_addon_version()
-        latest_version = get_latest_github_release("Fxnarji","squared-media-rig-ui")
-        self.report({'INFO'}, f"Update Available! Current version: {local_version} -> Available version: {latest_version}")
-        return{'FINISHED'}

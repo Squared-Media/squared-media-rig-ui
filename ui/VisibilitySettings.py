@@ -1,10 +1,10 @@
 import bpy
 from .. import properties
 
-rigID = properties.rigID
-category = properties.category
+rigID = properties.RigProperties.rigID
+category = properties.UIProperties.category
 
-class VisibilitySettingsUI(bpy.types.Panel):
+class VIEW3D_PT_visibility_settings(bpy.types.Panel):
     bl_label = "Visibility Settings"
     bl_idname = "OBJECT_PT_SquaredMediaVisibility"
     bl_space_type = "VIEW_3D"

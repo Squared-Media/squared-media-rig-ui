@@ -2,10 +2,10 @@ import bpy
 from ..utils import get_material_object, is_packed
 from .. import properties
 
-rigID = properties.rigID
-category = properties.category
+rigID = properties.RigProperties.rigID
+category = properties.UIProperties.category
 
-class SkinSettingsUI(bpy.types.Panel):
+class VIEW3D_PT_skin_settings(bpy.types.Panel):
     bl_label = "Skin Settings"
     bl_idname = "OBJECT_PT_SquaredMediaSkinSettings"
     bl_space_type = "VIEW_3D"

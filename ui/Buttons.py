@@ -1,12 +1,12 @@
 import bpy
 from .. import properties
 
-rigID = properties.rigID
-category = properties.category
+rigID = properties.RigProperties.rigID
+category = properties.UIProperties.category
 
 
 
-class ButtonsUI(bpy.types.Panel):
+class VIEW3D_PT_buttons(bpy.types.Panel):
     bl_label = "Buttons"
     bl_idname = "OBJECT_PT_SquaredMediaButtons"
     bl_space_type = "VIEW_3D"
