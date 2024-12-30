@@ -32,7 +32,7 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         default='LINK'
     )#type: ignore
 
-    CollectionName: bpy.props.StringProperty()#type: ignore
+    CollectionName: bpy.props.StringProperty(default="SQM Character Rig")#type: ignore
 
     def draw(self, context):
         layout = self.layout
