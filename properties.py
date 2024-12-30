@@ -12,5 +12,13 @@ class UIProperties:
     category = "SQM Rig UI"
 
 class AddonProperties:
-    module_name = "squared-media-rig-ui.zip"
-    addon = bpy.context.preferences.addons["squared-media-rig-ui"].preferences
+    module_name = "squared-media-rig-ui"
+    module_name_main = "squared-media-rig-ui-main"
+
+    if bpy.context.preferences.addons.get(module_name):
+        addon = bpy.context.preferences.addons[module_name].preferences
+    else:
+        if bpy.context.preferences.addons.get(module_name_main):
+            addon = bpy.context.preferences.addons[module_name_main].preferences
+        else:
+            addon = None

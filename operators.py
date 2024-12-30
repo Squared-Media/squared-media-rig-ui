@@ -162,6 +162,7 @@ class UPDATE_OT_install_latest(bpy.types.Operator):
             file_path = os.path.join(addon_dir, properties.AddonProperties.module_name)
             
             urllib.request.urlretrieve(self.url, file_path)
+            
             bpy.ops.preferences.addon_install(filepath=file_path, overwrite=True)
             bpy.ops.preferences.addon_enable(module=properties.AddonProperties.module_name)
             
