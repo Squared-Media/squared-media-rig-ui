@@ -5,7 +5,6 @@ rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
 
 
-
 class VIEW3D_PT_buttons(bpy.types.Panel):
     bl_label = "Buttons"
     bl_idname = "OBJECT_PT_SquaredMediaButtons"
@@ -24,7 +23,14 @@ class VIEW3D_PT_buttons(bpy.types.Panel):
         HelperBox = layout.box()
         HelperBox.label(text="Helper")
         HelperBox.operator("squaredmedia.keyframe_all_custom_properties")
-        HelperBox.operator("squaredmedia.link_rig", text="Spawn New Rig")
+    
+        preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+        Spawnbox = layout.box()
+        Spawnbox.label(text="Spawn Rig")
+        Spawnbox.alignment = 'EXPAND'
+        row = Spawnbox.column()
+        row.prop(preferences, "CollectionName", text="Name")
+        row.operator("squaredmedia.import_rig", text="Spawn New Rig")
 
         if bpy.context.space_data.lock_camera:
             HelperBox.operator("squaredmedia.reset_camera", text = "End Face Anim")

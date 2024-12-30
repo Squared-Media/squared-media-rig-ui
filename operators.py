@@ -72,9 +72,9 @@ class OBJECT_OT_keyframe_all_properties(bpy.types.Operator):
         self.report({'INFO'}, f"Keyframed all custom properties in armature '{obj.name}'")
         return {'FINISHED'}
 
-class COLLECTION_OT_link_rig_collection(bpy.types.Operator):
+class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
     """links the skin, armature and boneshapes into the current file"""
-    bl_idname = "squaredmedia.link_rig"
+    bl_idname = "squaredmedia.import_rig"
     bl_label = "Check Rig File"
     bl_description = "links the skin, armature and boneshapes into the current file"
     bl_options = {'REGISTER', 'UNDO'}
@@ -86,9 +86,11 @@ class COLLECTION_OT_link_rig_collection(bpy.types.Operator):
             self.report({'ERROR'}, f"Blend file not found: {rig_blend_path}")
             return {'CANCELLED'}
         
-         
+        
+        preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+
         # using blenders default operator to link collection
-        if properties.AddonProperties.addon.DefaultImportOption:
+        if bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.DefaultImportOption == 'LINK':
             bpy.ops.wm.link(
                 filepath=rig_blend_path, 
                 directory=rig_blend_path + "/Collection/",  
@@ -97,18 +99,18 @@ class COLLECTION_OT_link_rig_collection(bpy.types.Operator):
             bpy.ops.object.make_override_library()
             
             imported_collection = bpy.data.collections.get(collection_name)
-            imported_collection.name = "MAKE ME RENAMEABLE!!!"
+            imported_collection.name = preferences.CollectionName
 
-        elif SQM_Rig_Preferences.DefaultImportOption == 'APPEND':
+        elif bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.DefaultImportOption == 'APPEND':
             bpy.ops.wm.append(
                 filepath=rig_blend_path, 
                 directory=rig_blend_path + "/Collection/",  
                 filename=collection_name,
             )
 
+            imported_collection = bpy.data.collections.get(collection_name)
+            imported_collection.name = preferences.CollectionName
 
-        if not imported_collection:
-            raise RuntimeError(f"Collection {collection_name} not found.")
 
         return {'FINISHED'}
     

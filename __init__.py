@@ -1,5 +1,5 @@
 import bpy
-from .operators import IMAGE_OT_pack, IMAGE_OT_reload, OBJECT_OT_keyframe_all_properties, COLLECTION_OT_link_rig_collection, SCENE_OT_set_view_camera, SCENE_OT_reset_view_camera, UPDATE_OT_install_latest
+from .operators import IMAGE_OT_pack, IMAGE_OT_reload, OBJECT_OT_keyframe_all_properties, COLLECTION_OT_import_rig_collection, SCENE_OT_set_view_camera, SCENE_OT_reset_view_camera, UPDATE_OT_install_latest
 from .ui.UIHeader import VIEW3D_PT_ui_Header
 from .ui.SkinSettings import VIEW3D_PT_skin_settings
 from .ui.Buttons import VIEW3D_PT_buttons
@@ -20,6 +20,7 @@ bl_info = {
 class SQM_Rig_Preferences(bpy.types.AddonPreferences):
     bl_idname = __name__
     __version__ = bl_info["version"]
+
     AppendOrLinkItems = [
         ('APPEND', "Append", "Append the collection"),
         ('LINK', "Link", "Link the collection"),
@@ -30,6 +31,8 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         items=AppendOrLinkItems,  
         default='LINK'
     )#type: ignore
+
+    CollectionName: bpy.props.StringProperty()#type: ignore
 
     def draw(self, context):
         layout = self.layout
@@ -50,7 +53,7 @@ classes = [
         SCENE_OT_reset_view_camera,
 
         OBJECT_OT_keyframe_all_properties,
-        COLLECTION_OT_link_rig_collection,
+        COLLECTION_OT_import_rig_collection,
         UPDATE_OT_install_latest,
 
         # UI Classes
