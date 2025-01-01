@@ -51,7 +51,7 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         import_op.imported_name = preferences.CollectionName or rig_props.rigs[rig_props.active_rig_index].name
         
         sublayout.operator("squaredmedia.load_rigs", text="", icon="FILE_REFRESH")
-        
+
         row = layout.row()
         row.enabled = False
         row.label(text=f"Mode = {preferences.DefaultImportOption.lower()}")

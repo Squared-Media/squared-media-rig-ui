@@ -1,6 +1,7 @@
 #region
 import bpy
 from . import properties
+from .ops.Snapper import OBJECT_OT_FK_to_IK_snapper  
 from .operators import EXPERIMENTAL_OT_Null, IMAGE_OT_pack, IMAGE_OT_reload, OBJECT_OT_keyframe_all_properties, COLLECTION_OT_import_rig_collection, SCENE_OT_set_view_camera, SCENE_OT_reset_view_camera, UPDATE_OT_install_latest
 from .ui.UIHeader import VIEW3D_PT_ui_Header
 from .ui.SkinSettings import VIEW3D_PT_skin_settings
@@ -8,7 +9,6 @@ from .ui.Buttons import VIEW3D_PT_buttons
 from .ui.VisibilitySettings import VIEW3D_PT_visibility_settings
 from .ui.RigSettings import VIEW3D_PT_rig_settings, VIEW3D_PT_face_settings, VIEW3D_PT_arm_settings, VIEW3D_PT_body_settings, VIEW3D_PT_optimization_settings, VIEW3D_PT_leg_settings, VIEW3D_PT_retargeting_settings, VIEW3D_PT_roundness_settings
 from .list import VIEW3D_PT_RigListPanel, RigListProperties, RigItem, RigListUI, SCENE_OT_RefreshRigList
-
 
 bl_info = {
     "name": "Squared Media Rig UI Addon - EXPERIMENTAL",
@@ -31,6 +31,10 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         ('LINK', "Link", "Use this if you want to keep the rig as is"),
     ]
 
+    SnappItems = [
+        ('SMART', "Smart", "automatically places keyframes"),
+        ('REGULAR', "Regular", "Normal IK / FK Snapping"),
+    ]
 
     DefaultImportOption: bpy.props.EnumProperty(
         name="Append or Link",  
@@ -38,21 +42,29 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         items=AppendOrLinkItems,  
         default='LINK'
     )#type: ignore
+    
+    Snapping: bpy.props.EnumProperty(
+        name="Smart Snapping",  
+        description="Choose whether to Append or Link the collection", 
+        items=SnappItems,  
+        default='SMART'
+    )#type: ignore
 
-    #custom_path: bpy.props.StringProperty(subtype='FILE_PATH', default="D:\BLENDER_RELOADED\Projekte\BPS_Stuff\SQM-Rig\Addon\Test Folder")                                  #type: ignore
     built_in_path: bpy.props.StringProperty(default=properties.Paths.default_lib_path)                                  #type: ignore
 
-    CollectionName: bpy.props.StringProperty()                              #type: ignore
-    selected_index: bpy.props.IntProperty()                                 #type: ignore
+    CollectionName: bpy.props.StringProperty()                                                                          #type: ignore
+    selected_index: bpy.props.IntProperty()                                                                             #type: ignore
 
     def draw(self, context):
         layout = self.layout
         row = layout.row()
         row.label(text="Default import preference")
         row.prop(self,"DefaultImportOption",expand=True)
-        
-        #row=layout.row()
-        #row.prop(self,"custom_path",text="Custom Path")
+
+        row = layout.row()
+        row.label(text="Smart Snapping")
+        row.prop(self,"Snapping",expand=True)
+
 
 
 classes = [
@@ -70,7 +82,9 @@ classes = [
         SCENE_OT_set_view_camera,
         SCENE_OT_reset_view_camera,
 
+        OBJECT_OT_FK_to_IK_snapper,
         OBJECT_OT_keyframe_all_properties,
+        
         COLLECTION_OT_import_rig_collection,
         UPDATE_OT_install_latest,
 

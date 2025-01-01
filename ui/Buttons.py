@@ -29,4 +29,13 @@ class VIEW3D_PT_buttons(bpy.types.Panel):
             HelperBox.operator("squaredmedia.reset_camera", text = "End Face Anim")
         else:
             HelperBox.operator("squaredmedia.set_camera", text = "Start Face Anim")
-
+        
+        SnapperBox = layout.box()
+        SnapperBox.label(text="Snapper")
+        SnapArmsLeft = SnapperBox.operator("squaredmedia.snapper", text="Arm L FK -> IK", icon = "SNAP_ON")
+        SnapArmsLeft.limb = 'Arm_L'
+        SnapArmsLeft.mode = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.Snapping
+        
+        SnapArmsRight = SnapperBox.operator("squaredmedia.snapper", text="Arm R FK -> IK", icon = "SNAP_ON")
+        SnapArmsRight.limb = 'Arm_R'
+        SnapArmsRight.mode = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.Snapping
