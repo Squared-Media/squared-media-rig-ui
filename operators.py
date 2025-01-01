@@ -79,12 +79,12 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
 
-    collection_name: bpy.props.StringProperty(name="Collection Name", default="SQM Character Rig")#type: ignore
-
+    collection_name:    bpy.props.StringProperty(name="Collection Name", default="SQM Character Rig")#type: ignore
+    rig_path:           bpy.props.StringProperty(name="Rig Path", default=properties.Paths.default_lib_path)#type: ignore   
+    imported_name:      bpy.props.StringProperty(name="Imported Name")#type: ignore
     def execute(self, context):
-        rig_blend_path = os.path.join(os.path.dirname(__file__),lib_folder, blend_file)
+        rig_blend_path = self.rig_path
         collection_name = self.collection_name
-
         if not os.path.exists(rig_blend_path):
             self.report({'ERROR'}, f"Blend file not found: {rig_blend_path}")
             return {'CANCELLED'}
@@ -102,7 +102,7 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
             bpy.ops.object.make_override_library()
             
             imported_collection = bpy.data.collections.get(collection_name)
-            imported_collection.name = preferences.CollectionName
+            imported_collection.name = self.imported_name
 
         elif bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.DefaultImportOption == 'APPEND':
             bpy.ops.wm.append(
@@ -112,7 +112,7 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
             )
 
             imported_collection = bpy.data.collections.get(collection_name)
-            imported_collection.name = preferences.CollectionName
+            imported_collection.name = self.imported_name
 
 
         return {'FINISHED'}
@@ -186,8 +186,5 @@ class EXPERIMENTAL_OT_Null(bpy.types.Operator):
 
     def execute(self, context):
 
-        prefs = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
-
-
-        print(f"Current rig list: {prefs.DefaultImportOption}")
+        self.report({'INFO'}, "This operator did nothing")
         return {"FINISHED"}
