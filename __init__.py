@@ -1,3 +1,4 @@
+#region
 import bpy
 from . import properties
 from .operators import EXPERIMENTAL_OT_Null, IMAGE_OT_pack, IMAGE_OT_reload, OBJECT_OT_keyframe_all_properties, COLLECTION_OT_import_rig_collection, SCENE_OT_set_view_camera, SCENE_OT_reset_view_camera, UPDATE_OT_install_latest
@@ -7,18 +8,20 @@ from .ui.Buttons import VIEW3D_PT_buttons
 from .ui.VisibilitySettings import VIEW3D_PT_visibility_settings
 from .ui.RigSettings import VIEW3D_PT_rig_settings, VIEW3D_PT_face_settings, VIEW3D_PT_arm_settings, VIEW3D_PT_body_settings, VIEW3D_PT_optimization_settings, VIEW3D_PT_leg_settings, VIEW3D_PT_retargeting_settings, VIEW3D_PT_roundness_settings
 from .list import VIEW3D_PT_RigListPanel, RigListProperties, RigItem, RigListUI, SCENE_OT_RefreshRigList
+
+
 bl_info = {
     "name": "Squared Media Rig UI Addon - EXPERIMENTAL",
     "description": "Adds RIG UI for Supported Rigs",
     "author": "Squared Media, Fxnarji",
-    "version": (0, 2, 0),
+    "version": (0, 2, 1),
     "blender": (4, 3, 2),
     "location": "Npanel > SQMDefaultRig",
     "support": "COMMUNITY",
     "category": "UI",
 }
 
-
+#endregion
 class SQM_Rig_Preferences(bpy.types.AddonPreferences):
     bl_idname = __name__
     __version__ = bl_info["version"]
@@ -89,12 +92,13 @@ classes = [
         VIEW3D_PT_RigListPanel
     ]
 
+
+#region
 def load_rigs(scene):
     bpy.ops.squaredmedia.load_rigs()
     print("Rigs Loaded")
 
 def register():
-    
     for i in classes:
         bpy.utils.register_class(i)
 
@@ -113,3 +117,4 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+#endregion

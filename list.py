@@ -19,11 +19,14 @@ class RigListUI(bpy.types.UIList):
 
 
 class VIEW3D_PT_RigListPanel(bpy.types.Panel):
-    bl_label = "Rig List"
+    bl_label = "Rig Spawner"
     bl_idname = "VIEW3D_PT_rig_list"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'SQM - EXPERIMENTAL'
+    bl_category = 'SQM Rig UI'
+
+   
+
 
     def draw(self, context):
         layout = self.layout
