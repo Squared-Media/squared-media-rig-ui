@@ -22,6 +22,7 @@ bl_info = {
 #endregion
 class SQM_Rig_Preferences(bpy.types.AddonPreferences):
     __version__ = bl_info["version"]
+    bl_idname = __name__
 
     AppendOrLinkItems = [
         ('APPEND', "Append", "Use this if you want to modify the rig"),
@@ -59,7 +60,6 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
     )                                                                         #type: ignore
     
     built_in_path: bpy.props.StringProperty(default=properties.Paths.default_lib_path)                                  #type: ignore
-
     CollectionName: bpy.props.StringProperty()                                                                          #type: ignore
     selected_index: bpy.props.IntProperty()                                                                             #type: ignore
 
