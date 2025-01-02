@@ -9,19 +9,18 @@ from .ui.RigSettings import VIEW3D_PT_rig_settings, VIEW3D_PT_face_settings, VIE
 from .list import VIEW3D_PT_RigListPanel, RigListProperties, RigItem, RigListUI, SCENE_OT_RefreshRigList
 
 bl_info = {
-    "name": "Squared Media Rig UI Addon - EXPERIMENTAL",
+    "name": "Squared Media Rig UI Addon",
     "description": "Adds RIG UI for Supported Rigs",
     "author": "Squared Media, Fxnarji",
     "version": (0, 2, 2),
     "blender": (4, 3, 2),
-    "location": "Npanel > SQMDefaultRig",
+    "location": "N-panel",
     "support": "COMMUNITY",
     "category": "UI",
 }
 
 #endregion
 class SQM_Rig_Preferences(bpy.types.AddonPreferences):
-    bl_idname = "squared-media-rig-ui"
     __version__ = bl_info["version"]
 
     AppendOrLinkItems = [
