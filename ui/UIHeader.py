@@ -23,7 +23,8 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
         layout = self.layout
         header = layout.box()
         row = header.row()
-        row.label(text="SQM Rig", icon="RENDER_ANIMATION")
+        row.label(text="A CHANGER", icon="RENDER_ANIMATION")
+
         row.operator("squaredmedia.download_latest_version", text="Update Addon", icon="IMPORT")
 
         layout.separator()
