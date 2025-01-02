@@ -12,8 +12,8 @@ class Paths:
     default_lib_path = os.path.join(os.path.dirname(__file__),lib_folder, blend_file)
     rig_list = [
         ("SQM - Default Rig",default_lib_path, "COLLECTION_COLOR_05"),
-       ("SQM - Sheep",default_lib_path, "COLLECTION_COLOR_04"),
-       ("SQM - Pig",default_lib_path, "COLLECTION_COLOR_04"),
+       ("SQM - Sheep",default_lib_path, "FILE_BLANK"),
+       ("SQM - Pig",default_lib_path, "FILE_BLANK"),
     ]
 
     prefix = "SQM-"

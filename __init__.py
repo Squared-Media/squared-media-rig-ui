@@ -3,11 +3,9 @@ import bpy
 from . import properties
 from .ops.Snapper import OBJECT_OT_FK_to_IK_snapper  
 from .operators import EXPERIMENTAL_OT_Null, IMAGE_OT_pack, IMAGE_OT_reload, OBJECT_OT_keyframe_all_properties, COLLECTION_OT_import_rig_collection, SCENE_OT_set_view_camera, SCENE_OT_reset_view_camera, UPDATE_OT_install_latest
-from .ui.UIHeader import VIEW3D_PT_ui_Header
-from .ui.SkinSettings import VIEW3D_PT_skin_settings
-from .ui.Buttons import VIEW3D_PT_buttons
+from .ui.UIHeader import VIEW3D_PT_ui_Main
 from .ui.VisibilitySettings import VIEW3D_PT_visibility_settings
-from .ui.RigSettings import VIEW3D_PT_rig_settings, VIEW3D_PT_face_settings, VIEW3D_PT_arm_settings, VIEW3D_PT_body_settings, VIEW3D_PT_optimization_settings, VIEW3D_PT_leg_settings, VIEW3D_PT_retargeting_settings, VIEW3D_PT_roundness_settings
+from .ui.RigSettings import VIEW3D_PT_rig_settings, VIEW3D_PT_face_settings, VIEW3D_PT_arm_settings, VIEW3D_PT_body_settings, VIEW3D_PT_optimization_settings, VIEW3D_PT_leg_settings, VIEW3D_PT_roundness_settings
 from .list import VIEW3D_PT_RigListPanel, RigListProperties, RigItem, RigListUI, SCENE_OT_RefreshRigList
 
 bl_info = {
@@ -23,7 +21,7 @@ bl_info = {
 
 #endregion
 class SQM_Rig_Preferences(bpy.types.AddonPreferences):
-    bl_idname = __name__
+    bl_idname = "squared-media-rig-ui"
     __version__ = bl_info["version"]
 
     AppendOrLinkItems = [
@@ -36,6 +34,11 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         ('REGULAR', "Regular", "Normal IK / FK Snapping"),
     ]
 
+    RigTabs = [
+        ('SKIN', "Skin", "automatically places keyframes"),
+        ('RIG', "Rig", "Normal IK / FK Snapping"),
+        ('SETTINGS', "Misc", "Normal IK / FK Snapping"),
+    ]
     DefaultImportOption: bpy.props.EnumProperty(
         name="Append or Link",  
         description="Choose whether to Append or Link the collection", 
@@ -50,6 +53,12 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         default='SMART'
     )#type: ignore
 
+    rigTab: bpy.props.EnumProperty(
+        name="Rig Tab",
+        description="Choose wich tab is open",
+        items=RigTabs
+    )                                                                         #type: ignore
+    
     built_in_path: bpy.props.StringProperty(default=properties.Paths.default_lib_path)                                  #type: ignore
 
     CollectionName: bpy.props.StringProperty()                                                                          #type: ignore
@@ -67,12 +76,13 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
 
 
 
+
 classes = [
         # Properties
+        SQM_Rig_Preferences,
         RigItem,
         RigListProperties,
         RigListUI,
-        SQM_Rig_Preferences,
 
         # Operator classes
         SCENE_OT_RefreshRigList,
@@ -91,9 +101,7 @@ classes = [
         EXPERIMENTAL_OT_Null,
 
         # UI Classes
-        VIEW3D_PT_ui_Header,
-        VIEW3D_PT_skin_settings,
-        VIEW3D_PT_buttons,
+        VIEW3D_PT_ui_Main,
         VIEW3D_PT_visibility_settings,
         VIEW3D_PT_rig_settings,
         VIEW3D_PT_face_settings,
@@ -102,7 +110,6 @@ classes = [
         VIEW3D_PT_leg_settings,
         VIEW3D_PT_roundness_settings,
         VIEW3D_PT_optimization_settings,
-        VIEW3D_PT_retargeting_settings,
         VIEW3D_PT_RigListPanel
     ]
 

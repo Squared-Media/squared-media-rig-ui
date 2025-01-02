@@ -222,26 +222,6 @@ class VIEW3D_PT_roundness_settings(bpy.types.Panel):
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Viewport Leg.L"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Render Leg.L"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
 
-class VIEW3D_PT_retargeting_settings(bpy.types.Panel):
-    bl_label = "Retargeting Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
-    bl_idname = "OBJECT_PT_SquaredMediaRetargetingSettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-
-    def draw(self, context):
-        rig = bpy.context.active_object
-        RetargetIcon = "RECORD_OFF"
-        layout = self.layout
-        if rig.pose.bones["Settings"]["Retargeting"]:
-            RetargetIcon = "RECORD_ON"
-        else:
-            RetargetIcon = "RECORD_OFF"
-        
-        row = layout.column()
-        row.prop(rig.pose.bones["Settings"], '["Retargeting"]', toggle=True, icon = RetargetIcon)
-        row.prop(rig.pose.bones["Settings"], '["Show Mixamo Rig"]', toggle=True)
 
 class VIEW3D_PT_optimization_settings(bpy.types.Panel):
     bl_label = "Optimisation Settings"
@@ -257,18 +237,5 @@ class VIEW3D_PT_optimization_settings(bpy.types.Panel):
         
         layout = self.layout
 
-        # Potato Mode
-        row = layout.row(align=False)
-        row.prop(rig.pose.bones["Settings"], '["Potato Mode"]', toggle=True, text="High Quality Preview")
-        
-        #Skin Layer
-        row = layout.row(align=False)
-        row.prop(rig.pose.bones["Settings"], '["Skin Layer 02"]', toggle=True)
-        
-        # SubD
-        row = layout.row(align=False)
-        row.prop(rig.pose.bones["Settings"], '["SubD Viewport"]', toggle=True)
-        row = layout.row(align=False)
-        row.prop(rig.pose.bones["Settings"], '["SubD Render"]', toggle=True)
 
 
