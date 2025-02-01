@@ -12,7 +12,11 @@ bl_info = {
     "name": "Squared Media Rig UI Addon",
     "description": "Adds RIG UI for Supported Rigs",
     "author": "Squared Media, Fxnarji",
+<<<<<<< Updated upstream
     "version": (0, 2, 2),
+=======
+    "version": (0, 3, 7), #3.7 is current
+>>>>>>> Stashed changes
     "blender": (4, 3, 2),
     "location": "N-panel",
     "support": "COMMUNITY",
@@ -56,8 +60,18 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
     rigTab: bpy.props.EnumProperty(
         name="Rig Tab",
         description="Choose wich tab is open",
+<<<<<<< Updated upstream
         items=RigTabs
     )                                                                         #type: ignore
+=======
+        items=RigTabs,
+        default="RIG"
+    )#type: ignore
+    
+    textinput: bpy.props.StringProperty() #type: ignore
+
+    ShowExperimental: bpy.props.BoolProperty(default=True)#type: ignore
+>>>>>>> Stashed changes
     
     built_in_path: bpy.props.StringProperty(default=properties.Paths.default_lib_path)                                  #type: ignore
     CollectionName: bpy.props.StringProperty()                                                                          #type: ignore

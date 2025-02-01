@@ -1,6 +1,5 @@
 import bpy
 import os
-import urllib.request
 from .utils import is_packed
 from . import properties
 
