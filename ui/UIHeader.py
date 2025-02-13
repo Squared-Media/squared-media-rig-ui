@@ -14,6 +14,7 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 2
 
     #properties
 

@@ -11,6 +11,7 @@ class VIEW3D_PT_visibility_settings(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 1
     @classmethod
     def poll(self, context):
         obj = context.active_object

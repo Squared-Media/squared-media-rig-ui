@@ -60,7 +60,7 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         name="Rig Tab",
         description="Choose wich tab is open",
         items=RigTabs,
-        default="RIG"
+        default="SKIN"
     )#type: ignore
     
     textinput: bpy.props.StringProperty() #type: ignore
@@ -111,14 +111,14 @@ classes = [
         EXPERIMENTAL_OT_set_pose,
 
         # UI Classes
-        VIEW3D_PT_ui_Main,
+        VIEW3D_PT_RigListPanel,
         VIEW3D_PT_visibility_settings,
+        VIEW3D_PT_ui_Main,
         VIEW3D_PT_face_settings,
         VIEW3D_PT_arm_settings,
         VIEW3D_PT_body_settings,
         VIEW3D_PT_leg_settings,
         VIEW3D_PT_roundness_settings,
-        VIEW3D_PT_RigListPanel,
         Test
     ]
 
