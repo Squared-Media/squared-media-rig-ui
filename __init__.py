@@ -5,7 +5,7 @@ from .ops.Snapper import OBJECT_OT_FK_to_IK_snapper
 from .operators import EXPERIMENTAL_OT_set_pose, EXPERIMENTAL_OT_Null, IMAGE_OT_pack, IMAGE_OT_reload, OBJECT_OT_keyframe_all_properties, COLLECTION_OT_import_rig_collection, SCENE_OT_toggle_face_camera
 from .ui.UIHeader import VIEW3D_PT_ui_Main
 from .ui.VisibilitySettings import VIEW3D_PT_visibility_settings
-from .ui.RigSettings import Test, VIEW3D_PT_face_settings, VIEW3D_PT_arm_settings, VIEW3D_PT_body_settings, VIEW3D_PT_leg_settings, VIEW3D_PT_roundness_settings
+from .ui.RigSettings import Test
 from .list import VIEW3D_PT_RigListPanel, RigListProperties, RigItem, RigListUI, SCENE_OT_RefreshRigList
 
 bl_info = {
@@ -114,11 +114,6 @@ classes = [
         VIEW3D_PT_RigListPanel,
         VIEW3D_PT_visibility_settings,
         VIEW3D_PT_ui_Main,
-        VIEW3D_PT_face_settings,
-        VIEW3D_PT_arm_settings,
-        VIEW3D_PT_body_settings,
-        VIEW3D_PT_leg_settings,
-        VIEW3D_PT_roundness_settings,
         Test
     ]
 

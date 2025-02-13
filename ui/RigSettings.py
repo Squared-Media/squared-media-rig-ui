@@ -6,30 +6,14 @@ category = properties.UIProperties.category
 preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
 parentPanel = "OBJECT_PT_SquaredMediaHeader"
 
-class VIEW3D_PT_face_settings(bpy.types.Panel):
-    bl_label = "Face Settings"
-    bl_idname = "OBJECT_PT_SquaredMediaFaceSettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-    bl_parent_id = parentPanel
-    bl_order = 3
+
+def drawEyeSettings(self, context):
+    rig = bpy.context.active_object
     
-
-    @classmethod
-    def poll(cls, context):
-        if context.active_object is None:
-            return False
-
-        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
-  
-
-    def draw(self, context):
-        rig = bpy.context.active_object
-        
-        layout = self.layout
-        EyeBox = layout.box()
-        EyeBox.label(text="Eyes")
+    layout = self.layout
+    EyeBox = layout.box()
+    EyeBox.prop(rig.pose.bones["WGT-UIProperties"],'["EyeRigConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["EyeRigConf"] else "RIGHTARROW", emboss = False, text = "Eye Settings")
+    if rig.pose.bones["WGT-UIProperties"]["EyeRigConf"]:
 
         DynamicEyes = EyeBox.box()
         DynamicEyes.label(text="Dynamic Eyes")
@@ -47,116 +31,78 @@ class VIEW3D_PT_face_settings(bpy.types.Panel):
             col.prop(rig.pose.bones["CTRL-EyeParent"],'["ParentToFace"]', text = "Head" , toggle=True)
             col.prop(rig.pose.bones["CTRL-EyeParent"], '["ParentToRoot"]', text = "Root" , toggle=True)
 
-class VIEW3D_PT_arm_settings(bpy.types.Panel):
-    bl_label = "Arm Settings"
-    bl_idname = "OBJECT_PT_SquaredMediaArmSettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-    bl_parent_id = parentPanel
-    bl_order = 3
+def drawArmSettings(self, context):
+    rig = bpy.context.active_object
     
-    @classmethod
-    def poll(cls, context):
-        if context.active_object is None:
-            return False
+    layout = self.layout
+    ArmBox = layout.box()
+    ArmBox.prop(rig.pose.bones["WGT-UIProperties"],'["ArmRigConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"] else "RIGHTARROW", emboss = False, text = "Arm Settings")
+    if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"]:
 
-        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
-    
-    def draw(self, context):
-        rig = bpy.context.active_object
-        
-        layout = self.layout
-        SlimArmBox = layout.box()
-        SlimArmBox.label(text="Slim Arms")
+
+        SlimArmBox = ArmBox.box()
+        SlimArmBox.label(text = "Slim Arm")
         SlimArmBox.prop(rig.pose.bones["Settings"],'["Slim Arms"]', toggle = True)
 
-        IKArmsBox = layout.box()
+        IKArmsBox = ArmBox.box()
         IKArmsBox.label(text="IK Arms")
         col = IKArmsBox.column(align=False)
         col.prop(rig.pose.bones["CTRL-IK-LowerArm.L"], '["IK Arm L"]')
         col.prop(rig.pose.bones["CTRL-IK-LowerArm.R"], '["IK Arm R"]')
 
-        StretchyBox = layout.box()
+        StretchyBox = ArmBox.box()
         StretchyBox.label(text="Stretchy Arms")
         col = StretchyBox.column(align=False)
         col.prop(rig.pose.bones["CTRL-IK-LowerArm.L"], '["Stretchy Arm L"]')
         col.prop(rig.pose.bones["CTRL-IK-LowerArm.R"], '["Stretchy Arm R"]')
 
-        AttachmentBox = layout.box()
+        AttachmentBox = ArmBox.box()
         AttachmentBox.label(text="Attachments")
         col = AttachmentBox.column(align=False)
         col.prop(rig.pose.bones["CTRL-HandAttachment.L"], '["Parent to Arm"]', text="Parent to Arm L")
         col.prop(rig.pose.bones["CTRL-HandAttachment.R"], '["Parent to Arm"]', text="Parent to Arm R")
 
-class VIEW3D_PT_body_settings(bpy.types.Panel):
-    bl_label = "Body Settings"
-    bl_idname = "OBJECT_PT_SquaredMediaBodySettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-    bl_parent_id = parentPanel
-    bl_order = 3
-   
-    @classmethod
-    def poll(cls, context):
-        if context.active_object is None:
-            return False
+def drawBodySettings(self, context):
+    rig = bpy.context.active_object
+    layout = self.layout
+    BodyBox = layout.box()
+    BodyBox.prop(rig.pose.bones["WGT-UIProperties"],'["BodyConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["BodyConf"] else "RIGHTARROW", emboss = False, text = "Body Settings  ")
+    if rig.pose.bones["WGT-UIProperties"]["BodyConf"]:
 
-        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
-    
-    def draw(self, context):
-        rig = bpy.context.active_object
-        layout = self.layout
-        col = layout.column(align=False)
+        col = BodyBox.box()
+        col.label(text="Body")
         col.prop(rig.pose.bones["CTRL-Torso"], '["InheritRotation"]', toggle=True, text="Torso Inherit Rotation")
         col.prop(rig.pose.bones["CTRL-Head"], '["InheritRotation"]', toggle=True, text="Head Inherit Rotation")
         col.prop(rig.pose.bones["CTRL-Pelvis"], '["HipBone"]', toggle=True, text="Hip Bone")
 
-class VIEW3D_PT_leg_settings(bpy.types.Panel):
-    bl_label = "Leg Settings"
-    bl_idname = "OBJECT_PT_SquaredMediaLegSettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-    bl_parent_id = parentPanel
-    bl_order = 3
+def drawLegSettings(self, context):
+    rig = bpy.context.active_object
+    layout = self.layout
+    LegBox = layout.box()
+    LegBox.prop(rig.pose.bones["WGT-UIProperties"],'["LegConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["LegConf"] else "RIGHTARROW", emboss = False, text = "Leg Settings  ")
+    if rig.pose.bones["WGT-UIProperties"]["LegConf"]:
 
-    @classmethod
-    def poll(cls, context):
-        if context.active_object is None:
-            return False
-
-        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
-
-
-    def draw(self, context):
-        rig = bpy.context.active_object
-        
-        layout = self.layout
         #Leg Settings
-        row = layout.row()
-        row.label(text="Leg Settings")
         # IK Legs
-        IKLegsBox = layout.box()
+        IKLegsBox = LegBox.box()
         IKLegsBox.label(text="IK Legs")
         col = IKLegsBox.column(align=False)
         col.prop(rig.pose.bones["CTRL-LowerLeg.L"], '["IK Leg L"]')
         col.prop(rig.pose.bones["CTRL-LowerLeg.R"], '["IK Leg R"]')
         
-        StretchyBox = layout.box()
+        StretchyBox = LegBox.box()
         StretchyBox.label(text="Stretchy Legs")
         col = StretchyBox.column(align=False)
         col.prop(rig.pose.bones["CTRL-LowerLeg.L"], '["Stretchy Leg L"]')
         col.prop(rig.pose.bones["CTRL-LowerLeg.R"], '["Stretchy Leg R"]')
         # Fancy Feet
-        FancyFeetBox = layout.box()
+        FancyFeetBox = LegBox.box()
         FancyFeetBox.label(text="Fancy Feet")
         row = FancyFeetBox.row(align=False)
         row.prop(rig.pose.bones["CTRL-LowerLeg.L"], '["Fancy Feet L"]', toggle=True)
         row.prop(rig.pose.bones["CTRL-LowerLeg.R"], '["Fancy Feet R"]', toggle=True)
         #Detach
-        DetachBox = layout.box()
+        DetachBox = LegBox.box()
         DetachBox.label(text="Detach")
         row = DetachBox.row(align=False)
         Icon_DetachLegL = "TIME"
@@ -178,32 +124,15 @@ class VIEW3D_PT_leg_settings(bpy.types.Panel):
             text_DetachLegR = "Detach Leg R"
         row.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Detach Leg R"]', toggle=True, text = text_DetachLegR, icon = Icon_DetachLegR)
 
-class VIEW3D_PT_roundness_settings(bpy.types.Panel):
-    bl_label = "Roundness Settings"
-    bl_idname = "OBJECT_PT_SquaredMediaRoundnessSettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-    bl_parent_id = parentPanel
-    bl_order = 3
-
-    @classmethod
-    def poll(cls, context):
-        if context.active_object is None:
-            return False
-
-        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
+def drawRoundnessSettings(self, context):
+    rig = bpy.context.active_object
     
-    def draw(self, context):
-        rig = bpy.context.active_object
+    # Roundness Settings
+    layout = self.layout
+    RoundnessBox = layout.box()
+    RoundnessBox.prop(rig.pose.bones["WGT-UIProperties"],'["RoundnessConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["RoundnessConf"] else "RIGHTARROW", emboss = False, text = "Roundness Settings")
+    if rig.pose.bones["WGT-UIProperties"]["RoundnessConf"]:
         
-        layout = self.layout
-        # Roundness Settings
-        RoundnessBox = layout.box()
-        row = RoundnessBox.row()
-        row.label(text="Roundness Settings")
-
-
         #Head 
         HeadArea = RoundnessBox.row()
         Head = HeadArea.box()
@@ -246,6 +175,13 @@ class VIEW3D_PT_roundness_settings(bpy.types.Panel):
         LegR = LegR.column(align=True)
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Viewport Leg.L"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Render Leg.L"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
+
+def draw_all_rig_settings(self,context):
+     drawEyeSettings(self, context)
+     drawArmSettings(self, context)
+     drawBodySettings(self, context)
+     drawLegSettings(self, context)
+     drawRoundnessSettings(self, context)
 
 class Test(bpy.types.GizmoGroup):
     bl_idname = "CustomGizmos"
