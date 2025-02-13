@@ -12,6 +12,8 @@ class VIEW3D_PT_face_settings(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 3
+    
 
     @classmethod
     def poll(cls, context):
@@ -50,6 +52,7 @@ class VIEW3D_PT_arm_settings(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 3
     
     @classmethod
     def poll(cls, context):
@@ -90,6 +93,7 @@ class VIEW3D_PT_body_settings(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 3
    
     @classmethod
     def poll(cls, context):
@@ -112,6 +116,7 @@ class VIEW3D_PT_leg_settings(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 3
 
     @classmethod
     def poll(cls, context):
@@ -175,6 +180,7 @@ class VIEW3D_PT_roundness_settings(bpy.types.Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    bl_order = 3
 
     @classmethod
     def poll(cls, context):
@@ -242,6 +248,7 @@ class Test(bpy.types.GizmoGroup):
     bl_space_type = "VIEW_3D"
     bl_region_type = "WINDOW"
     bl_options = {'PERSISTENT', 'SCALE'}
+    bl_order = 3
     
 
     @classmethod

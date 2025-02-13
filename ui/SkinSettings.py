@@ -79,6 +79,19 @@ def draw_skin_settings(self, context):
             Errorbox.label(text="ERROR: No material object found")
             return  
     
+    #Texture Box
+    TexutureBox = layout.box()
+    TexutureBox.label(text="Skin Texture")
+    img = Mat_obj.material_slots[0].material.node_tree.nodes["SkinTexture"].image
+
+    left = TexutureBox.row(align=True)
+    left.operator("squaredmedia.imgpack", icon="PACKAGE").id_name = img.name
+
+    main = left.row(align=True)
+    main.enabled = not is_packed(img)
+    main.prop(img, "filepath", text="")
+    main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name   
+
     #Proportions
     ProportionsBox = layout.box()
     ProportionsBox.label(text="Face Configurator")
@@ -207,15 +220,4 @@ def draw_skin_settings(self, context):
     row.prop(Layer02, "hide_render", text = "Render", invert_checkbox = True, icon = "LAYER_USED")
 
 
-    #Texture Box
-    TexutureBox = layout.box()
-    TexutureBox.label(text="Skin Texture")
-    img = Mat_obj.material_slots[0].material.node_tree.nodes["SkinTexture"].image
-
-    left = TexutureBox.row(align=True)
-    left.operator("squaredmedia.imgpack", icon="PACKAGE").id_name = img.name
-
-    main = left.row(align=True)
-    main.enabled = not is_packed(img)
-    main.prop(img, "filepath", text="")
-    main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name   
+   
