@@ -60,7 +60,7 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         name="Rig Tab",
         description="Choose wich tab is open",
         items=RigTabs,
-        default="SKIN"
+        default="RIG"
     )#type: ignore
     
     textinput: bpy.props.StringProperty() #type: ignore
