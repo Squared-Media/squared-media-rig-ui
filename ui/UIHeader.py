@@ -2,12 +2,12 @@ import bpy
 from ..utils import get_material_object
 from .. import properties
 from .SkinSettings import draw_skin_settings
-from .Settings import draw_buttons
+from .Settings import draw_all_settings
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
 preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
-
+         
 class VIEW3D_PT_ui_Main(bpy.types.Panel):
     bl_label = "Squared Media Rig"
     bl_idname = "OBJECT_PT_SquaredMediaHeader"
@@ -17,15 +17,12 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
 
     #properties
 
-
-
     def draw(self, context):
         layout = self.layout
         header = layout.box()
         row = header.row()
-        row.label(text="Squared Media Rig UI", icon="RENDER_ANIMATION")
+        row.label(text="Squared Media", icon="RENDER_ANIMATION")
 
-        row.operator("squaredmedia.download_latest_version", text="Update Addon", icon="IMPORT")
 
         layout.separator()
         col = layout.row()
@@ -41,11 +38,12 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
         
 
         #drawing main contents of Rig UI
-        layout.separator()
-        if preferences.preferences.rigTab == "SKIN" and context.active_object and get_material_object(context.active_object):
-            draw_skin_settings(self, context)
-        elif preferences.preferences.rigTab == "SETTINGS":
-            draw_buttons(self, context)
+        if context.active_object and context.active_object.get("rig_id") == rigID and get_material_object(context.active_object):
+            layout.separator()
+            if preferences.preferences.rigTab == "SKIN":
+                draw_skin_settings(self, context)
+            elif preferences.preferences.rigTab == "SETTINGS":
+                draw_all_settings(self, context)
     
 
     

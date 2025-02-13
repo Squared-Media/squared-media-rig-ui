@@ -3,6 +3,7 @@ from .. import properties
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
+preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
 
 class VIEW3D_PT_visibility_settings(bpy.types.Panel):
     bl_label = "Visibility Settings"
@@ -24,11 +25,8 @@ class VIEW3D_PT_visibility_settings(bpy.types.Panel):
 
         # Body Visibility
         BodyBox = layout.box()
-        BodyBox.label(text="Body Visibility")
+        BodyBox.label(text="General Visibility")
         col = BodyBox.column()
-<<<<<<< Updated upstream
-        col.prop(rig.data.collections_all["Face"], "is_visible", text="Face Bones", toggle=True)
-=======
 
         # Face Visibility
         col.prop(rig.data.collections_all["Isolate Face"], "is_visible", text="Isolate Face", toggle=True, invert_checkbox=True)
@@ -38,8 +36,8 @@ class VIEW3D_PT_visibility_settings(bpy.types.Panel):
         row.prop(rig.data.collections_all["FaceComplex"], "is_visible", text="Face Complex", toggle=True)
         
         # Misc Visibility
->>>>>>> Stashed changes
         col.prop(layers["Menu"], "is_visible", text="Menu", toggle=True)   
+        col.prop(layers["Settings"], "is_visible", text="Settings", toggle=True)   
         col.prop(layers["Debug"], "is_visible", text="Debug", toggle=True, icon = "SETTINGS")
 
         # IK Visibility

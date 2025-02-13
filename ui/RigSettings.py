@@ -3,35 +3,23 @@ from .. import properties
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
+preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
 
-class VIEW3D_PT_rig_settings(bpy.types.Panel):
-    bl_label = "Rig Settings"
-    bl_idname = "OBJECT_PT_SquaredMediaRigSettings"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
-
-
-    @classmethod
-    def poll(self, context):
-        obj = context.active_object
-        return obj and obj.get("rig_id") == rigID
-    
-    def draw(self,context):
-        rig = bpy.context.active_object
-        layout = self.layout  
-
-        header = layout.box()
-        header.label(text="General Rig Settings")
 
 class VIEW3D_PT_face_settings(bpy.types.Panel):
     bl_label = "Face Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaFaceSettings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
 
+    @classmethod
+    def poll(cls, context):
+        if context.active_object is None:
+            return False
+
+        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
+  
 
     def draw(self, context):
         rig = bpy.context.active_object
@@ -58,12 +46,18 @@ class VIEW3D_PT_face_settings(bpy.types.Panel):
 
 class VIEW3D_PT_arm_settings(bpy.types.Panel):
     bl_label = "Arm Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaArmSettings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+    
+    @classmethod
+    def poll(cls, context):
+        if context.active_object is None:
+            return False
 
+        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
+    
     def draw(self, context):
         rig = bpy.context.active_object
         
@@ -87,17 +81,23 @@ class VIEW3D_PT_arm_settings(bpy.types.Panel):
         AttachmentBox = layout.box()
         AttachmentBox.label(text="Attachments")
         col = AttachmentBox.column(align=False)
-        col.prop(rig.pose.bones["DEF-Attachment.L"], '["Parent to Arm"]', text="Parent to Arm L")
-        col.prop(rig.pose.bones["DEF-Attachment.R"], '["Parent to Arm"]', text="Parent to Arm R")
+        col.prop(rig.pose.bones["CTRL-HandAttachment.L"], '["Parent to Arm"]', text="Parent to Arm L")
+        col.prop(rig.pose.bones["CTRL-HandAttachment.R"], '["Parent to Arm"]', text="Parent to Arm R")
 
 class VIEW3D_PT_body_settings(bpy.types.Panel):
     bl_label = "Body Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaBodySettings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+   
+    @classmethod
+    def poll(cls, context):
+        if context.active_object is None:
+            return False
 
+        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
+    
     def draw(self, context):
         rig = bpy.context.active_object
         layout = self.layout
@@ -108,11 +108,18 @@ class VIEW3D_PT_body_settings(bpy.types.Panel):
 
 class VIEW3D_PT_leg_settings(bpy.types.Panel):
     bl_label = "Leg Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaLegSettings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
+
+    @classmethod
+    def poll(cls, context):
+        if context.active_object is None:
+            return False
+
+        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
+
 
     def draw(self, context):
         rig = bpy.context.active_object
@@ -164,12 +171,18 @@ class VIEW3D_PT_leg_settings(bpy.types.Panel):
 
 class VIEW3D_PT_roundness_settings(bpy.types.Panel):
     bl_label = "Roundness Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
     bl_idname = "OBJECT_PT_SquaredMediaRoundnessSettings"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = category
 
+    @classmethod
+    def poll(cls, context):
+        if context.active_object is None:
+            return False
+
+        return context.active_object.get("rig_id") == rigID and preferences.preferences.rigTab == "RIG"
+    
     def draw(self, context):
         rig = bpy.context.active_object
         
@@ -179,16 +192,16 @@ class VIEW3D_PT_roundness_settings(bpy.types.Panel):
         row = RoundnessBox.row()
         row.label(text="Roundness Settings")
 
-            
+
+        #Head 
         HeadArea = RoundnessBox.row()
-        HeadArea = HeadArea.split(factor=0.333)
-        HeadArea.column()
         Head = HeadArea.box()
         Head.label(text="Head")
         col = Head.column(align = True)
         col.prop(rig.pose.bones["CTRL-Head"], '["Smooth - Viewport Head"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         col.prop(rig.pose.bones["CTRL-Head"], '["Smooth - Render Head"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
-        HeadArea.split()
+
+        #Body
         Body = RoundnessBox.row(align = False)
         ArmL = Body.box()
         ArmL.label(text="Arm Left")
@@ -201,41 +214,80 @@ class VIEW3D_PT_roundness_settings(bpy.types.Panel):
         Torso = Torso.column(align=True)
         Torso.prop(rig.pose.bones["CTRL-Pelvis"], '["Smooth - Viewport Body"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         Torso.prop(rig.pose.bones["CTRL-Pelvis"], '["Smooth - Render Body"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
+        
         ArmR = Body.box()
         ArmR.label(text="Arm Right")
         ArmR = ArmR.column(align=True)
         ArmR.prop(rig.pose.bones["CTRL-IK-UpperArm.R"], '["Smooth - Viewport Arm.R"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         ArmR.prop(rig.pose.bones["CTRL-IK-UpperArm.R"], '["Smooth - Render Arm.R"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
+        
+        
+        #Legs
         Legs = RoundnessBox.row(align=False)
-        Legs = Legs.split(factor=0.5)
-        LegL = Legs.split(factor=0.3)
-        LegL.column()
-        LegL = LegL.box()
+        LegL = Legs.box()
         LegL.label(text="Leg Left")
         LegL = LegL.column(align=True)
         LegL.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Smooth - Viewport Leg.R"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         LegL.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Smooth - Render Leg.R"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
-        LegR = Legs.split(factor=0.7)
-        LegR = LegR.box()
+
+        LegR = Legs.box()
         LegR.label(text="Leg Right")
         LegR = LegR.column(align=True)
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Viewport Leg.L"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
         LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Render Leg.L"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
 
-
-class VIEW3D_PT_optimization_settings(bpy.types.Panel):
-    bl_label = "Optimisation Settings"
-    bl_parent_id = "OBJECT_PT_SquaredMediaRigSettings"
-    bl_idname = "OBJECT_PT_SquaredMediaOptimisationSettings"
+class Test(bpy.types.GizmoGroup):
+    bl_idname = "CustomGizmos"
+    bl_label = "Custom gizmos"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-    bl_category = category
+    bl_region_type = "WINDOW"
+    bl_options = {'PERSISTENT', 'SCALE'}
+    
 
-
-    def draw(self, context):
+    @classmethod
+    def poll(cls, context):
         rig = bpy.context.active_object
-        
-        layout = self.layout
+        return rig and rig.get("rig_id") == "SquaredMediaDefaultRig"
+    
+    def draw_prepare(self, context):
+        region_width = context.region.width
+        region_height = context.region.height
+    
+    # Get the width of the N panel (right toolbar)
+        n_panel_width = 0
+        if context.area.ui_type == 'VIEW_3D' and context.space_data.show_region_ui:
+            for region in context.area.regions:
+                if region.type == 'UI':
+                    n_panel_width = region.width
+
+        # Set the initial position for the gizmos
+        r_xpos = region_width -  n_panel_width  # Adjust this for the X position
+        r_ypos = region_height
+        ui_scale = context.preferences.view.ui_scale
+        for gizmo in self.gizmos:
+            gizmo.matrix_basis[0][3] = r_xpos - 22.5 * ui_scale
+            gizmo.matrix_basis[1][3] = r_ypos - 300 * ui_scale
 
 
+       
+    def setup(self, context):
+        mpr = self.gizmos.new("GIZMO_GT_button_2d")
+        mpr.bl_idname = "RunForestButton"
+        mpr.draw_options = {'BACKDROP', 'OUTLINE'}
+        mpr.target_set_operator('squaredmedia.set_camera')
+        mpr.alpha = 0.5
+        mpr.color = 0.5, 0.1, 0.5
+        mpr.color_highlight = 1.0, 1.0, 1.0
+        mpr.alpha_highlight = 0.1
+        mpr.scale_basis = (30) / 2
+        mpr.use_tooltip = True
+        mpr.show_drag = False
+        mpr.use_draw_value = True
+        mpr.icon = "LOCKVIEW_ON"  # Default icon
 
+    #def draw(self, context):
+        #rig = bpy.context.active_object
+        #SQM_Camera = rig["Cam"]
+        #layout = self.layout
+        #layout.scale_y = 2.0  
+        #layout.operator("squaredmedia.set_camera", icon ="LOCKVIEW_ON" if SQM_Camera.hide_viewport else "LOCKVIEW_OFF", text="Start Face Anim" if SQM_Camera.hide_viewport else "End Face Anim")

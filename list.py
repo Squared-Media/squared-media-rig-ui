@@ -43,22 +43,21 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         # Import and load buttons
         sublayout = layout.row(align=True)
         sublayout.scale_y = 2
-        split = sublayout.split(factor=0.85, align=True)
         
         if len(rig_props.rigs) > 0:
-            import_op = split.operator("squaredmedia.import_rig", text="Import Rig", icon="IMPORT")
+            sublayout = sublayout.split(factor=0.85, align=True)
+            import_op = sublayout.operator("squaredmedia.import_rig", text="Import Rig", icon="IMPORT")
             import_op.collection_name = rig_props.rigs[rig_props.active_rig_index].name
             import_op.rig_path = rig_props.rigs[rig_props.active_rig_index].id
             import_op.imported_name = preferences.CollectionName or rig_props.rigs[rig_props.active_rig_index].name
-            split.operator("squaredmedia.load_rigs", text="", icon="FILE_REFRESH")
+
+            sublayout.operator("squaredmedia.load_rigs", text="", icon="FILE_REFRESH")
+
             row = layout.row()
             row.enabled = False
             row.label(text=f"Mode = {preferences.DefaultImportOption.lower()}")
         else:
-            layout.label(text="please refresh", icon = "WARNING_LARGE")
-            sublayout.operator("squaredmedia.load_rigs", text="REFRESH", icon="FILE_REFRESH")
-        
-
+            sublayout.operator("squaredmedia.load_rigs", text="Please click to refresh", icon = "FILE_REFRESH")
 
 
 class SCENE_OT_RefreshRigList(bpy.types.Operator):
@@ -81,23 +80,3 @@ class SCENE_OT_RefreshRigList(bpy.types.Operator):
             rig_item.icon = rig[2]
 
         return {"FINISHED"}
-
-
-def register():
-    bpy.utils.register_class(VIEW3D_PT_RigListPanel)
-    bpy.utils.register_class(RigItem)
-    bpy.utils.register_class(RigListProperties)
-    bpy.utils.register_class(RigListUI)
-    bpy.utils.register_class(SCENE_OT_RefreshRigList)
-
-
-def unregister():
-    bpy.utils.unregister_class(SCENE_OT_RefreshRigList)
-    bpy.utils.unregister_class(RigListUI)
-    bpy.utils.unregister_class(RigListProperties)
-    bpy.utils.unregister_class(RigItem)
-    bpy.utils.unregister_class(VIEW3D_PT_RigListPanel)
-
-
-if __name__ == "__main__":
-    register()

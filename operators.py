@@ -81,6 +81,21 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
     collection_name:    bpy.props.StringProperty(name="Collection Name", default="SQM Character Rig")#type: ignore
     rig_path:           bpy.props.StringProperty(name="Rig Path", default=properties.Paths.default_lib_path)#type: ignore   
     imported_name:      bpy.props.StringProperty(name="Imported Name")#type: ignore
+
+    def invoke(self, context, event):
+        preferences = context.preferences.addons[properties.AddonProperties.module_name].preferences
+        if event.alt:
+            self.report({'INFO'}, "ALT key is pressed - Inverting Default Import Option.")
+            # Invert the DefaultImportOption
+            if preferences.DefaultImportOption == 'LINK':
+                self.inverted_option = 'APPEND'
+            else:
+                self.inverted_option = 'LINK'
+        else:
+            self.inverted_option = preferences.DefaultImportOption
+
+        return self.execute(context)
+
     def execute(self, context):
         rig_blend_path = self.rig_path
         collection_name = self.collection_name
@@ -116,67 +131,29 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
 
         return {'FINISHED'}
     
-class SCENE_OT_set_view_camera(bpy.types.Operator):
+class SCENE_OT_toggle_face_camera(bpy.types.Operator):
     bl_idname = "squaredmedia.set_camera" 
     bl_label ="sets Face Animation camera to be active"
 
 
     def execute(self, context):
         rig = bpy.context.active_object
-        
-        # since rig made by me and linked from addon structure itself, we know that rig will always have a custom property containing the face camera 
         SQM_Camera = rig["Cam"]
-        bpy.context.space_data.use_local_camera = True
-        bpy.context.space_data.camera = SQM_Camera
-        bpy.context.space_data.lock_camera = True
-        bpy.ops.view3d.view_camera()
-        return {"FINISHED"}
-    
-class SCENE_OT_reset_view_camera(bpy.types.Operator):
-    bl_idname = "squaredmedia.reset_camera" 
-    bl_label="sets new camera to be active"
-    
-   
-    def execute(self, context):
-        bpy.context.space_data.use_local_camera = False
-        bpy.context.space_data.lock_object = None
-        bpy.context.space_data.lock_camera = False
-        bpy.ops.view3d.view_camera()
-        return {"FINISHED"}
 
-class UPDATE_OT_install_latest(bpy.types.Operator):
-    """Download and install an addon from GitHub"""
-    bl_idname = "squaredmedia.download_latest_version"
-    bl_label = "Download and Install Addon"
-    
-    url: bpy.props.StringProperty(
-        name="Download URL",
-        description="URL of the addon .zip file to download",
-        default= GitubRepo
-    )#type: ignore
-    
-    def execute(self, context):
-        try:
-
-            addon_dir = bpy.utils.user_resource('SCRIPTS')
-            if not addon_dir:
-                self.report({'ERROR'}, "Could not locate Blender's addon directory.")
-                return {'CANCELLED'}
-            
-            file_path = os.path.join(addon_dir, properties.AddonProperties.module_name)
-            
-            urllib.request.urlretrieve(self.url, file_path)
-            
-            bpy.ops.preferences.addon_install(filepath=file_path, overwrite=True)
-            bpy.ops.preferences.addon_enable(module=properties.AddonProperties.module_name)
-            
-            self.report({'INFO'}, "Addon downloaded, installed, and enabled.")
-            return {'FINISHED'}
-        except Exception as e:
-            self.report({'ERROR'}, f"Failed to download or install addon: {e}")
-            return {'CANCELLED'}
-
-
+        if SQM_Camera.hide_viewport: 
+            SQM_Camera.hide_viewport = False
+            bpy.context.space_data.use_local_camera = True
+            bpy.context.space_data.camera = SQM_Camera
+            bpy.context.space_data.lock_camera = True
+            bpy.ops.view3d.view_camera()
+            return {"FINISHED"}
+        else:
+            bpy.context.space_data.use_local_camera = False
+            bpy.context.space_data.lock_object = None
+            bpy.context.space_data.lock_camera = False
+            SQM_Camera.hide_viewport = True
+            bpy.ops.view3d.view_camera()
+            return {"FINISHED"}
 #debug Operator
 class EXPERIMENTAL_OT_Null(bpy.types.Operator):
     bl_idname = "squaredmedia.null"
@@ -187,3 +164,50 @@ class EXPERIMENTAL_OT_Null(bpy.types.Operator):
 
         self.report({'INFO'}, "This operator did nothing")
         return {"FINISHED"}
+    
+class EXPERIMENTAL_OT_set_pose(bpy.types.Operator):
+    bl_idname = "squaredmedia.set_pose"
+    bl_label = "Set Pose"
+    bl_description = "Setting Mouth Pose"
+
+    phonem: bpy.props.StringProperty()
+
+    def execute(self, context):
+        armature = bpy.context.object 
+        bpy.ops.object.mode_set(mode='POSE')
+        
+        source_action_name = self.phonem
+        source_action = bpy.data.actions.get(source_action_name)
+        target_action = armature.animation_data.action
+
+        armature.active_selection_set = 0
+        bpy.ops.pose.select_all(action="DESELECT")
+        bpy.ops.pose.selection_set_select()
+
+
+
+        for bone in bpy.context.selected_pose_bones:
+            # Loop through the fcurves (keyframe data) of the source action
+            for fcurve in source_action.fcurves:
+                # Check if this fcurve is related to the current bone
+                if bone.name in fcurve.data_path:
+                    # Get the data for the current fcurve (location, rotation, scale)
+                    data_path = fcurve.data_path
+                    index = fcurve.array_index
+
+                    target_fcurve = target_action.fcurves.find(data_path, index=index)
+                    
+                    if not target_fcurve:
+                        target_fcurve = target_action.fcurves.new(data_path=data_path, index=index)
+
+                    if not target_fcurve:
+                        target_fcurve = target_action.fcurves.new(data_path=data_path, index=index)
+
+                    # Copy each keyframe from the source action to the target action at the specified frame
+                    for keyframe in fcurve.keyframe_points:
+                        target_fcurve.keyframe_points.insert(bpy.context.scene.frame_current, keyframe.co.y)
+
+            
+        return {'FINISHED'}
+
+
