@@ -48,10 +48,10 @@ class OBJECT_OT_FK_to_IK_snapper(bpy.types.Operator):
         Arm_R_IK_bones = ['MCH-UpperArm.R', 'CTRL-IK-LowerArm.R']
         Arm_R_FK_bones = ['CTRL-FK-UpperArm.R', 'CTRL-FK-LowerArm.R']
 
-        Hand_IK_L = "CTRL-Hand.L"
+        Hand_IK_L = "CTRL-HandIK.L"
         Hand_Pole_L = "CTRL-IKArmTarget.L"
 
-        Hand_IK_R = "CTRL-Hand.R"
+        Hand_IK_R = "CTRL-HandIK.R"
         Hand_Pole_R = "CTRL-IKArmTarget.R"
 
 
