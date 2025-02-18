@@ -91,7 +91,9 @@ def draw_skin_settings(self, context):
         main = left.row(align=True)
         main.enabled = not is_packed(img)
         main.prop(img, "filepath", text="")
-        main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name   
+        main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name 
+
+        TexutureBox.prop(rig.pose.bones["Settings"],'["Slim Arms"]', toggle = True)
 
     #Proportions
     ProportionsBox = layout.box()

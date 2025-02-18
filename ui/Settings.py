@@ -52,12 +52,12 @@ def draw_snapper(self, context):
         ArmL.label(text="Arm L")
         row = ArmL.row(align = True)
 
-        SnapArmsLeft = row.operator("squaredmedia.snapper", text="From FK", icon = "SNAP_ON")
+        SnapArmsLeft = row.operator("squaredmedia.snapper", text="FK > IK (L)", icon = "SNAP_ON")
         SnapArmsLeft.limb = 'Arm_L'
         SnapArmsLeft.mode = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.Snapping
         SnapArmsLeft.direction = "IK_TO_FK"
 
-        SnapArmsLeft = row.operator("squaredmedia.snapper", text="From IK", icon = "SNAP_OFF")
+        SnapArmsLeft = row.operator("squaredmedia.snapper", text="IK > FK (L)", icon = "SNAP_OFF")
         SnapArmsLeft.limb = 'Arm_L'
         SnapArmsLeft.mode = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.Snapping
         SnapArmsLeft.direction = "FK_TO_IK"
@@ -66,13 +66,13 @@ def draw_snapper(self, context):
         ArmR = SnapperBox.box()
         ArmR.label(text="Arm R")
         row = ArmR.row(align=True)
-
-        SnapArmsRight = row.operator("squaredmedia.snapper", text="From FK", icon = "SNAP_ON")
+        
+        SnapArmsRight = row.operator("squaredmedia.snapper", text="FK > IK (R)", icon = "SNAP_ON")
         SnapArmsRight.limb = 'Arm_R'
         SnapArmsRight.mode = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.Snapping
         SnapArmsRight.direction = "IK_TO_FK"
 
-        SnapArmsRight = row.operator("squaredmedia.snapper", text="From IK", icon = "SNAP_OFF")
+        SnapArmsRight = row.operator("squaredmedia.snapper", text="IK > FK (R)", icon = "SNAP_OFF")
         SnapArmsRight.limb = 'Arm_R'
         SnapArmsRight.mode = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.Snapping
         SnapArmsRight.direction = "FK_TO_IK"
@@ -130,6 +130,7 @@ def draw_all_settings(self, context):
     if rig.pose.bones["WGT-UIProperties"]["HelperConf"]:
 
         HelperBox.operator("squaredmedia.keyframe_all_custom_properties")
+        HelperBox.operator("squaredmedia.set_camera", text = "Toggle Camera")
 
 
     if preferences.preferences.ShowExperimental:
