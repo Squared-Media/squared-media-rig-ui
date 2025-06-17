@@ -1,4 +1,4 @@
-name: Build Release
+name: Manual Release
 
 on:
   workflow_dispatch:
@@ -13,10 +13,12 @@ on:
         description: 'Path to file to upload (relative to root)'
         required: true
 
+permissions:
+  contents: write  # required to create releases
+
 jobs:
   create_release:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
