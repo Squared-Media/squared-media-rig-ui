@@ -10,7 +10,7 @@ category = properties.UIProperties.category
 preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
          
 class VIEW3D_PT_ui_Main(bpy.types.Panel):
-    bl_label = "Squared Media Rig"
+    bl_label = "Squared Media Pro Rig v1"
     bl_idname = "OBJECT_PT_SquaredMediaHeader"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

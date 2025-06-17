@@ -16,6 +16,6 @@ class Paths:
     default_lib_path = os.path.join(os.path.dirname(__file__),lib_folder,blend_file)
 
 class UIProperties:
-    category = "SQM Rig UI"
+    category = "SQM Pro Rig v1"
 
 #bpy.context.addons.preferences[AddonProperties.module_name].preferences
