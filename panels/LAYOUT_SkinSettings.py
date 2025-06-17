@@ -186,16 +186,15 @@ def draw_eyebrowBox01(self,context,layout,rig,Mat_obj):
 def draw_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings
     ColorBox = layout.box()
-    ColorBox.prop(rig.pose.bones["WGT-UIProperties"],'["EyeConfig"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["EyeConfig"] else "RIGHTARROW", emboss = False, text = "Eye Settings")
+    ColorBox.prop(rig.pose.bones["WGT-UIProperties"],'["EyeConfig"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["EyeConfig"] else "RIGHTARROW", emboss = False, text = "Eye and Brow Settings")
     if rig.pose.bones["WGT-UIProperties"]["EyeConfig"]:
-        Eye = ColorBox.row()
 
-        if rig.pose.bones["Settings"]["Eye_R_enable"] and rig.pose.bones["Settings"]["Eye_L_enable"]:
-            Eye = Eye.split(factor=0.5)
-        
-        EyeRBox = Eye.box()
+        #Eyes
+        EyeBox = ColorBox.row().box()
+        EyeBox.label(text="Eye Settings")
+        Eye = EyeBox.split(factor=0.5) 
         EyeLBox = Eye.box()
-
+        EyeRBox = Eye.box()
 
         #Right Eye 
         if rig.pose.bones["Settings"]["Eye_R_enable"]:
@@ -211,6 +210,27 @@ def draw_EyeBox(self,context,layout,rig,Mat_obj):
             eye_settings(self, context, EyeL, EyeLBox, "Left")
         else:
             EyeLBox.label(text="disabled")
+        
+
+        #Eyebrows
+        EyebrowBox = ColorBox.row().box()
+        EyebrowBox.label(text="Eyebrow Settings")
+        Eyebrow = EyebrowBox.split(factor=0.5) 
+        EyebrowLBox = Eyebrow.box()
+        EyebrowRBox = Eyebrow.box()
+
+        EyebrowL = Mat_obj.material_slots[3].material.node_tree.nodes["Eyebrow"].inputs
+        EyebrowR = Mat_obj.material_slots[4].material.node_tree.nodes["Eyebrow"].inputs
+        if rig.pose.bones["Settings"]["Eyebrow_R_enabled"]:
+            draw_eyebrowBox(self, context, EyebrowR, EyebrowRBox.box(), "Right")
+        else:
+            EyebrowRBox.label(text="disabled")
+
+        if rig.pose.bones["Settings"]["Eyebrow_L_enabled"]:
+            draw_eyebrowBox(self, context, EyebrowL, EyebrowLBox.box(), "Right")
+        else:
+            EyebrowLBox.label(text="disabled")
+
 
 def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings
@@ -250,7 +270,6 @@ def draw_skin_settings(self, context):
     layout = self.layout
     draw_TextureBox(self,context,layout,rig,Mat_obj)
     draw_proportionBox(self,context,layout,rig)
-    draw_eyebrowBox01(self,context,layout,rig,Mat_obj)
     draw_EyeBox(self,context,layout,rig,Mat_obj)
     draw_advanced_EyeBox(self, context, layout, rig, Mat_obj)
     
