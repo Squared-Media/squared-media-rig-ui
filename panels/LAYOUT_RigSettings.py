@@ -38,7 +38,6 @@ def drawArmSettings(self, context):
     ArmBox.prop(rig.pose.bones["WGT-UIProperties"],'["ArmRigConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"] else "RIGHTARROW", emboss = False, text = "Arm Settings")
     if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"]:
 
-
         SlimArmBox = ArmBox.box()
         SlimArmBox.label(text = "Slim Arm")
         SlimArmBox.prop(rig.pose.bones["Settings"],'["Slim Arms"]', toggle = True)

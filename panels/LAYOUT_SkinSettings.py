@@ -88,6 +88,8 @@ def draw_TextureBox(self,context,layout,rig,Mat_obj):
         main.enabled = not is_packed(img)
         main.prop(img, "filepath", text="")
         main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name   
+        
+        TexutureBox.prop(rig.pose.bones["Settings"],'["Slim Arms"]', toggle = True)
 
 def draw_proportionBox(self,context,layout,rig):
      #Proportions
@@ -277,8 +279,8 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
 def draw_skin_settings(self, context):
     rig = bpy.context.active_object
     Mat_obj = get_material_object(rig)
-    
     layout = self.layout
+
     draw_TextureBox(self,context,layout,rig,Mat_obj)
     draw_proportionBox(self,context,layout,rig)
     draw_EyeBox(self,context,layout,rig,Mat_obj)
