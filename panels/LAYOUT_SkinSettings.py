@@ -44,19 +44,21 @@ def advanced_eye_settings(self, context, EyeR, ParentBox, name):
 #
     Pupil.label(text="Iris")
     Pupil.prop(EyeR[9], "default_value", text = EyeR[9].name)
+    Pupil.prop(EyeR[12], "default_value", text = EyeR[12].name)
+
 #
 #
     Reflection = col.box()
     Reflection.label(text="Reflection")
     Reflection = Reflection.column(align=True)
 #
-    Reflection.prop(EyeR[12], "default_value", text = EyeR[12].name)
     Reflection.prop(EyeR[13], "default_value", text = EyeR[13].name)
+    Reflection.prop(EyeR[14], "default_value", text = EyeR[14].name)
     
     row = Reflection.row()
     row = row.split(factor=0.5)
     row.label(text="Rotation")
-    row.prop(EyeR[15], "default_value", text = "")
+    row.prop(EyeR[16], "default_value", text = "")
 
 #-----------------
 
@@ -235,5 +237,4 @@ def draw_skin_settings(self, context):
     draw_proportionBox(self,context,layout,rig)
     draw_eyebrowBox01(self,context,layout,rig,Mat_obj)
     draw_EyeBox(self,context,layout,rig,Mat_obj)
-    #draw_SecondLayerBox(self,context,layout,rig)
     
