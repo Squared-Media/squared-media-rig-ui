@@ -186,7 +186,7 @@ def draw_eyebrowBox01(self,context,layout,rig,Mat_obj):
 def draw_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings
     ColorBox = layout.box()
-    ColorBox.prop(rig.pose.bones["WGT-UIProperties"],'["EyeConfig"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["EyeConfig"] else "RIGHTARROW", emboss = False, text = "Eye and Brow Settings")
+    ColorBox.prop(rig.pose.bones["WGT-UIProperties"],'["EyeConfig"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["EyeConfig"] else "RIGHTARROW", emboss = False, text = "Eye & Brow Settings")
     if rig.pose.bones["WGT-UIProperties"]["EyeConfig"]:
 
         #Eyes
