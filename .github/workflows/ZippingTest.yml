@@ -1,18 +1,42 @@
-name: Zip lib folder
+name: Zip and Release lib folder
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write  # needed to create releases and upload assets
+
 jobs:
-  zip_lib:
+  zip_and_release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Create builds directory
+      - name: Create builds folder
         run: mkdir -p builds
 
       - name: Zip lib folder
         run: zip -r builds/test.zip lib
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.3.4
+          release_name: Test
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: builds/test.zip
+          asset_name: test.zip
+          asset_content_type: application/zip
