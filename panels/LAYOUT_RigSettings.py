@@ -101,28 +101,7 @@ def drawLegSettings(self, context):
         row.prop(rig.pose.bones["CTRL-LowerLeg.L"], '["Fancy Feet L"]', toggle=True)
         row.prop(rig.pose.bones["CTRL-LowerLeg.R"], '["Fancy Feet R"]', toggle=True)
         #Detach
-        DetachBox = LegBox.box()
-        DetachBox.label(text="Detach")
-        row = DetachBox.row(align=False)
-        Icon_DetachLegL = "TIME"
-        text_DetachLegL = "loading..."
-        if(rig.pose.bones["CTRL-UpperLeg.L"]["Detach Leg L"]):
-            Icon_DetachLegL = "UNLINKED"
-            text_DetachLegL = "Attach Leg L"
-        else:
-            Icon_DetachLegL = "LINKED"
-            text_DetachLegL = "Detach Leg L"
-        row.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Detach Leg L"]', toggle=True, text = text_DetachLegL, icon = Icon_DetachLegL)
-        Icon_DetachLegR = "TIME"
-        text_DetachLegR = "loading..."
-        if(rig.pose.bones["CTRL-UpperLeg.R"]["Detach Leg R"]):
-            Icon_DetachLegR = "UNLINKED"
-            text_DetachLegR = "Attach Leg R"
-        else:
-            Icon_DetachLegR = "LINKED"
-            text_DetachLegR = "Detach Leg R"
-        row.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Detach Leg R"]', toggle=True, text = text_DetachLegR, icon = Icon_DetachLegR)
-
+       
 def drawRoundnessSettings(self, context):
     rig = bpy.context.active_object
     
