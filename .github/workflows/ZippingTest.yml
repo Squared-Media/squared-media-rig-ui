@@ -1,10 +1,10 @@
-name: Zip and Release lib folder
+name: Zip and Release project
 
 on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # needed to create releases and upload assets
+  contents: write
 
 jobs:
   zip_and_release:
@@ -17,8 +17,13 @@ jobs:
       - name: Create builds folder
         run: mkdir -p builds
 
-      - name: Zip lib folder
-        run: zip -r builds/test.zip lib
+      - name: Zip entire project excluding .git, .github/workflows, builds
+        run: |
+          zip -r builds/test.zip . \
+            -x ".git/*" \
+            -x ".github/workflows/*" \
+            -x "**__pycache__*"\
+            -x "builds/*"
 
       - name: Create GitHub Release
         id: create_release
