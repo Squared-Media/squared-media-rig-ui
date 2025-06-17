@@ -6,12 +6,6 @@ on:
       tag_name:
         description: 'Tag name (e.g. v1.0.0)'
         required: true
-      release_name:
-        description: 'Release title'
-        required: true
-      file_path:
-        description: 'Path to file to upload (relative to root)'
-        required: true
 
 permissions:
   contents: write  # required to create releases
@@ -29,7 +23,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.inputs.tag_name }}
+          tag_name: ${{ github.event.inputs.release_name }}
           release_name: ${{ github.event.inputs.release_name }}
           draft: true
           prerelease: false
