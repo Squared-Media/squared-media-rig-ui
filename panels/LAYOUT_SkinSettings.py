@@ -66,8 +66,8 @@ def draw_eyebrowBox(self,context,Eyebrow,Parentbox, name):
      row = Parentbox.row()
      row.prop(Eyebrow[0], "default_value", text = Eyebrow[0].name)
 
-     row = Parentbox.row()
-     row.prop(Eyebrow[1], "default_value", text = Eyebrow[1].name)
+     #row = Parentbox.row()
+     #row.prop(Eyebrow[1], "default_value", text = Eyebrow[1].name)
 
 def draw_TextureBox(self,context,layout,rig,Mat_obj):  
     if Mat_obj is None:
