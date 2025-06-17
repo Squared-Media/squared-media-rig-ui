@@ -1,1 +1,18 @@
+# Blender temp files
+*.blend1
+*.blend2
+*.blend@
+# IDE files
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
 *.pyc
+
+# Git metadata (never needed unless you’re zipping manually)
+.git/
+
+# Custom build outputs
+dist/
+*.zip
