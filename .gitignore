@@ -12,7 +12,3 @@ __pycache__/
 
 # Git metadata (never needed unless you’re zipping manually)
 .git/
-
-# Custom build outputs
-dist/
-*.zip
