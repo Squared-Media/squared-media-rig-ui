@@ -182,17 +182,6 @@ def draw_eyebrowBox01(self,context,layout,rig,Mat_obj):
         draw_eyebrowBox(self, context, EyebrowR, split.box(), "Right")
         draw_eyebrowBox(self, context, EyebrowL, split.box(), "Left")
 
-def draw_SecondLayerBox(self,context,layout,rig):
-    # Second Skin Layer
-    SecondLayerBox = layout.box()
-    SecondLayerBox.prop(rig.pose.bones["WGT-UIProperties"],'["LayerConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["LayerConf"] else "RIGHTARROW", emboss = False, text = "Layer Settings")
-    if rig.pose.bones["WGT-UIProperties"]["LayerConf"]:
-
-        row = SecondLayerBox.row()
-        Layer02 = rig.pose.bones["Settings"].get("Layer02", None) 
-        row.prop(Layer02, "hide_viewport", text = "Viewport", invert_checkbox = True, icon = "LAYER_USED")
-        row.prop(Layer02, "hide_render", text = "Render", invert_checkbox = True, icon = "LAYER_USED")
-    
 def draw_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings
     ColorBox = layout.box()
@@ -246,5 +235,5 @@ def draw_skin_settings(self, context):
     draw_proportionBox(self,context,layout,rig)
     draw_eyebrowBox01(self,context,layout,rig,Mat_obj)
     draw_EyeBox(self,context,layout,rig,Mat_obj)
-    draw_SecondLayerBox(self,context,layout,rig)
+    #draw_SecondLayerBox(self,context,layout,rig)
     

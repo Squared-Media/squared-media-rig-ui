@@ -58,3 +58,12 @@ class VIEW3D_PT_visibility_settings(bpy.types.Panel):
         #Poles
         row = box.row()
         row.prop(layers["Poles"], "is_visible", text="IK Poles", toggle=True)
+
+        # Second Skin Layer
+        SecondLayerBox = layout.box()
+        SecondLayerBox.label(text="Second Layer Visibility")
+        row = SecondLayerBox.row()
+        Layer02 = rig.pose.bones["Settings"].get("Layer02", None) 
+        row.prop(Layer02, "hide_viewport", text = "Viewport", invert_checkbox = True, icon = "LAYER_USED")
+        row.prop(Layer02, "hide_render", text = "Render", invert_checkbox = True, icon = "LAYER_USED")
+    
