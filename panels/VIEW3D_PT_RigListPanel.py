@@ -6,7 +6,7 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_rig_list"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'SQM Rig UI'
+    bl_category = properties.UIProperties.category
     bl_order = 0
 
     def draw(self, context):
