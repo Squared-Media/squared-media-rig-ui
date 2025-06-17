@@ -29,16 +29,22 @@ jobs:
             echo "name=$name" >> $GITHUB_OUTPUT
             echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Determine zip name
+      - name: Determine zip and release name
         id: vars
         run: |
-          prefix="${{ github.event.inputs.name_prefix || steps.read_manifest.outputs.name }}"
+          prefix="${{ github.event.inputs.name_prefix }}"
+          if [ -z "$prefix" ]; then
+            prefix="${{ steps.read_manifest.outputs.name }}"
+          fi
+
           version="${{ steps.read_manifest.outputs.version }}"
-          zip_name="$prefix $version.zip"
-          release_name="${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY)_$version"
+          zip_name="${prefix} ${version}.zip"
+          release_name="$(basename $GITHUB_REPOSITORY)_${version}"
+
           echo "zip_name=$zip_name" >> $GITHUB_OUTPUT
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
           echo "tag_name=$version" >> $GITHUB_OUTPUT
+
 
       - name: Zip entire project excluding .git, .github/workflows, builds, and __pycache__
         run: |
