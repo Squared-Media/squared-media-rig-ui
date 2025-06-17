@@ -171,6 +171,12 @@ def draw_proportionBox(self,context,layout,rig):
             row = AdvancedBox.row()
             row.prop(rig.pose.bones["MCH-Eyes"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
 
+            smoothHead = rig.pose.bones["CTRL-Head"]['Smooth - Render Head'] or rig.pose.bones["CTRL-Head"]['Smooth - Viewport Head']
+            if rig.pose.bones["MCH-Eyes"]['Eye_Gap'] > 3.27 and smoothHead:
+                warningBox = AdvancedBox.box()
+                warningBox.alert = True
+                warningBox.label(text="Eye Gap is high, this can affect Head Smoothing Quality", icon='ERROR')
+
 def draw_eyebrowBox01(self,context,layout,rig,Mat_obj):
     #Eyebrows
     EyebrowBox = layout.box()
@@ -230,7 +236,6 @@ def draw_EyeBox(self,context,layout,rig,Mat_obj):
             draw_eyebrowBox(self, context, EyebrowL, EyebrowLBox.box(), "Right")
         else:
             EyebrowLBox.label(text="disabled")
-
 
 def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings
