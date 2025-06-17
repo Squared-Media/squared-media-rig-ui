@@ -1,4 +1,4 @@
-name: Zip and Release project with version from TOML
+name: Make New Release
 
 on:
   workflow_dispatch:
