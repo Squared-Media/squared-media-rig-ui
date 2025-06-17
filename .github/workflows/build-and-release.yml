@@ -2,10 +2,8 @@ name: Auto ZIP & Release
 
 on:
   push:
-    branches:
-      - main  # adjust if needed
-      - test-release
-
+    tags:
+      - 'v*'
 jobs:
   build-zip:
     runs-on: ubuntu-latest
