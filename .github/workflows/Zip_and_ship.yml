@@ -29,7 +29,7 @@ jobs:
 
       - name: Update version in blender_manifest.toml
         run: |
-          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' root/blender_manifest.toml
+          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' /blender_manifest.toml
 
       - name: Create builds directory
         run: mkdir -p builds
@@ -48,7 +48,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add root/blender_manifest.toml
+          git add blender_manifest.toml
           git commit -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
           git push
 
