@@ -42,7 +42,7 @@ jobs:
         run: |
           prefix="${{ steps.read_name.outputs.name}}"
           version="${{ steps.read_version.outputs.version }}"
-          zip_name="$prefix $version.zip"
+          zip_name="Squared_Media_Pro_Rig_V$version.zip"
           echo "zip_name=$zip_name" >> $GITHUB_OUTPUT
 
       - name: Zip entire project excluding .git, .github/workflows, builds, and __pycache__
