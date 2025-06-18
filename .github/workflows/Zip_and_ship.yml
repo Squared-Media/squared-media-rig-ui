@@ -27,12 +27,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Update version in blender_manifest.toml
+        run: |
+          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' root/blender_manifest.toml
+
       - name: Create builds directory
         run: mkdir -p builds
-
-      - name: Create version.json
-        run: |
-          echo "{\"version\": \"${{ steps.get_tag.outputs.new_tag }}\"}" > version.json
 
       - name: Create zip archive
         run: |
@@ -44,11 +44,11 @@ jobs:
             -x "builds/*" \
             -x "**/__pycache__/*"
 
-      - name: Commit version.json
+      - name: Commit updated blender_manifest.toml
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add version.json
+          git add root/blender_manifest.toml
           git commit -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
           git push
 
