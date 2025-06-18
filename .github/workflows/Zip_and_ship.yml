@@ -57,10 +57,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Update version in blender_manifest.toml
         run: |
           sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' blender_manifest.toml
