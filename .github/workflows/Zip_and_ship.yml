@@ -2,6 +2,19 @@ name: Manual Release
 
 on:
   workflow_dispatch:
+    inputs:
+      bump_patch:
+        description: "Bump patch version (default)"
+        required: false
+        default: "true"
+      bump_minor:
+        description: "Bump minor version"
+        required: false
+        default: "false"
+      bump_major:
+        description: "Bump major version"
+        required: false
+        default: "false"
 
 jobs:
   release:
@@ -13,23 +26,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get latest release tag
+      - name: Get latest release tag and calculate new version
         id: get_tag
         run: |
-          latest_tag=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name || echo "0.0.0")
-          echo "Latest tag raw: $latest_tag"
+          latest_tag=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name || echo "v0.0.0")
+          echo "Latest tag: $latest_tag"
 
-          # Strip leading 'v' for toml and version bump
-          latest_tag_toml="${latest_tag#v}"
+          latest_tag_clean="${latest_tag#v}"
+          IFS='.' read -r major minor patch <<< "$latest_tag_clean"
 
-          IFS='.' read -r major minor patch <<< "$latest_tag_toml"
-          patch=$((patch + 1))
+          # Inputs
+          bump_patch="${{ github.event.inputs.bump_patch }}"
+          bump_minor="${{ github.event.inputs.bump_minor }}"
+          bump_major="${{ github.event.inputs.bump_major }}"
+
+          if [[ "$bump_major" == "true" ]]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif [[ "$bump_minor" == "true" ]]; then
+            minor=$((minor + 1))
+            patch=0
+          else
+            patch=$((patch + 1))
+          fi
+
           new_tag="$major.$minor.$patch"
-          echo "New tag (no v): $new_tag"
-
-          # Export outputs for later steps
           echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
           echo "new_tag_with_v=v$new_tag" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
