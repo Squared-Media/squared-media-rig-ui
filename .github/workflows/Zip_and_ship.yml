@@ -1,0 +1,70 @@
+name: Zip and Release project with manifest version + name
+
+on:
+  workflow_dispatch:
+    inputs:
+      name_prefix:
+        description: 'Override name prefix (defaults to value in blender_manifest.toml)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  zip_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create builds folder
+        run: mkdir -p builds
+
+      - name: Read name and version from blender_manifest.toml
+        id: read_manifest
+        run: |
+          name=$(grep '^name' blender_manifest.toml | sed -E 's/name *= *"(.*)"/\1/')
+          version=$(grep '^version' blender_manifest.toml | sed -E 's/version *= *"(.*)"/\1/')
+          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Determine zip name
+        id: vars
+        run: |
+          prefix="${{ github.event.inputs.name_prefix || steps.read_manifest.outputs.name }}"
+          version="${{ steps.read_manifest.outputs.version }}"
+          zip_name="$prefix $version.zip"
+          release_name="${{ github.repository_owner }}/$(basename $GITHUB_REPOSITORY)_$version"
+          echo "zip_name=$zip_name" >> $GITHUB_OUTPUT
+          echo "release_name=$release_name" >> $GITHUB_OUTPUT
+          echo "tag_name=$version" >> $GITHUB_OUTPUT
+
+      - name: Zip project (exclude folders)
+        run: |
+          zip -r "builds/${{ steps.vars.outputs.zip_name }}" . \
+            -x ".git/*" \
+            -x ".github/workflows/*" \
+            -x "builds/*" \
+            -x "**/__pycache__/*"
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.vars.outputs.tag_name }}
+          release_name: ${{ steps.vars.outputs.release_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "builds/${{ steps.vars.outputs.zip_name }}"
+          asset_name: "${{ steps.vars.outputs.zip_name }}"
+          asset_content_type: application/zip
