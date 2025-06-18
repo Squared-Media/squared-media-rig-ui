@@ -59,4 +59,4 @@ jobs:
           gh release create "${{ steps.get_tag.outputs.new_tag }}" \
             --title "Release ${{ steps.get_tag.outputs.new_tag }}" \
             --notes "Automated release" \
-            "builds/$(basename `git rev-parse --show-toplevel`)+${{ steps.get_tag.outputs.new_tag }}.zip"
+            "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
