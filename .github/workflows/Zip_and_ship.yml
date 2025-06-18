@@ -18,6 +18,9 @@ jobs:
         run: |
           latest_tag=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name || echo "0.0.0")
           echo "Latest tag: $latest_tag"
+
+          latest_tag_toml="${latest_tag#v}"
+          echo "toml friendly version: latest_tag_toml"
       
           IFS='.' read -r major minor patch <<< "$latest_tag"
           patch=$((patch + 1))
@@ -29,7 +32,7 @@ jobs:
 
       - name: Update version in blender_manifest.toml
         run: |
-          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' blender_manifest.toml
+          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.latest_tag_toml }}"/' blender_manifest.toml
 
       - name: Create builds directory
         run: mkdir -p builds

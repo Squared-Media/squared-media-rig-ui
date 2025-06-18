@@ -1,4 +1,6 @@
 import bpy
+import tomllib
+import os
 
 #Operators
 from .operators.OBJECT_OT_FK_to_IK_snapper            import OBJECT_OT_FK_to_IK_snapper  
@@ -23,11 +25,18 @@ from .msc.DATA_list_setup                             import RigListProperties, 
 from .msc.Preferences                                 import SQM_Rig_Preferences
 
 
+toml_path = os.path.join(os.path.dirname(__file__), "blender_manifest.toml")
+with open(toml_path, "rb") as f:
+    manifest = tomllib.load(f)
+version_str = manifest.get("version", "0.0.0")
+version_tuple = tuple(int(x) for x in version_str.split("."))
+
+
 bl_info = {
     "name": "Squared Media Rig UI Addon",
     "description": "Adds RIG UI for Supported Rigs",
     "author": "Squared Media, Fxnarji",
-    "version": (1, 3, 3), 
+    "version": version_tuple, 
     "blender": (4, 3, 2),
     "location": "Npanel > SQMDefaultRig",
     "support": "COMMUNITY",
