@@ -42,7 +42,7 @@ jobs:
         run: |
           prefix="${{ steps.read_name.outputs.name}}"
           version="${{ steps.read_version.outputs.version }}"
-          zip_name="Squared_Media_Pro_Rig_V$version.zip"
+          zip_name="Squared_Media_Pro_Rig_V$version"
           echo "zip_name=$zip_name" >> $GITHUB_OUTPUT
 
       - name: Zip entire project excluding .git, .github/workflows, builds, and __pycache__
@@ -70,6 +70,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: builds/${{ steps.zip_name.outputs.zip_name}}
-          asset_name: ${{ steps.zip_name.outputs.zip_name}}
+          asset_path: builds/${{ steps.zip_name.outputs.zip_name}}.zip
+          asset_name: ${{ steps.zip_name.outputs.zip_name}}.zip
           asset_content_type: application/zip
