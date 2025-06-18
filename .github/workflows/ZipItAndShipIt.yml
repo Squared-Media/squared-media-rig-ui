@@ -23,31 +23,17 @@ jobs:
           version=$(grep '^version' blender_manifest.toml | sed -E 's/version *= *"(.*)"/\1/')
           echo "version=$version" >> $GITHUB_OUTPUT
 
-      - name: Read Name from blender_manifest.toml
-        id: read_name
-        run: |
-          version=$(grep '^name' blender_manifest.toml | cut -d '"' -f2)
-          echo "name=$name" >> $GITHUB_OUTPUT
-
       - name: Prepare release variables
         id: vars
         run: |
           repo_name=$(basename $GITHUB_REPOSITORY)
-          release_name="Squared Media Pro Rig V${{ steps.read_version.outputs.version }}"
+          release_name="${repo_name}_${{ steps.read_version.outputs.version }}"
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
           echo "tag_name=${{ steps.read_version.outputs.version }}" >> $GITHUB_OUTPUT
 
-      - name: Determine zip name
-        id: zip_name
-        run: |
-          prefix="${{ steps.read_name.outputs.name}}"
-          version="${{ steps.read_version.outputs.version }}"
-          zip_name="Squared_Media_Pro_Rig_V$version"
-          echo "zip_name=$zip_name" >> $GITHUB_OUTPUT
-
       - name: Zip entire project excluding .git, .github/workflows, builds, and __pycache__
         run: |
-          zip -r builds/${{ steps.zip_name.outputs.zip_name}}.zip . \
+          zip -r builds/test.zip . \
             -x ".git/*" \
             -x ".github/workflows/*" \
             -x "builds/*" \
@@ -70,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: builds/${{ steps.zip_name.outputs.zip_name}}.zip
-          asset_name: ${{ steps.zip_name.outputs.zip_name}}.zip
+          asset_path: builds/test.zip
+          asset_name: test.zip
           asset_content_type: application/zip
