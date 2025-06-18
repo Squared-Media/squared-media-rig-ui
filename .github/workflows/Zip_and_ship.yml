@@ -37,7 +37,7 @@ jobs:
       - name: Create zip archive
         run: |
           repo_name=$(basename `git rev-parse --show-toplevel`)
-          zip_name="${repo_name}+${{ steps.get_tag.outputs.new_tag }}.zip"
+          zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
           zip -r "builds/$zip_name" . \
             -x ".git/*" \
             -x ".github/workflows/*" \
