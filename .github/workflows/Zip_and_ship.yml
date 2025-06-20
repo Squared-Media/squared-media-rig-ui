@@ -3,10 +3,6 @@ name: Manual Release
 on:
   workflow_dispatch:
     inputs:
-      bump_patch:
-        description: "Bump patch version (default)"
-        required: false
-        default: "true"
       bump_minor:
         description: "Bump minor version"
         required: false
@@ -29,31 +25,39 @@ jobs:
       - name: Get latest release tag and calculate new version
         id: get_tag
         run: |
-          latest_tag=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name || echo "v0.0.0")
+          # Get the list of releases (an array)
+          release_tags=$(gh api repos/${{ github.repository }}/releases --jq '.[].tag_name' 2>/dev/null)
+
+          if [[ -z "$release_tags" ]]; then
+            # No releases: fallback
+            latest_tag="v0.0.0"
+          else
+            # Get the latest tag from the first release in the list (releases API returns in descending order)
+            latest_tag=$(gh api repos/${{ github.repository }}/releases --jq '.[0].tag_name' 2>/dev/null)
+          fi
+
           echo "Latest tag: $latest_tag"
+          echo "bump_major: ${{ github.event.inputs.bump_major }}"
+          echo "bump_minor: ${{ github.event.inputs.bump_minor }}"
+
 
           latest_tag_clean="${latest_tag#v}"
           IFS='.' read -r major minor patch <<< "$latest_tag_clean"
 
-          # Inputs
-          bump_patch="${{ github.event.inputs.bump_patch }}"
-          bump_minor="${{ github.event.inputs.bump_minor }}"
-          bump_major="${{ github.event.inputs.bump_major }}"
-
-          if [[ "$bump_major" == "true" ]]; then
+          if [[ ${{ github.event.inputs.bump_major }} == "true" ]]; then
             major=$((major + 1))
             minor=0
             patch=0
-          elif [[ "$bump_minor" == "true" ]]; then
+          elif [[ ${{ github.event.inputs.bump_minor }} == "true" ]]; then
             minor=$((minor + 1))
             patch=0
-          else
-            patch=$((patch + 1))
           fi
 
+          patch=$((patch + 1))
           new_tag="$major.$minor.$patch"
           echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
           echo "new_tag_with_v=v$new_tag" >> "$GITHUB_OUTPUT"
+
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -70,8 +74,9 @@ jobs:
           zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
           zip -r "builds/$zip_name" . \
             -x ".git/*" \
-            -x ".github/workflows/*" \
+            -x ".github/*" \
             -x "builds/*" \
+            -x "/__pycache__/*" \
             -x "**/__pycache__/*"
 
       - name: Commit updated blender_manifest.toml
@@ -79,7 +84,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add blender_manifest.toml
-          git commit -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
+          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
           git push
 
       - name: Create new GitHub release
