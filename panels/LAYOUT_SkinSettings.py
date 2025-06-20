@@ -5,6 +5,7 @@ from .. import properties
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
 
+
 def eye_settings(self, context, Eye, ParentBox, name):
     rig = bpy.context.active_object
 
@@ -27,11 +28,17 @@ def eye_settings(self, context, Eye, ParentBox, name):
     row = ParentBox.row()
     row.prop(Eye[4], "default_value", text = Eye[4].name)
 
-def draw_advanced_Eyes(self, context, Eye, ParentBox, name):
+def draw_advanced_Eyes(self, context, Eye, ParentBox, name, eye_overrides):
           #Advanced Settings
 
     ParentBox.label(text=name, icon = "HIDE_OFF")
     col = ParentBox.column()
+
+    override_box = col.box()
+    override_box.label(text = "overrides")
+    override_box.prop(eye_overrides[0], "default_value", text = eye_overrides[0].name)
+    override_box.prop(eye_overrides[1], "default_value", text = eye_overrides[1].name)
+
 
     Pupil = col.box()
     Pupil.label(text="Pupil")
@@ -249,7 +256,9 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
         #Right Eye 
         if rig.pose.bones["Settings"]["Eye_R_enable"]:
             EyeR = Mat_obj.material_slots[1].material.node_tree.nodes["Eye.R"].inputs
-            draw_advanced_Eyes(self, context, EyeR, EyeRBox, "Right")
+            eye_overridesR = Mat_obj.material_slots[0].material.node_tree.nodes["Overrides_R"].inputs
+
+            draw_advanced_Eyes(self, context, EyeR, EyeRBox, "Right", eye_overridesR)
         else:
             EyeRBox.label(text="disabled")
 
@@ -257,7 +266,9 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
         #Left Eye
         if rig.pose.bones["Settings"]["Eye_L_enable"]:
             EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
-            draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left")
+            eye_overridesL = Mat_obj.material_slots[0].material.node_tree.nodes["Overrides_L"].inputs
+
+            draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left", eye_overridesL)
         else:
             EyeLBox.label(text="disabled")
 
