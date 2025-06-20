@@ -4,6 +4,7 @@ from .. import properties
 from .LAYOUT_SkinSettings   import draw_skin_settings
 from .LAYOUT_Settings       import draw_all_settings
 from .LAYOUT_RigSettings    import draw_all_rig_settings
+from ..msc.IMG_load_icons   import preview_collections
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
@@ -23,7 +24,15 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
         layout = self.layout
         header = layout.box()
         row = header.row()
-        row.label(text="Squared Media", icon="RENDER_ANIMATION")
+
+
+        pcoll = preview_collections.get("main")
+        if pcoll:
+            icon_id = pcoll["sqm_logo"].icon_id
+            row.label(text="Squared Media", icon_value=icon_id)
+
+        else:
+            row.label(text="Squared Media", icon="RENDER_ANIMATION")
 
 
         layout.separator()

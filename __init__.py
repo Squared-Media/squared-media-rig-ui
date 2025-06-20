@@ -23,7 +23,7 @@ from .panels.MyFancyPanel                             import TestPanel
 #misc       
 from .msc.DATA_list_setup                             import RigListProperties, RigItem, RigListUI
 from .msc.Preferences                                 import SQM_Rig_Preferences
-
+from .msc.IMG_load_icons                              import load_icons, unload_icons
 
 toml_path = os.path.join(os.path.dirname(__file__), "blender_manifest.toml")
 with open(toml_path, "rb") as f:
@@ -87,6 +87,8 @@ def register():
     bpy.types.Scene.rigs = bpy.props.PointerProperty(type=RigListProperties)
 
     bpy.app.handlers.load_post.append(load_rigs)
+    
+    load_icons()
 
 def unregister():
     for i  in reversed(classes):
@@ -96,6 +98,8 @@ def unregister():
 
     if load_rigs in bpy.app.handlers.load_post:
         bpy.app.handlers.load_post.remove(load_rigs)
+
+    unload_icons()
 
 if __name__ == "__main__":
     register()
