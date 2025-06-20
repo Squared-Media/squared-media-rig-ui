@@ -283,4 +283,3 @@ def draw_skin_settings(self, context):
     draw_proportionBox(self,context,layout,rig)
     draw_EyeBox(self,context,layout,rig,Mat_obj)
     draw_advanced_EyeBox(self, context, layout, rig, Mat_obj)
-    
