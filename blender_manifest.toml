@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "squared_media_rig_ui"
-version = "1.3.4"
+version = "1.3.5"
 name = "Squared Media Pro Rig V1"
 tagline = "UI for controlling Squared Media's rigs in Blender"
 maintainer = "Fxnarji <fxn-work@proton.me>"
