@@ -115,11 +115,17 @@ def draw_optimizations(self, context):
         row.prop(rig.pose.bones["Settings"], '["SubD Render"]', toggle=True)
 
         #proxies
-        row = optimization_box.row()
+        row = optimization_box.column()
         Proxies = rig.pose.bones["Settings"].get("Proxies", None) 
         row.prop(Proxies, "hide_viewport", text = "Proxies", invert_checkbox = True, icon = "LAYER_USED")
         Rendermesh = rig.pose.bones["Settings"].get("Render Mesh", None) 
         row.prop(Rendermesh, "hide_viewport", text = "Render Mesh", invert_checkbox = True, icon = "LAYER_USED")
+        settings = rig.pose.bones["Settings"]
+        row.prop(settings, '["ExpensiveGeoNodes"]', text = "Enable Geo Nodes", icon = "LAYER_USED")
+        
+
+
+
 
 def draw_all_settings(self, context):
     layout = self.layout
