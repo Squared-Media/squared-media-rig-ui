@@ -1,0 +1,73 @@
+{
+    "CTRL-Pelvis": {
+        "Smooth - Render Body": false,
+        "Smooth - Viewport Body": false,
+        "HipBone": true
+    },
+    "CTRL-Torso": {
+        "InheritRotation": true
+    },
+    "CTRL-IK-UpperArm.L": {
+        "Smooth - Render Arm.L": false,
+        "Smooth - Viewport Arm.L": false
+    },
+    "CTRL-FK-UpperArm.L": {
+        "Smooth - Render Arm.L": true,
+        "Smooth - Viewport Arm.L": false
+    },
+    "CTRL-LowerArm.L": {
+        "Stretchy Arm L": 1.0,
+        "IK Arm L": 0.0
+    },
+    "CTRL-IK-UpperArm.R": {
+        "Smooth - Render Arm.R": false,
+        "Smooth - Viewport Arm.R": false
+    },
+    "MCH-IK-LowerArm.R": {
+        "Stretchy Arm R": 1.0,
+        "IK Arm R": 1.0
+    },
+    "CTRL-FK-UpperArm.R": {
+        "Smooth - Render Arm.L": true,
+        "Smooth - Viewport Arm.L": false
+    },
+    "CTRL-LowerArm.R": {
+        "Stretchy Arm R": 1.0,
+        "IK Arm R": 0.0
+    },
+    "CTRL-UpperLeg.R": {
+        "Smooth - Render Leg.R": false,
+        "Smooth - Viewport Leg.R": false
+    },
+    "CTRL-LowerLeg.R": {
+        "IK Leg R": 1.0,
+        "Fancy Feet R": true,
+        "Stretchy Leg R": 0.0
+    },
+    "CTRL-UpperLeg.L": {
+        "Smooth - Render Leg.L": false,
+        "Smooth - Viewport Leg.L": false
+    },
+    "CTRL-LowerLeg.L": {
+        "IK Leg L": 1.0,
+        "Fancy Feet L": true,
+        "Stretchy Leg L": 0.0
+    },
+    "CTRL-HandAttachment.L": {
+        "Parent to Arm": 1.0
+    },
+    "CTRL-Head": {
+        "EnableFace": true,
+        "Smooth - Render Head": false,
+        "Smooth - Viewport Head": false,
+        "InheritRotation": false
+    },
+    "Settings": {
+        "Retargeting": false,
+        "Show Mixamo Rig": false,
+        "Slim Arms": false,
+        "SubD Render": 3,
+        "SubD Viewport": 1,
+        "HipBone": true,
+        "Track Eyes": false,
+        "SQM_FaceCamVar": 

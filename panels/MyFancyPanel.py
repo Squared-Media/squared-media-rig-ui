@@ -14,3 +14,6 @@ class TestPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Test")
+        layout.operator("squaredmedia.saveconfig", icon="FILE_REFRESH")
+        layout.operator("squaredmedia.loadconfig", icon="FILE_REFRESH")
+

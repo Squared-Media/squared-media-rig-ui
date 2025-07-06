@@ -12,8 +12,9 @@ from .operators.EXPERIMENTAL_                         import EXPERIMENTAL_OT_Nul
 from .operators.OBJECT_OT_keyframe_all_properties     import OBJECT_OT_keyframe_all_properties
 from .operators.COLLECTION_OT_import_rig_collection   import COLLECTION_OT_import_rig_collection
 from .operators.SCENE_OT_toggle_face_camera           import SCENE_OT_toggle_face_camera
-
-#UI
+from .operators.FILE_OT_SaveConfigAsToml              import FILE_OT_SaveConfigAsTomlOperator
+from .operators.FILE_OT_LoadJsonConfig                import FILE_OT_LoadJsonConfig
+#UI!
 from .panels.VIEW3D_PT_ui_Main                        import VIEW3D_PT_ui_Main
 from .panels.VIEW3D_PT_VisibilitySettings             import VIEW3D_PT_visibility_settings
 from .panels.VIEW3D_CameraGizmo                       import VIEW3D_CameraGizmo
@@ -73,7 +74,11 @@ classes = [
         VIEW3D_PT_visibility_settings,
         VIEW3D_PT_ui_Main,
         VIEW3D_CameraGizmo,
-        #TestPanel
+
+        #File Classes
+        FILE_OT_SaveConfigAsTomlOperator,
+        FILE_OT_LoadJsonConfig,
+        TestPanel
     ]
 
 def load_rigs(scene):

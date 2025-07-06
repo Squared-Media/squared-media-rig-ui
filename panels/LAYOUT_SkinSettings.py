@@ -96,7 +96,7 @@ def draw_TextureBox(self,context,layout,rig,Mat_obj):
         main.prop(img, "filepath", text="")
         main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name   
         
-        TexutureBox.prop(rig.pose.bones["Settings"],'["Slim Arms"]', toggle = True)
+        TexutureBox.prop(rig.pose.bones["Skin_cfg"],'["Slim Arms"]', toggle = True)
 
 def draw_proportionBox(self,context,layout,rig):
      #Proportions
@@ -110,19 +110,19 @@ def draw_proportionBox(self,context,layout,rig):
         GenerablBox = ProportionsBox.box()
         GenerablBox.label(text="General")
         row = GenerablBox.row()
-        row.prop(rig.pose.bones["MCH-FaceSlider"],'["FaceHeight"]', toggle = True, text = "Face Height")
+        row.prop(rig.pose.bones["Skin_cfg"],'["FaceHeight"]', toggle = True, text = "Face Height")
 
 
         #Eyebrows
         Eyebrowbox = ProportionsBox.box()
         Eyebrowbox.label(text="Eybrows")
         row = Eyebrowbox.row()
-        row.prop(rig.pose.bones["Settings"],'["Eyebrow_R_enabled"]', text="Eyebrow R", toggle = True)
-        row.prop(rig.pose.bones["Settings"],'["Eyebrow_L_enabled"]', text="Eyebrow L", toggle = True)
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_enabled"]', text="Eyebrow R", toggle = True)
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_L_enabled"]', text="Eyebrow L", toggle = True)
         row = Eyebrowbox.row()
-        row.prop(rig.pose.bones["MCH-Eyebrows_scale_ref"],'["EyebrowHeight"]', text="Eyebrow Height Offset", toggle = True)
+        row.prop(rig.pose.bones["Skin_cfg"],'["EyebrowHeight"]', text="Eyebrow Height Offset", toggle = True)
         row = Eyebrowbox.row()
-        row.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_gap"]', toggle = True, text = "Eyebrow Gap")
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_gap"]', toggle = True, text = "Eyebrow Gap")
 
 
 
@@ -131,15 +131,15 @@ def draw_proportionBox(self,context,layout,rig):
         Eyebox = ProportionsBox.box()
         Eyebox.label(text="Eyes")
         row = Eyebox.row()
-        row.prop(rig.pose.bones["Settings"],'["Eye_R_enable"]', text="Eye R", toggle=True)
-        row.prop(rig.pose.bones["Settings"],'["Eye_L_enable"]', text="Eye L", toggle=True)
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_enable"]', text="Eye R", toggle=True)
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_enable"]', text="Eye L", toggle=True)
         row=Eyebox.row()
-        row.prop(rig.pose.bones["MCH-Eyes"],'["EyeHeight"]', text="Eye Height Offset", toggle=True)
+        row.prop(rig.pose.bones["Skin_cfg"],'["EyeHeight"]', text="Eye Height Offset", toggle=True)
         
         row = Eyebox.row()
-        row.prop(rig.pose.bones["MCH-Eyes"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
 
-        eye_gap = rig.pose.bones["MCH-Eyes"]['Eye_Gap']
+        eye_gap = rig.pose.bones["Skin_cfg"]['Eye_Gap']
         smooth_render = rig.pose.bones["CTRL-Head"]['Smooth - Render Head']
         smooth_viewport = rig.pose.bones["CTRL-Head"]['Smooth - Viewport Head']
 
@@ -152,14 +152,14 @@ def draw_proportionBox(self,context,layout,rig):
         #Mouth
         Mouthbox = ProportionsBox.box()
         Mouthbox.label(text="Mouth")
-        Mouthbox.prop(rig.pose.bones["Settings"],'["Mouth_enable"]', text = "Mouth", toggle = True)
+        Mouthbox.prop(rig.pose.bones["Skin_cfg"],'["Mouth_enable"]', text = "Mouth", toggle = True)
         
-        if rig.pose.bones["Settings"]["Mouth_enable"]:
-            Mouthbox.box().prop(rig.pose.bones["Settings"],'["Teeth_enable"]', text = "Teeth", toggle = True)
+        if rig.pose.bones["Skin_cfg"]["Mouth_enable"]:
+            Mouthbox.box().prop(rig.pose.bones["Skin_cfg"],'["Teeth_enable"]', text = "Teeth", toggle = True)
 
 
         row = Mouthbox.row()
-        row.prop(rig.pose.bones["MCH-Mouth"],'["MouthHeight"]', text="Mouth Height Offset")
+        row.prop(rig.pose.bones["Skin_cfg"],'["MouthHeight"]', text="Mouth Height Offset")
         
         AdvancedBox = ProportionsBox.box()
         AdvancedBox.prop(rig.pose.bones["WGT-UIProperties"],'["Advanced_Face_Config"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Advanced_Face_Config"] else "RIGHTARROW", emboss = False, text = "Advanced Face Settings")
@@ -170,26 +170,26 @@ def draw_proportionBox(self,context,layout,rig):
             row = AdvancedBox.row()
             split = row.split(factor=0.5)
             col = split.column(align = True)
-            col.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_R"]',index = 0, text = "Eyebrow R Thickness")
-            col.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_R"]',index = 1, text = "Eyebrow R Height")
-            col.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_R_width"]', text = "Eyebrow R Width")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_Thickness"]', text = "Eyebrow R Thickness")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_Height"]', text = "Eyebrow R Height")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_width"]', text = "Eyebrow R Width")
 
 
             col = split.column(align = True)
-            col.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_L"]',index = 0, text = "Eyebrow L Thickness")
-            col.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_L"]',index = 1, text = "Eyebrow L Height")
-            col.prop(rig.pose.bones["MCH-Eyebrows"],'["Eyebrow_L_width"]', text = "Eyebrow L Width")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_L_Thickness"]', text = "Eyebrow L Thickness")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_L_Height"]', text = "Eyebrow L Height")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_L_width"]', text = "Eyebrow L Width")
 
            
 
             row = AdvancedBox.row()
             col = row.column(align=True)
-            col.prop(rig.pose.bones["MCH-Eyes"],'["Eye_R_Height"]', toggle = True, text = "Eye R Height")
-            col.prop(rig.pose.bones["MCH-Eyes"],'["Eye_R_Width"]', toggle = True, text = "Eye R Width")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_Height"]', toggle = True, text = "Eye R Height")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_Width"]', toggle = True, text = "Eye R Width")
 
             col = row.column(align=True)
-            col.prop(rig.pose.bones["MCH-Eyes"],'["Eye_L_Height"]', toggle = True, text = "Eye L Height")
-            col.prop(rig.pose.bones["MCH-Eyes"],'["Eye_L_Width"]', toggle = True, text = "Eye L Width")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_Height"]', toggle = True, text = "Eye L Height")
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_Width"]', toggle = True, text = "Eye L Width")
             
 def draw_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings
@@ -205,7 +205,7 @@ def draw_EyeBox(self,context,layout,rig,Mat_obj):
         EyeRBox = Eye.box()
 
         #Right Eye 
-        if rig.pose.bones["Settings"]["Eye_R_enable"]:
+        if rig.pose.bones["Skin_cfg"]["Eye_R_enable"]:
             EyeR = Mat_obj.material_slots[1].material.node_tree.nodes["Eye.R"].inputs
             eye_settings(self, context, EyeR, EyeRBox, "Right")
         else:
@@ -213,7 +213,7 @@ def draw_EyeBox(self,context,layout,rig,Mat_obj):
 
 
         #Left Eye
-        if rig.pose.bones["Settings"]["Eye_L_enable"]:
+        if rig.pose.bones["Skin_cfg"]["Eye_L_enable"]:
             EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
             eye_settings(self, context, EyeL, EyeLBox, "Left")
         else:
@@ -229,12 +229,12 @@ def draw_EyeBox(self,context,layout,rig,Mat_obj):
 
         EyebrowL = Mat_obj.material_slots[3].material.node_tree.nodes["Eyebrow"].inputs
         EyebrowR = Mat_obj.material_slots[4].material.node_tree.nodes["Eyebrow"].inputs
-        if rig.pose.bones["Settings"]["Eyebrow_R_enabled"]:
+        if rig.pose.bones["Skin_cfg"]["Eyebrow_R_enabled"]:
             draw_eyebrowBox(self, context, EyebrowR, EyebrowRBox.box(), "Right")
         else:
             EyebrowRBox.label(text="disabled")
 
-        if rig.pose.bones["Settings"]["Eyebrow_L_enabled"]:
+        if rig.pose.bones["Skin_cfg"]["Eyebrow_L_enabled"]:
             draw_eyebrowBox(self, context, EyebrowL, EyebrowLBox.box(), "Left")
         else:
             EyebrowLBox.label(text="disabled")
@@ -246,7 +246,7 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
     if rig.pose.bones["WGT-UIProperties"]["EyeRigConf"]:
         Eye = ColorBox.row()
 
-        if rig.pose.bones["Settings"]["Eye_R_enable"] and rig.pose.bones["Settings"]["Eye_L_enable"]:
+        if rig.pose.bones["Skin_cfg"]["Eye_R_enable"] and rig.pose.bones["Skin_cfg"]["Eye_L_enable"]:
             Eye = Eye.split(factor=0.5)
         
         EyeRBox = Eye.box()
@@ -254,7 +254,7 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
 
 
         #Right Eye 
-        if rig.pose.bones["Settings"]["Eye_R_enable"]:
+        if rig.pose.bones["Skin_cfg"]["Eye_R_enable"]:
             EyeR = Mat_obj.material_slots[1].material.node_tree.nodes["Eye.R"].inputs
             eye_overridesR = Mat_obj.material_slots[0].material.node_tree.nodes["Overrides_R"].inputs
 
@@ -264,13 +264,18 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
 
 
         #Left Eye
-        if rig.pose.bones["Settings"]["Eye_L_enable"]:
+        if rig.pose.bones["Skin_cfg"]["Eye_L_enable"]:
             EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
             eye_overridesL = Mat_obj.material_slots[0].material.node_tree.nodes["Overrides_L"].inputs
 
             draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left", eye_overridesL)
         else:
             EyeLBox.label(text="disabled")
+
+def draw_export_import(self, context, layout):
+    Row = layout.row()
+    Row.operator("squaredmedia.loadconfig")
+    Row.operator("squaredmedia.saveconfig")
 
 #-----------------
 
@@ -283,3 +288,6 @@ def draw_skin_settings(self, context):
     draw_proportionBox(self,context,layout,rig)
     draw_EyeBox(self,context,layout,rig,Mat_obj)
     draw_advanced_EyeBox(self, context, layout, rig, Mat_obj)
+    draw_export_import(self,context, layout)
+
+

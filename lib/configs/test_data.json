@@ -1,0 +1,117 @@
+[
+    {
+        "Skin_cfg": {
+            "Slim Arms": false,
+            "EyeHeight": 0.0,
+            "Eye_Gap": 2.0,
+            "Eye_L_Width": 2.0,
+            "Eye_L_Height": 1.0,
+            "Eye_R_Width": 2.0,
+            "Eye_R_Height": 1.0,
+            "EyebrowHeight": 0.0,
+            "Eye_L_enable": true,
+            "Eye_R_enable": true,
+            "Eyebrow_L_enabled": true,
+            "Eyebrow_R_enabled": true,
+            "Eyebrow_gap": 2.0,
+            "FaceHeight": 4.0,
+            "MouthHeight": 0.0,
+            "Mouth_enable": true,
+            "Teeth_enable": false,
+            "Eyebrow_R_Height": 1.0,
+            "Eyebrow_L_Height": 1.0,
+            "Eyebrow_R_Thickness": 2.0,
+            "Eyebrow_L_Thickness": 1.0
+        }
+    },
+    {
+        "Eye.R": {
+            "Upper": [
+                0.07574462890625,
+                0.72216796875,
+                0.01326751708984375,
+                1.0
+            ],
+            "Pupil": [
+                0.01451873779296875,
+                0.0134735107421875,
+                0.01103973388671875,
+                1.0
+            ],
+            "Lower": [
+                0.016326904296875,
+                0.1646728515625,
+                0.0254669189453125,
+                1.0
+            ],
+            "Reflection": true,
+            "Glow": 0.0,
+            "Pupil_Width": 1.0,
+            "Pupil_Height": 1.0,
+            "Pupil_Scale": 0.699999988079071,
+            "Pupil_Rotation": 0.0,
+            "Iris_Mask": 0.5,
+            "Iris Use Custom Texture": false,
+            "Iris_Custom Texture": 0.0,
+            "Iris_Gradient": 0,
+            "Reflection_Color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Reflection_Offset": [
+                -0.15000000596046448,
+                -0.17999999225139618,
+                0.0
+            ],
+            "Reflection_Scale": 0.5199999809265137,
+            "Reflection_Rotation": 0.0
+        }
+    },
+    {
+        "Eye.L": {
+            "Upper": [
+                0.07574462890625,
+                0.72216796875,
+                0.01326751708984375,
+                1.0
+            ],
+            "Pupil": [
+                0.01451873779296875,
+                0.0134735107421875,
+                0.01103973388671875,
+                1.0
+            ],
+            "Lower": [
+                0.016326904296875,
+                0.1646728515625,
+                0.0254669189453125,
+                1.0
+            ],
+            "Reflection": true,
+            "Glow": 0.0,
+            "Pupil_Width": 1.0,
+            "Pupil_Height": 1.0,
+            "Pupil_Scale": 0.699999988079071,
+            "Pupil_Rotation": 0.0,
+            "Iris_Mask": 0.5,
+            "Iris Use Custom Texture": false,
+            "Iris_Custom Texture": 0.0,
+            "Iris_Gradient": 0,
+            "Reflection_Color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "Reflection_Offset": [
+                -0.15000000596046448,
+                -0.17999999225139618,
+                0.0
+            ],
+            "Reflection_Scale": 0.5199999809265137,
+            "Reflection_Rotation": 0.0
+        }
+    }
+]
