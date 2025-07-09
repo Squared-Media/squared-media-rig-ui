@@ -1,5 +1,6 @@
 import bpy
 from .. import properties
+from ..msc.utils import is_file_in_library
 
 class VIEW3D_PT_RigListPanel(bpy.types.Panel):
     bl_label = "Rig Spawner"
@@ -23,19 +24,22 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         if len(rig_props.rigs) > 0:
             box.operator("squaredmedia.confirm_open_blend_file", text= "", icon = "GREASEPENCIL").filepath = rig_props.rigs[rig_props.active_rig_index].id
 
-        # Rig default import name
-        layout.prop(preferences, "CollectionName", text="Name", expand=True, placeholder="(optional)")
+
 
         # Import and load buttons
         sublayout = layout.row(align=True)
         sublayout.scale_y = 2
-        
+        if is_file_in_library(context):
+            row = layout.row()
+            row.scale_y = 2
+            row.operator("squaredmedia.namecharacter", text="Name Your Character!", icon="SMALL_CAPS")
+
+
         if len(rig_props.rigs) > 0:
             sublayout = sublayout.split(factor=0.85, align=True)
             import_op = sublayout.operator("squaredmedia.import_rig", text="Import Rig", icon="IMPORT")
             import_op.collection_name = rig_props.rigs[rig_props.active_rig_index].name
             import_op.rig_path = rig_props.rigs[rig_props.active_rig_index].id
-            import_op.imported_name = preferences.CollectionName or rig_props.rigs[rig_props.active_rig_index].name
 
             sublayout.operator("squaredmedia.load_rigs", text="", icon="FILE_REFRESH")
 

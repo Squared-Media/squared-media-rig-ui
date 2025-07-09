@@ -13,7 +13,6 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
 
     collection_name:    bpy.props.StringProperty(name="Collection Name", default="SQM Character Rig")#type: ignore
     rig_path:           bpy.props.StringProperty(name="Rig Path", default=properties.Paths.default_lib_path)#type: ignore   
-    imported_name:      bpy.props.StringProperty(name="Imported Name")#type: ignore
 
     def invoke(self, context, event):
         preferences = context.preferences.addons[properties.AddonProperties.module_name].preferences
@@ -37,7 +36,6 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
             return {'CANCELLED'}
         
         
-        preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
 
         # using blenders default operator to link collection
         if bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.DefaultImportOption == 'LINK':
@@ -48,8 +46,6 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
             )
             bpy.ops.object.make_override_library()
             
-            imported_collection = bpy.data.collections.get(collection_name)
-            imported_collection.name = self.imported_name
 
         elif bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.DefaultImportOption == 'APPEND':
             bpy.ops.wm.append(
@@ -58,8 +54,6 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
                 filename=collection_name,
             )
 
-            imported_collection = bpy.data.collections.get(collection_name)
-            imported_collection.name = self.imported_name
 
 
         return {'FINISHED'}

@@ -11,9 +11,8 @@ def is_packed(img):
 
 def get_material_object(rig):
     """Retrieve the material object associated with the given rig."""
-    return next((child for child in rig.children if child.get('mat_id') == "SQM-MaterialObject"), None)
-
-
+    Mat_Obj = rig.data.bones["Data_Obj"]["Mat_Obj"]
+    return Mat_Obj
 
 def get_collections_from_blend(blend_path):
     """Returns a list of collections inside a .blend file."""
@@ -35,3 +34,29 @@ def find_collections_in_directory(dir,prefix):
                 collection_data[collection] = blend_path
 
     return collection_data
+
+def is_file_in_library(context):
+    current_path = bpy.data.filepath
+    preferences = get_preferences(context) 
+    library_path = preferences.usr_file_path
+
+    if not current_path or not library_path:
+        return False  # Either the file hasn't been saved or the preference isn't set
+
+    current_path = os.path.abspath(current_path)
+    library_path = os.path.abspath(library_path)
+
+
+    return os.path.commonpath([current_path, library_path]) == library_path
+
+def has_name(rig):
+    Name = rig.data.bones["Data_Obj"]["Name"]
+    if not Name:
+        return False
+    if Name == "SQM-Default":
+        return False
+    return True
+
+def get_preferences(context):
+    prefernces = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+    return prefernces

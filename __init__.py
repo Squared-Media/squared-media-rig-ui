@@ -14,7 +14,10 @@ from .operators.COLLECTION_OT_import_rig_collection   import COLLECTION_OT_impor
 from .operators.SCENE_OT_toggle_face_camera           import SCENE_OT_toggle_face_camera
 from .operators.FILE_OT_SaveConfigAsToml              import FILE_OT_SaveConfigAsTomlOperator
 from .operators.FILE_OT_LoadJsonConfig                import FILE_OT_LoadJsonConfig
-#UI!
+from .operators.Dummy_OT_DummyOperator                import DummyOperator
+from .operators.FILE_OT_NameCharacter                 import FILE_OT_NameCharacter
+
+#UI
 from .panels.VIEW3D_PT_ui_Main                        import VIEW3D_PT_ui_Main
 from .panels.VIEW3D_PT_VisibilitySettings             import VIEW3D_PT_visibility_settings
 from .panels.VIEW3D_CameraGizmo                       import VIEW3D_CameraGizmo
@@ -54,6 +57,7 @@ classes = [
         # Operator classes
         IMAGE_OT_pack,
         IMAGE_OT_reload,
+        DummyOperator,
         
         ConfirmOpenBlendFileOperator,
 
@@ -78,6 +82,7 @@ classes = [
         #File Classes
         FILE_OT_SaveConfigAsTomlOperator,
         FILE_OT_LoadJsonConfig,
+        FILE_OT_NameCharacter,
         TestPanel
     ]
 
