@@ -30,6 +30,7 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         sublayout = layout.row(align=True)
         sublayout.scale_y = 2
 
+        # Name Character Button
         row = layout.row()
         row.scale_y = 2
         row.operator("squaredmedia.namecharacter", text="Name Your Character!", icon="SMALL_CAPS")
