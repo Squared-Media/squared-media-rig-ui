@@ -29,10 +29,10 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         # Import and load buttons
         sublayout = layout.row(align=True)
         sublayout.scale_y = 2
-        if is_file_in_library(context):
-            row = layout.row()
-            row.scale_y = 2
-            row.operator("squaredmedia.namecharacter", text="Name Your Character!", icon="SMALL_CAPS")
+
+        row = layout.row()
+        row.scale_y = 2
+        row.operator("squaredmedia.namecharacter", text="Name Your Character!", icon="SMALL_CAPS")
 
 
         if len(rig_props.rigs) > 0:
