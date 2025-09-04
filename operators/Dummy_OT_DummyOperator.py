@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import has_name
+from ..msc.utils import get_skin_texture, get_rig
 
 
 class DummyOperator(bpy.types.Operator):
@@ -7,6 +7,7 @@ class DummyOperator(bpy.types.Operator):
     bl_label = "Dummy"
 
     def execute(self, context):
-        print(has_name(bpy.context.active_object))
+        rig = get_rig(context)
+        print(rig)
         return {"FINISHED"}
 

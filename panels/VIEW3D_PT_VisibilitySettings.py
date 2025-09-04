@@ -1,9 +1,11 @@
 import bpy
 from .. import properties
+from ..msc.utils import get_rig
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
 preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
+
 
 class VIEW3D_PT_visibility_settings(bpy.types.Panel):
     bl_label = "Visibility Settings"
@@ -17,7 +19,7 @@ class VIEW3D_PT_visibility_settings(bpy.types.Panel):
         obj = context.active_object
         return obj and obj.get("rig_id") == rigID
     def draw(self, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         
         layout = self.layout
         layers = rig.data.collections_all

@@ -1,5 +1,6 @@
 import bpy
 from .. import properties
+from ..msc.utils import get_rig
 
 blend_file = properties.Paths.blend_file
 lib_folder = properties.Paths.lib_folder
@@ -13,7 +14,7 @@ class SCENE_OT_toggle_face_camera(bpy.types.Operator):
 
 
     def execute(self, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         SQM_Camera = rig["Cam"]
 
         if SQM_Camera.hide_viewport: 

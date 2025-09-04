@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_library_prefix
+from ..msc.utils import get_library_prefix, get_rig
 
 class FILE_OT_NameCharacter(bpy.types.Operator):
     bl_idname = "squaredmedia.namecharacter"
@@ -10,7 +10,7 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
     new_name: bpy.props.StringProperty(name="New Name:")
 
     def switch_names(self, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         DataBone = rig.data.bones["Data_Obj"]
         DataBone["OldName"] = DataBone["Name"]
         DataBone["Name"] = self.new_name
@@ -28,7 +28,7 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
             d.name = self.rename(context,name = d.name)
 
     def rename(self, context, name):
-            rig = bpy.context.active_object
+            rig = get_rig(context)
             DataBone = rig.data.bones["Data_Obj"]
             Name = DataBone["Name"]
             OldName = DataBone["OldName"]
@@ -53,7 +53,7 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
     
 
     def execute(self, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         DataBone = rig.data.bones["Data_Obj"]
         Collection = DataBone["Collection"]
         prefix = get_library_prefix(context)

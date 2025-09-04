@@ -1,13 +1,13 @@
 import bpy
 from .. import properties
-
+from ..msc.utils import get_rig
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
 preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
 parentPanel = "OBJECT_PT_SquaredMediaHeader"
 
 def drawEyeSettings(self, context):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     
     layout = self.layout
     EyeBox = layout.box()
@@ -31,7 +31,7 @@ def drawEyeSettings(self, context):
             col.prop(rig.pose.bones["CTRL-EyeParent"], '["ParentToRoot"]', text = "Root" , toggle=True)
 
 def drawArmSettings(self, context):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     
     layout = self.layout
     ArmBox = layout.box()
@@ -61,7 +61,7 @@ def drawArmSettings(self, context):
         col.prop(rig.pose.bones["CTRL-HandAttachment.R"], '["Parent to Arm"]', text="Parent to Arm R")
 
 def drawBodySettings(self, context):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     layout = self.layout
     BodyBox = layout.box()
     BodyBox.prop(rig.pose.bones["WGT-UIProperties"],'["BodyConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["BodyConf"] else "RIGHTARROW", emboss = False, text = "Body Settings  ")
@@ -74,7 +74,7 @@ def drawBodySettings(self, context):
         col.prop(rig.pose.bones["CTRL-Pelvis"], '["HipBone"]', toggle=True, text="Hip Bone")
 
 def drawLegSettings(self, context):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     layout = self.layout
     LegBox = layout.box()
     LegBox.prop(rig.pose.bones["WGT-UIProperties"],'["LegConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["LegConf"] else "RIGHTARROW", emboss = False, text = "Leg Settings  ")
@@ -102,7 +102,7 @@ def drawLegSettings(self, context):
         #Detach
        
 def drawRoundnessSettings(self, context):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     
     # Roundness Settings
     layout = self.layout

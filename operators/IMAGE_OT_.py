@@ -12,7 +12,7 @@ class IMAGE_OT_pack(bpy.types.Operator):
     bl_label = ""
     bl_description = "packs or unpacks textures"
 
-    id_name: bpy.props.StringProperty()
+    id_name: bpy.props.StringProperty()  #type:ignore
 
     def execute(self, context):
         img = bpy.data.images[self.id_name]

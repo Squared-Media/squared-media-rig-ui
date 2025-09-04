@@ -2,7 +2,7 @@ import bpy
 import mathutils
 import sys
 import json
-from ..msc.utils import get_material_object
+from ..msc.utils import get_material_object, get_rig
 
 class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
     bl_idname = "squaredmedia.saveconfig"
@@ -120,7 +120,7 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
         return {'RUNNING_MODAL'}
     
     def execute(self, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         MatObj = get_material_object(rig)
         bone_dict  = self.get_bone_custom_properties(rig)
         Eye_R_Shader_dict = self.get_shader_properties(MatObj, 1, "Eye.R")

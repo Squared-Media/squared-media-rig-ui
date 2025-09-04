@@ -1,4 +1,5 @@
 import bpy
+from ..msc.utils import get_rig
 
 class VIEW3D_CameraGizmo(bpy.types.GizmoGroup):
     bl_idname = "CustomGizmos"
@@ -11,7 +12,7 @@ class VIEW3D_CameraGizmo(bpy.types.GizmoGroup):
 
     @classmethod
     def poll(cls, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         return rig and rig.get("rig_id") == "SquaredMediaDefaultRig"
     
     def draw_prepare(self, context):
@@ -51,7 +52,7 @@ class VIEW3D_CameraGizmo(bpy.types.GizmoGroup):
         mpr.icon = "LOCKVIEW_ON"  # Default icon
 
     #def draw(self, context):
-        #rig = bpy.context.active_object
+        #rig = get_rig(context)
         #SQM_Camera = rig["Cam"]
         #layout = self.layout
         #layout.scale_y = 2.0  

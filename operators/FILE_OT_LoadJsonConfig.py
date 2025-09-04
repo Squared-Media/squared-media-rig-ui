@@ -1,7 +1,7 @@
 import bpy
 import json
 import mathutils
-from ..msc.utils import get_material_object
+from ..msc.utils import get_material_object, get_rig
 
 class FILE_OT_LoadJsonConfig(bpy.types.Operator):
     bl_idname = "squaredmedia.loadconfig"
@@ -102,7 +102,7 @@ class FILE_OT_LoadJsonConfig(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
     def execute(self, context):
-        rig = bpy.context.active_object
+        rig = get_rig(context)
         MatObj = get_material_object(rig)
         with open(self.filepath, "r", encoding="utf-8") as f:
             data = json.load(f)

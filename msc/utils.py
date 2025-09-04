@@ -64,3 +64,17 @@ def get_preferences(context):
 def get_library_prefix(context):
     preferences = get_preferences(context= context)
     return preferences.lib_prefix
+
+def get_skin_texture(rig):
+    material = get_material_object(rig)[0]
+
+def get_rig(context):
+    active_object =  context.active_object
+    if active_object is None:
+        return None
+
+    rig_id = active_object.get("rig_id")
+    if rig_id is None:
+        return None
+    if rig_id == "SquaredMediaDefaultRig":
+        return active_object

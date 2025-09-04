@@ -3,6 +3,7 @@ import bpy
 
 class RigProperties:
     rigID = "SquaredMediaDefaultRig"
+    skin_node_name = "Skin Texture"
 
 
 class AddonProperties:

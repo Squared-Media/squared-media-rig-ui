@@ -1,5 +1,6 @@
 import bpy
 from .. import properties
+from ..msc.utils import get_rig
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
@@ -8,7 +9,7 @@ preferences = bpy.context.preferences.addons[properties.AddonProperties.module_n
 def draw_phenomes(self, context):
     layout = self.layout
     PhenomesBox = layout.box()
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     PhenomesBox.prop(rig.pose.bones["WGT-UIProperties"],'["Phonemes"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Phonemes"] else "RIGHTARROW", emboss = False, text = "Phonemes (Not Functional)")
     if rig.pose.bones["WGT-UIProperties"]["Phonemes"]:
 
@@ -43,7 +44,7 @@ def draw_snapper(self, context):
     #Snapper
     layout = self.layout
     SnapperBox = layout.box()
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     SnapperBox.prop(rig.pose.bones["WGT-UIProperties"],'["Snapping"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Snapping"] else "RIGHTARROW", emboss = False, text = "Snapping")
     if rig.pose.bones["WGT-UIProperties"]["Snapping"]:
 
@@ -79,7 +80,7 @@ def draw_snapper(self, context):
 def draw_retargeting(self,context):
     #Retargeting
     layout = self.layout
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     retargeting_box = layout.box()
     retargeting_box.prop(rig.pose.bones["WGT-UIProperties"],'["Retargeting"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Retargeting"] else "RIGHTARROW", emboss = False, text = "Retargeting")
     if rig.pose.bones["WGT-UIProperties"]["Retargeting"]:
@@ -96,7 +97,7 @@ def draw_retargeting(self,context):
 
 def draw_optimizations(self, context):
     #Optimizations
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     layout = self.layout
     optimization_box = layout.box()
     optimization_box.prop(rig.pose.bones["WGT-UIProperties"],'["Optimization"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Optimization"] else "RIGHTARROW", emboss = False, text = "Optimization")
@@ -130,7 +131,7 @@ def draw_optimizations(self, context):
 def draw_all_settings(self, context):
     layout = self.layout
     HelperBox = layout.box()
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     HelperBox.prop(rig.pose.bones["WGT-UIProperties"],'["HelperConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["HelperConf"] else "RIGHTARROW", emboss = False, text = "Helpers")
     if rig.pose.bones["WGT-UIProperties"]["HelperConf"]:
 

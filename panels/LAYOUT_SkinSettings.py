@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_material_object, is_packed
+from ..msc.utils import get_material_object, is_packed, get_rig
 from .. import properties
 
 rigID = properties.RigProperties.rigID
@@ -7,7 +7,7 @@ category = properties.UIProperties.category
 
 
 def eye_settings(self, context, Eye, ParentBox, name):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
 
     ParentBox.label(text=name, icon = "HIDE_OFF")
     row = ParentBox.column(align=True)
@@ -284,7 +284,7 @@ def draw_export_import(self, context, layout):
 #-----------------
 
 def draw_skin_settings(self, context):
-    rig = bpy.context.active_object
+    rig = get_rig(context)
     Mat_obj = get_material_object(rig)
     layout = self.layout
 
