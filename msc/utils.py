@@ -1,6 +1,20 @@
 import bpy
 import os
 from .. import properties
+from enum import Enum
+
+class Material(Enum):
+    SKIN = 0
+    EYE_R = 1
+    EYE_L = 2
+    EYEBROW_R = 3
+    EYEBROW_L = 4
+    EYE_BACKGROUND = 5
+    MOUTH_INTERIOR = 6
+    DEBUG_MATERIAL = 7
+
+
+
 
 def is_packed(img):
     """Check if an image is packed in the .blend file."""
@@ -64,6 +78,13 @@ def get_preferences(context):
 def get_library_prefix(context):
     preferences = get_preferences(context= context)
     return preferences.lib_prefix
+
+def get_material(context, material: Material):
+    rig = get_rig(context)
+    if rig is None:
+        return None
+    mat_obj = get_material_object(rig)
+    return mat_obj.material_slots[material.value].material
 
 def get_skin_texture(rig):
     material = get_material_object(rig)[0]
