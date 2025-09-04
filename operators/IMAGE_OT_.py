@@ -1,5 +1,4 @@
 import bpy
-import os
 from ..msc.utils import is_packed
 from .. import properties
 

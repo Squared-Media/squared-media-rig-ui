@@ -120,7 +120,6 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
         return {'RUNNING_MODAL'}
     
     def execute(self, context):
-        print("test")
         rig = bpy.context.active_object
         MatObj = get_material_object(rig)
         bone_dict  = self.get_bone_custom_properties(rig)
