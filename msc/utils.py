@@ -60,3 +60,7 @@ def has_name(rig):
 def get_preferences(context):
     prefernces = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
     return prefernces
+
+def get_library_prefix(context):
+    preferences = get_preferences(context= context)
+    return preferences.lib_prefix

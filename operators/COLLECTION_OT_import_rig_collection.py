@@ -14,19 +14,7 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
     collection_name:    bpy.props.StringProperty(name="Collection Name", default="SQM Character Rig")#type: ignore
     rig_path:           bpy.props.StringProperty(name="Rig Path", default=properties.Paths.default_lib_path)#type: ignore   
 
-    def invoke(self, context, event):
-        preferences = context.preferences.addons[properties.AddonProperties.module_name].preferences
-        if event.alt:
-            self.report({'INFO'}, "ALT key is pressed - Inverting Default Import Option.")
-            # Invert the DefaultImportOption
-            if preferences.DefaultImportOption == 'LINK':
-                self.inverted_option = 'APPEND'
-            else:
-                self.inverted_option = 'LINK'
-        else:
-            self.inverted_option = preferences.DefaultImportOption
 
-        return self.execute(context)
 
     def execute(self, context):
         rig_blend_path = self.rig_path
@@ -45,16 +33,11 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
                 filename=collection_name,
             )
             bpy.ops.object.make_override_library()
-            
-
         elif bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences.DefaultImportOption == 'APPEND':
             bpy.ops.wm.append(
                 filepath=rig_blend_path, 
                 directory=rig_blend_path + "/Collection/",  
                 filename=collection_name,
             )
-
-
-
         return {'FINISHED'}
   

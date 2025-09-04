@@ -1,4 +1,5 @@
 import bpy
+from ..msc.utils import get_library_prefix
 
 class FILE_OT_NameCharacter(bpy.types.Operator):
     bl_idname = "squaredmedia.namecharacter"
@@ -17,7 +18,9 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
 
     def rename_collections(self, collection, context):
         for col in bpy.data.collections:
-                    col.name = self.rename(context, col.name)
+            print(f"found collection {col.name}")
+            col.name = self.rename(context, col.name)
+
 
     def rename_objects_in_collection(self, collection, context):
         data = collection.all_objects
@@ -34,7 +37,6 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
             if not name.startswith(prefix):
                 return name
 
-            first_half = name[:(len(prefix))]
             second_half = name[(len(prefix)):]
 
             new_name = f"{Name}{second_half}" 
@@ -54,10 +56,11 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         rig = bpy.context.active_object
         DataBone = rig.data.bones["Data_Obj"]
         Collection = DataBone["Collection"]
-
+        prefix = get_library_prefix(context)
+        Collection.name = prefix + self.new_name
         self.switch_names(context)
-        self.rename_objects_in_collection(context = context, collection=Collection)
-        self.rename_collections(context=context, collection=Collection)
+        self.rename_objects_in_collection(context = context, collection = Collection)
+        self.rename_collections(context=context, collection = Collection)
 
         return {"FINISHED"}
 
