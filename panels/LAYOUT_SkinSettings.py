@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_material_object, is_packed, get_rig
+from ..msc.utils import get_material_object, is_packed, get_rig, Material
 from .. import properties
 
 rigID = properties.RigProperties.rigID
@@ -36,8 +36,16 @@ def draw_advanced_Eyes(self, context, Eye, ParentBox, name, eye_overrides):
 
     override_box = col.box()
     override_box.label(text = "overrides")
-    override_box.prop(eye_overrides[0], "default_value", text = eye_overrides[0].name)
-    override_box.prop(eye_overrides[1], "default_value", text = eye_overrides[1].name)
+
+    if name == "Right":
+        eye = 3
+        rim = 4
+    else:
+        eye = 5
+        rim = 4
+
+    override_box.prop(eye_overrides[eye], "default_value", text = eye_overrides[eye].name)
+    override_box.prop(eye_overrides[rim], "default_value", text = eye_overrides[rim].name)
 
 
     Pupil = col.box()
@@ -86,11 +94,11 @@ def draw_TextureBox(self,context,layout,rig,Mat_obj):
     TexutureBox.prop(rig.pose.bones["WGT-UIProperties"],'["SkinConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["SkinConf"] else "RIGHTARROW", emboss = False, text = "Skin Selector  ")
     if rig.pose.bones["WGT-UIProperties"]["SkinConf"]:
 
-        img = Mat_obj.material_slots[0].material.node_tree.nodes["SkinTexture"].image
+        img = Mat_obj.material_slots[Material.SKIN.value].material.node_tree.nodes["SkinTexture"].image
 
         left = TexutureBox.row(align=True)
         if img is None:
-            left.template_ID(Mat_obj.material_slots[0].material.node_tree.nodes["SkinTexture"], "image", open="image.open")
+            left.template_ID(Mat_obj.material_slots[Material.SKIN.value].material.node_tree.nodes["SkinTexture"], "image", open="image.open")
             return
 
         #left.operator("squaredmedia.imgpack", icon="PACKAGE").id_name = img.name
@@ -231,8 +239,8 @@ def draw_EyeBox(self,context,layout,rig,Mat_obj):
         EyebrowLBox = Eyebrow.box()
         EyebrowRBox = Eyebrow.box()
 
-        EyebrowL = Mat_obj.material_slots[3].material.node_tree.nodes["Eyebrow"].inputs
-        EyebrowR = Mat_obj.material_slots[4].material.node_tree.nodes["Eyebrow"].inputs
+        EyebrowR = Mat_obj.material_slots[Material.EYEBROW_R.value].material.node_tree.nodes["Eyebrow.R"].inputs
+        EyebrowL = Mat_obj.material_slots[Material.EYEBROW_L.value].material.node_tree.nodes["Eyebrow.L"].inputs
         if rig.pose.bones["Skin_cfg"]["Eyebrow_R_enabled"]:
             draw_eyebrowBox(self, context, EyebrowR, EyebrowRBox.box(), "Right")
         else:
@@ -259,8 +267,8 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
 
         #Right Eye 
         if rig.pose.bones["Skin_cfg"]["Eye_R_enable"]:
-            EyeR = Mat_obj.material_slots[1].material.node_tree.nodes["Eye.R"].inputs
-            eye_overridesR = Mat_obj.material_slots[0].material.node_tree.nodes["Overrides_R"].inputs
+            EyeR = Mat_obj.material_slots[Material.EYE_R.value].material.node_tree.nodes["Eye.R"].inputs
+            eye_overridesR = Mat_obj.material_slots[Material.SKIN.value].material.node_tree.nodes["SkinShader"].inputs
 
             draw_advanced_Eyes(self, context, EyeR, EyeRBox, "Right", eye_overridesR)
         else:
@@ -270,7 +278,7 @@ def draw_advanced_EyeBox(self,context,layout,rig,Mat_obj):
         #Left Eye
         if rig.pose.bones["Skin_cfg"]["Eye_L_enable"]:
             EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
-            eye_overridesL = Mat_obj.material_slots[0].material.node_tree.nodes["Overrides_L"].inputs
+            eye_overridesL = Mat_obj.material_slots[0].material.node_tree.nodes["SkinShader"].inputs
 
             draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left", eye_overridesL)
         else:

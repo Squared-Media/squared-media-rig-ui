@@ -1,7 +1,7 @@
 import bpy
 import json
 import mathutils
-from ..msc.utils import get_material_object, get_rig
+from ..msc.utils import get_material_object, get_rig, get_material, Material
 
 class FILE_OT_LoadJsonConfig(bpy.types.Operator):
     bl_idname = "squaredmedia.loadconfig"
@@ -60,41 +60,39 @@ class FILE_OT_LoadJsonConfig(bpy.types.Operator):
             # For primitives (int, float, bool), just return as is
             return value
 
-    def load_shader_properties(self,obj, index, data_raw):
-        data = data_raw[index]
-        for node_name, props in data.items():
-            node = obj.material_slots[index].material.node_tree.nodes.get(node_name)
+    def load_shader_properties(self, rig, material: Material, data: dict):
+        """
+        Restores shader node input values from a JSON block like:
+        { "NodeName": { "SocketName": value, ... } }
+        """
+        mat = get_material(rig, material)
+        print(mat)
+        if not mat or not mat.use_nodes:
+            print(f"[ERROR] Material {material.name} not found or has no node tree!")
+            return
+
+        # Each entry in `data` is {node_name: {socket_name: value}}
+        for node_name, socket_props in data.items():
+            node = mat.node_tree.nodes.get(node_name)
             if not node:
-                print(f"Node '{node_name}' not found!")
+                print(f"[ERROR] Node '{node_name}' not found in material '{mat.name}'")
                 continue
 
-            for input_name, value in props.items():
-                input_socket = node.inputs.get(input_name)
-                if not input_socket:
-                    print(f"Input '{input_name}' not found in node '{node_name}'")
+            for socket_name, value in socket_props.items():
+                socket = node.inputs.get(socket_name)
+                if not socket:
+                    print(f"[WARNING] Socket '{socket_name}' not found in node '{node_name}'")
                     continue
-
-                if input_socket.is_linked:
-                    print(f"Input '{input_name}' in node '{node_name}' is linked — skipping")
-                    continue
-
-                # Detect expected type
-                if input_socket.type == 'VALUE':
-                    expected_type = None
-                elif input_socket.type == 'VECTOR':
-                    expected_type = 'VECTOR'
-                elif input_socket.type == 'RGBA':
-                    expected_type = 'COLOR'
-                else:
-                    expected_type = None
-
-                # Convert if needed
-                converted_value = self.convert_to_blender_value(value, expected_type)
 
                 try:
-                    input_socket.default_value = converted_value
+                    socket.default_value = value
+                except TypeError:
+                    try:
+                        socket.default_value = tuple(value)
+                    except Exception as e:
+                        print(f"[WARNING] Failed to set '{socket_name}' on '{node_name}': {e}")
                 except Exception as e:
-                    print(f"Failed to set '{input_name}' on node '{node_name}': {e}")
+                    print(f"[WARNING] Unexpected error on '{socket_name}' in '{node_name}': {e}")
 
     def invoke(self, context, event):
         # Trigger the file dialog
@@ -103,12 +101,15 @@ class FILE_OT_LoadJsonConfig(bpy.types.Operator):
 
     def execute(self, context):
         rig = get_rig(context)
-        MatObj = get_material_object(rig)
         with open(self.filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
             self.load_skin_cfg(rig, data)
-            self.load_shader_properties(MatObj, 1, data)
-            self.load_shader_properties(MatObj, 2, data)
+
+        self.load_shader_properties(rig, Material.SKIN, data[1])
+        self.load_shader_properties(rig, Material.EYE_R, data[2])
+        self.load_shader_properties(rig, Material.EYE_L, data[3])
+        self.load_shader_properties(rig, Material.EYEBROW_L, data[4])
+        self.load_shader_properties(rig, Material.EYEBROW_R, data[5])
 
 
         return {"FINISHED"}

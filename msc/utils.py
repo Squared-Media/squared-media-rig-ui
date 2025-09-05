@@ -79,16 +79,24 @@ def get_library_prefix(context):
     preferences = get_preferences(context= context)
     return preferences.lib_prefix
 
-def get_material(context, material: Material):
-    rig = get_rig(context)
+def get_material(rig, material: Material):
     if rig is None:
         return None
     mat_obj = get_material_object(rig)
     return mat_obj.material_slots[material.value].material
 
 def get_skin_texture(rig):
-    material = get_material_object(rig)[0]
+    mat = get_material(rig, Material.SKIN)
 
+    #setting image_node to null
+    image_node = ""
+    if mat and mat.use_nodes:
+        nodes = mat.node_tree.nodes
+        image_node = nodes[properties.RigProperties.skin_node_name]
+    
+    if image_node and image_node.image:
+        return image_node.image
+       
 def get_rig(context):
     active_object =  context.active_object
     if active_object is None:

@@ -2,7 +2,7 @@ import bpy
 import mathutils
 import sys
 import json
-from ..msc.utils import get_material_object, get_rig
+from ..msc.utils import get_material_object, get_rig, get_material, Material
 
 class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
     bl_idname = "squaredmedia.saveconfig"
@@ -89,30 +89,41 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
         # Last resort fallback to string (avoid for your case)
         return str(value)
 
-    def get_shader_properties(self, obj, index, name):
-        input_data = {}
-        node = obj.material_slots[index].material.node_tree.nodes.get(name)
+    def get_shader_properties(self, rig, material: Material, node_name: str):
+        """
+        Returns a dictionary of the default input values of a shader node,
+        keyed by socket name, for a specific material slot from a rig.
+        Skips linked inputs and missing nodes.
+        """
 
-        if not node:
-            self.report({'ERROR'}, f"Node '{name}' not found!")
+        # Get the material from the enum + rig
+        mat = get_material(rig, material)
+        if not mat or not mat.use_nodes:
+            self.report({'ERROR'}, f"Material '{material.name}' not found or has no node tree!")
             return None
 
+        # Get the node
+        node = mat.node_tree.nodes.get(node_name)
+        if not node:
+            self.report({'ERROR'}, f"Node '{node_name}' not found in material '{material.name}'!")
+            return None
+
+        input_data = {}
         for input_socket in node.inputs:
             if input_socket.is_linked:
                 self.report({'WARNING'}, f"Input '{input_socket.name}' is linked — skipping.")
                 continue
             try:
-                data = self.safe_convert(input_socket.default_value)
-                input_data[input_socket.name] = data
+                input_data[input_socket.name] = self.safe_convert(input_socket.default_value)
             except AttributeError:
                 self.report({'WARNING'}, f"Input '{input_socket.name}' has no default value — skipping.")
                 continue
 
-        # This wraps the inner dict under the node name
-        result = {name: input_data}
-
+        # Wrap under the node name
+        result = {node_name: input_data}
         print(result)
         return result
+
 
     def invoke(self, context, event):
         # Trigger the file dialog
@@ -121,14 +132,29 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
     
     def execute(self, context):
         rig = get_rig(context)
-        MatObj = get_material_object(rig)
         bone_dict  = self.get_bone_custom_properties(rig)
-        Eye_R_Shader_dict = self.get_shader_properties(MatObj, 1, "Eye.R")
-        Eye_L_Shader_dict = self.get_shader_properties(MatObj, 2, "Eye.L")
+
+        Skin_Shader_dict = self.get_shader_properties(rig, Material.SKIN, "SkinShader")
+
+        Eye_R_Shader_dict = self.get_shader_properties(rig, Material.EYE_R, "Eye.R")
+        Eye_L_Shader_dict = self.get_shader_properties(rig, Material.EYE_L, "Eye.L")
+
+        Eyebrow_L_Shader_dict = self.get_shader_properties(rig, Material.EYEBROW_L, "Eyebrow.L")
+        Eyebrow_R_Shader_dict = self.get_shader_properties(rig, Material.EYEBROW_R, "Eyebrow.R")
+
 
         
         
-        combined = [bone_dict, Eye_R_Shader_dict, Eye_L_Shader_dict]
+        combined = [
+            bone_dict, 
+            Skin_Shader_dict,
+
+            Eye_R_Shader_dict, 
+            Eye_L_Shader_dict,
+
+            Eyebrow_L_Shader_dict,
+            Eyebrow_R_Shader_dict,
+            ]
         
         self.save_dict_to_json(combined, self.filepath)
 

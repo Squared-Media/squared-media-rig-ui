@@ -3,8 +3,8 @@ import tomllib
 import os
 
 #Operators
-from .operators.FILE_OT_LoadJsonConfig                import FILE_OT_LoadJsonConfig
-from .operators.FILE_OT_SaveConfigAsToml              import FILE_OT_SaveConfigAsTomlOperator
+from .operators.FILE_OT_load_config                import FILE_OT_LoadJsonConfig
+from .operators.FILE_OT_save_config              import FILE_OT_SaveConfigAsTomlOperator
 from .operators.FILE_OT_NameCharacter                 import FILE_OT_NameCharacter
 from .operators.COLLECTION_OT_import_rig_collection   import COLLECTION_OT_import_rig_collection
 from .operators.SCENE_OT_Open_Preset                  import SCENE_OT_Open_Preset, ConfirmOpenBlendFileOperator
