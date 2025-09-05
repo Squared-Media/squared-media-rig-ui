@@ -1,5 +1,10 @@
 import bpy
 import os
+import zipfile
+import json
+import os
+
+
 from .. import properties
 from enum import Enum
 
@@ -107,3 +112,65 @@ def get_rig(context):
         return None
     if rig_id == "SquaredMediaDefaultRig":
         return active_object
+
+def save_files_to_zip(file_dict, zip_path):
+    """
+    Saves multiple files into a zip archive.
+    
+    Parameters:
+        file_dict (dict): {filename_in_zip: data}  
+                          - If `data` is a dict/list, it will be serialized to JSON.
+                          - If `data` is bytes, it will be written directly.
+                          - If `data` is a str path to a file, the file will be read and written.
+        zip_path (str): Path to the output zip file.
+    """
+    if not zip_path.lower().endswith(".sqm"):
+        zip_path += ".sqm"
+
+    try:
+        with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zipf:
+            for filename, data in file_dict.items():
+                if isinstance(data, (dict, list)):
+                    zipf.writestr(filename, json.dumps(data, indent=4))
+                elif isinstance(data, bytes):
+                    zipf.writestr(filename, data)
+                elif isinstance(data, str) and os.path.isfile(data):
+                    zipf.write(data, arcname=filename)
+                else:
+                    raise TypeError(f"Unsupported data type for {filename}: {type(data)}")
+        print(f"[INFO] Saved files to archive: {zip_path}")
+    except Exception as e:
+        print(f"[ERROR] Failed to save archive: {e}")
+
+def load_files_from_zip(zip_path):
+    """
+    Loads files from a zip archive into memory.
+
+    Parameters:
+        zip_path (str): Path to the zip file.
+
+    Returns:
+        dict: {filename_in_zip: data}  
+              - JSON files are deserialized into dict/list.  
+              - Other files are returned as bytes.
+    """
+    result = {}
+
+    try:
+        with zipfile.ZipFile(zip_path, "r") as zipf:
+            for name in zipf.namelist():
+                with zipf.open(name) as f:
+                    content = f.read()
+                    if name.lower().endswith(".json"):
+                        try:
+                            result[name] = json.loads(content.decode("utf-8"))
+                        except Exception as e:
+                            print(f"[WARNING] Failed to decode JSON {name}: {e}")
+                            result[name] = content
+                    else:
+                        result[name] = content  # raw bytes for textures, etc.
+        return result
+
+    except Exception as e:
+        print(f"[ERROR] Failed to read zip archive {zip_path}: {e}")
+        return None

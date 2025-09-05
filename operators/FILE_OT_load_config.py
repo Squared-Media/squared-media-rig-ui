@@ -1,7 +1,7 @@
 import bpy
 import json
 import mathutils
-from ..msc.utils import get_material_object, get_rig, get_material, Material
+from ..msc.utils import get_material_object, get_rig, get_material, load_files_from_zip, Material
 
 class FILE_OT_LoadJsonConfig(bpy.types.Operator):
     bl_idname = "squaredmedia.loadconfig"
@@ -101,15 +101,18 @@ class FILE_OT_LoadJsonConfig(bpy.types.Operator):
 
     def execute(self, context):
         rig = get_rig(context)
-        with open(self.filepath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            self.load_skin_cfg(rig, data)
 
-        self.load_shader_properties(rig, Material.SKIN, data[1])
-        self.load_shader_properties(rig, Material.EYE_R, data[2])
-        self.load_shader_properties(rig, Material.EYE_L, data[3])
-        self.load_shader_properties(rig, Material.EYEBROW_L, data[4])
-        self.load_shader_properties(rig, Material.EYEBROW_R, data[5])
+        files = load_files_from_zip(self.filepath)
+
+        config_data = files.get("config.json")
+
+        self.load_skin_cfg(rig, config_data)
+
+        self.load_shader_properties(rig, Material.SKIN, config_data[1])
+        self.load_shader_properties(rig, Material.EYE_R, config_data[2])
+        self.load_shader_properties(rig, Material.EYE_L, config_data[3])
+        self.load_shader_properties(rig, Material.EYEBROW_L, config_data[4])
+        self.load_shader_properties(rig, Material.EYEBROW_R, config_data[5])
 
 
         return {"FINISHED"}

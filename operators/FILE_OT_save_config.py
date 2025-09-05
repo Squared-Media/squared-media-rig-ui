@@ -1,14 +1,16 @@
 import bpy
+import zipfile
+import os
 import mathutils
 import sys
 import json
-from ..msc.utils import get_material_object, get_rig, get_material, Material
+from ..msc.utils import get_material_object, get_rig, get_material, save_files_to_zip, Material
 
 class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
     bl_idname = "squaredmedia.saveconfig"
     bl_label = "Save Config to File"
 
-    filepath: bpy.props.StringProperty(subtype = "FILE_PATH")
+    filepath: bpy.props.StringProperty(subtype = "FILE_PATH") #type: ignore
 
     def get_bone_custom_properties(self,obj):
         """
@@ -40,21 +42,6 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
             result[bone.name] = bone_props
 
         return result
-
-    def save_dict_to_json(self, data, filepath):
-        """
-        Saves the given dictionary of bone custom properties to a JSON file.
-
-        Parameters:
-            data (dict): Dictionary in the format returned by get_bone_custom_properties()
-            filepath (str): Full path to the output .json file
-        """
-        try:
-            with open(filepath, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
-            print(f"Saved bone properties to: {filepath}")
-        except Exception as e:
-            print(f"Failed to save bone properties: {e}")
 
     def safe_convert(self, value):
 
@@ -156,7 +143,11 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
             Eyebrow_R_Shader_dict,
             ]
         
-        self.save_dict_to_json(combined, self.filepath)
+
+        save_files_to_zip({
+            "config.json": combined,
+            "skin.png": bpy.data.images['NoSkin.png'].filepath
+        }, self.filepath)
 
         #print(dictionary)
         return {"FINISHED"}
