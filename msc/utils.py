@@ -142,6 +142,24 @@ def save_files_to_zip(file_dict, zip_path):
     except Exception as e:
         print(f"[ERROR] Failed to save archive: {e}")
 
+
+def write_json(dictionary, path):
+    """
+    Writes a dictionary to a JSON file.
+
+    Parameters:
+        dictionary (dict): The data to save.
+        path (str): File path to save the JSON to.
+    """
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(dictionary, f, indent=4)
+        print(f"[INFO] JSON saved to {path}")
+    except Exception as e:
+        print(f"[ERROR] Failed to write JSON to {path}: {e}")
+
+
+
 def load_files_from_zip(zip_path):
     """
     Loads files from a zip archive into memory.

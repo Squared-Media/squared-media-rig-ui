@@ -21,6 +21,7 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         box.template_list("RigListUI", "", rig_props, "rigs", rig_props, "active_rig_index")
         box = box.column(align=True)
         box.prop(preferences, "ShowPrefixes", text="", expand=True, placeholder="(optional)", toggle = True, icon ="HIDE_OFF" )
+        box.operator("squaredmedia.open_rig_library", text = "", icon = "FILE_FOLDER")
         if len(rig_props.rigs) > 0:
             box.operator("squaredmedia.confirm_open_blend_file", text= "", icon = "GREASEPENCIL").filepath = rig_props.rigs[rig_props.active_rig_index].id
 

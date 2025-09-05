@@ -101,7 +101,7 @@ def draw_TextureBox(self,context,layout,rig,Mat_obj):
             left.template_ID(Mat_obj.material_slots[Material.SKIN.value].material.node_tree.nodes["SkinTexture"], "image", open="image.open")
             return
 
-        #left.operator("squaredmedia.imgpack", icon="PACKAGE").id_name = img.name
+        left.operator("squaredmedia.imgpack", icon="PACKAGE").id_name = img.name
 
         main = left.row(align=True)
         main.enabled = not is_packed(img)

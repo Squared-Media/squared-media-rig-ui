@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_library_prefix, get_rig
+from ..msc.utils import get_library_prefix, get_rig, write_json
 
 class FILE_OT_NameCharacter(bpy.types.Operator):
     bl_idname = "squaredmedia.namecharacter"
@@ -43,21 +43,17 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
             print(new_name)
             return new_name
 
-
     def invoke(self, context, event):
         # Trigger the file dialog
         context.window_manager.invoke_props_dialog(self)
         return {'RUNNING_MODAL'}
-
-
-    
 
     def execute(self, context):
         rig = get_rig(context)
         DataBone = rig.data.bones["Data_Obj"]
         Collection = DataBone["Collection"]
         prefix = get_library_prefix(context)
-        Collection.name = prefix + self.new_name
+        #Collection.name = prefix + self.new_name
         self.switch_names(context)
         self.rename_objects_in_collection(context = context, collection = Collection)
         self.rename_collections(context=context, collection = Collection)
