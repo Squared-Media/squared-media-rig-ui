@@ -1,0 +1,128 @@
+name: Manual Release V2
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_minor:
+        description: "Bump minor version"
+        required: false
+        default: "false"
+      bump_major:
+        description: "Bump major version"
+        required: false
+        default: "false"
+      release_type:
+        description: "either full or pre"
+        required: false
+        default: "full"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest release tag and calculate new version
+        id: get_tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Fetch all releases
+          release_tags=$(gh api repos/${{ github.repository }}/releases --jq '.[].tag_name' 2>/dev/null)
+
+          if [[ -z "$release_tags" ]]; then
+            latest_tag="v0.0.0"
+          else
+            # Find latest stable release (ignore pre-releases)
+            stable_releases=$(echo "$release_tags" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
+            if [[ -z "$stable_releases" ]]; then
+              latest_tag="v0.0.0"
+            else
+              latest_tag=$(echo "$stable_releases" | head -n1)
+            fi
+          fi
+
+          echo "Latest stable tag: $latest_tag"
+          latest_tag_clean="${latest_tag#v}"
+          IFS='.' read -r major minor patch <<< "$latest_tag_clean"
+
+          # Apply major/minor bumps
+          if [[ "${{ github.event.inputs.bump_major }}" == "true" ]]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif [[ "${{ github.event.inputs.bump_minor }}" == "true" ]]; then
+            minor=$((minor + 1))
+            patch=0
+          fi
+
+          # Default: increment patch
+          patch=$((patch + 1))
+          base_version="$major.$minor.$patch"
+
+          release_type="${{ github.event.inputs.release_type }}"
+
+          if [[ "$release_type" == "pre" ]]; then
+            # Count existing pre-releases with this base version
+            existing_betas=$(echo "$release_tags" | grep -E "^v${base_version}-beta[0-9]+$" | sort -V -r)
+            if [[ -z "$existing_betas" ]]; then
+              beta_number=1
+            else
+              last_beta=$(echo "$existing_betas" | head -n1)
+              beta_suffix="${last_beta#v${base_version}-beta}"
+              beta_number=$((beta_suffix + 1))
+            fi
+            new_tag="${base_version}-beta${beta_number}"
+          else
+            # Full release
+            new_tag="$base_version"
+          fi
+
+          echo "Calculated new tag: $new_tag"
+          echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
+          echo "new_tag_with_v=v$new_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Update version in blender_manifest.toml
+        run: |
+          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' blender_manifest.toml
+
+      - name: Create builds directory
+        run: mkdir -p builds
+
+      - name: Create zip archive
+        run: |
+          repo_name=$(basename `git rev-parse --show-toplevel`)
+          zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
+          zip -r "builds/$zip_name" . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "builds/*" \
+            -x "/__pycache__/*" \
+            -x "**/__pycache__/*"
+
+      - name: Commit updated blender_manifest.toml
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add blender_manifest.toml
+          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
+          git push
+
+      - name: Create new GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          release_flag=""
+          if [[ "${{ github.event.inputs.release_type }}" == "pre" ]]; then
+            release_flag="--prerelease"
+          fi
+
+          gh release create "${{ steps.get_tag.outputs.new_tag }}" \
+            --title "$(basename `git rev-parse --show-toplevel`) ${{ steps.get_tag.outputs.new_tag }}" \
+            --notes "Automated release" \
+            $release_flag \
+            "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
