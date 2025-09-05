@@ -38,7 +38,7 @@ jobs:
             latest_tag="v0.0.0"
           else
             # Find latest stable release (ignore pre-releases)
-            stable_releases=$(echo "$release_tags" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
+            stable_releases=$(echo "$release_tags" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
             if [[ -z "$stable_releases" ]]; then
               latest_tag="v0.0.0"
             else
@@ -68,12 +68,12 @@ jobs:
 
           if [[ "$release_type" == "pre" ]]; then
             # Count existing pre-releases with this base version
-            existing_betas=$(echo "$release_tags" | grep -E "^v${base_version}-beta[0-9]+$" | sort -V -r)
+            existing_betas=$(echo "$release_tags" | grep -E "^${base_version}-beta-[0-9]+$" | sort -V -r)
             if [[ -z "$existing_betas" ]]; then
               beta_number=1
             else
               last_beta=$(echo "$existing_betas" | head -n1)
-              beta_suffix="${last_beta#v${base_version}-beta}"
+              beta_suffix="${last_beta#${base_version}-beta-}"
               beta_number=$((beta_suffix + 1))
             fi
             new_tag="${base_version}-beta${beta_number}"
