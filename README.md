@@ -1,4 +1,4 @@
-This  # **Squared Media Rig UI**
+# **Squared Media Rig UI**
 
 **Squared Media Rig UI** is a Blender add-on designed to streamline rigging and animation workflows by providing an intuitive user interface for controlling rigs. Tailored for animators and riggers, this add-on simplifies the management of rig properties, such as bone controls, IK/FK switching, and custom attributes, making it ideal for projects requiring efficient animation pipelines, such as those by Squared Media.
 
@@ -8,7 +8,6 @@ This  # **Squared Media Rig UI**
 - **Bone Management**: Easily toggle bone visibility, manage bone collections, or adjust rig settings.
 - **Animation-Friendly**: Designed to enhance animation workflows with quick access to controls.
 - **Integration with Blender**: Compatible with Blender’s rigging systems, such as custom armatures or popular add-ons like Rigify.
-- *(Add specific features here, e.g., “Supports Squared Media’s Minecraft-style character rigs” or “Includes IK/FK snapping tools Teaching.”)*
 
 ## Installation
 
@@ -20,7 +19,6 @@ This  # **Squared Media Rig UI**
    - Enable the add-on by checking the box next to “Squared Media Rig UI.”
 3. **Dependencies**:
    - Ensure Blender 3.0 or later is installed.
-   - *(Add any additional dependencies, e.g., `rigutils` module or specific Python libraries, if required.)*
 
 ## Usage
 
@@ -39,16 +37,17 @@ This add-on is written in Python and designed for Blender’s API. To contribute
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Fxnarji/squared-media-rig-ui.git```
-
-2. Install dependencies (if any): ```bash pip install -r requirements.txt```  
-3. Test the add-on in Blender by copying the add-on folder to Blender’s add-ons directory:
+   git clone https://github.com/Fxnarji/squared-media-rig-ui.git
+2. Test the add-on in Blender by copying the add-on folder to Blender’s add-ons directory:
     * Windows: C:\Users\<username>\AppData\Roaming\Blender Foundation\Blender\<version>\scripts\addons
     * Linux: ~/.config/blender/<version>/scripts/addons
     * macOS: /Users/<username>/Library/Application Support/Blender/<version>/scripts/addons
-4. Check the Issues page for open tasks, including “good first issues” for new contributors.
-Contributing
+
+3. Check the Issues page for open tasks, including “good first issues” for new contributors.
+
+
+## Contributing
 We welcome contributions! To get started:
-* Check the Issues page for tasks, such as bug fixes or feature additions.
+* Check the [Issues](https://github.com/Fxnarji/squared-media-rig-ui/issues) page for tasks, such as bug fixes or feature additions.
 * Submit a pull request with your changes, ensuring code follows Blender’s Python API conventions.
 
