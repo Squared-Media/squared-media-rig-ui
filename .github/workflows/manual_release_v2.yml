@@ -171,19 +171,3 @@ jobs:
           git add blender_manifest.toml
           git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
           git push
-
-      - name: Create new GitHub release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          release_flag=""
-          if [[ "${{ github.event.inputs.release_type }}" == "beta" ]]; then
-            release_flag="--prerelease"
-          fi
-
-          repo_name=$(basename "$(git rev-parse --show-toplevel)")
-          gh release create "${{ steps.get_tag.outputs.new_tag }}" \
-            --title "$repo_name ${{ steps.get_tag.outputs.new_tag }}" \
-            --notes "Automated release" \
-            $release_flag \
-            "builds/${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"

@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_material_object, get_toml_version
+from ..msc.utils import get_material_object, get_toml_key, get_toml_version
 from .. import properties
 from .LAYOUT_SkinSettings   import draw_skin_settings
 from .LAYOUT_Settings       import draw_all_settings
@@ -34,11 +34,21 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
         else:
             row.label(text="Squared Media", icon="RENDER_ANIMATION")
 
-        version_tuple = get_toml_version()
+
+#displaying current version
+        version = get_toml_key("version")
+        release_channel = get_toml_key("release_channel")
+        beta_version = get_toml_key("beta_version")
+
+        if release_channel == "stable":
+            beta_version = ""
+
+        version_str = f"v{version}-{release_channel}{beta_version}"
 
         row = row.row()
-        row.enabled = False
-        row.label(text=(f"v{str(version_tuple[0])}.{str(version_tuple[1])}.{str(version_tuple[2])}"))
+        row.enabled = True
+        row.operator("squaredmedia.copy_debug_info", text = version_str, emboss = True, icon = "INFO")
+
 
         layout.separator()
         col = layout.row()

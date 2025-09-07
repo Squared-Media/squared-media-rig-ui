@@ -194,9 +194,14 @@ def load_files_from_zip(zip_path):
         return None
     
 def get_toml_version():
+    version_str = get_toml_key("version")
+    version_tuple = tuple(int(x) for x in version_str.split("."))
+    return version_tuple
+
+
+def get_toml_key(key):
     toml_path = os.path.join(os.path.dirname((os.path.dirname(__file__))), "blender_manifest.toml")
     with open(toml_path, "rb") as f:
         manifest = tomllib.load(f)
-    version_str = manifest.get("version", "0.0.0")
-    version_tuple = tuple(int(x) for x in version_str.split("."))
-    return version_tuple
+    value = manifest.get(key, "0.0.0")
+    return value

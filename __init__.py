@@ -16,6 +16,7 @@ from .operators.OBJECT_OT_keyframe_all_properties     import OBJECT_OT_keyframe_
 from .operators.Dummy_OT_DummyOperator                import DummyOperator
 from .operators.EXPERIMENTAL_                         import EXPERIMENTAL_OT_Null, EXPERIMENTAL_OT_set_pose
 from .operators.FILE_OT_open_rig_library              import FILE_OT_open_rig_library
+from .operators.DEBUG_OT_copy_debug_information       import DEBUG_OT_copy_debug_info
 
 #UI
 from .panels.VIEW3D_PT_ui_Main                        import VIEW3D_PT_ui_Main
@@ -53,6 +54,7 @@ classes = [
         IMAGE_OT_pack,
         IMAGE_OT_reload,
         DummyOperator,
+        DEBUG_OT_copy_debug_info,
 
         FILE_OT_open_rig_library,
         
