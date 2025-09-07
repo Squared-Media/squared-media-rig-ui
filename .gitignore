@@ -12,3 +12,6 @@ __pycache__/
 
 # Git metadata (never needed unless you’re zipping manually)
 .git/
+
+#working files
+lib/textures/ignore/

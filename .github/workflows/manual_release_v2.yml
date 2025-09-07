@@ -12,9 +12,9 @@ on:
         required: false
         default: "false"
       release_type:
-        description: "either full or pre"
+        description: "either stable or beta"
         required: false
-        default: "full"
+        default: "beta"
 
 jobs:
   release:
@@ -37,7 +37,8 @@ jobs:
           if [[ -z "$release_tags" ]]; then
             latest_tag="v0.0.0"
           else
-            # Find latest stable release (ignore pre-releases)
+
+            # Find latest stable release (ignore beta-releases)
             stable_releases=$(echo "$release_tags" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
             if [[ -z "$stable_releases" ]]; then
               latest_tag="v0.0.0"
@@ -46,7 +47,7 @@ jobs:
             fi
           fi
 
-          echo "Latest stable tag: $latest_tag"
+          
           latest_tag_clean="${latest_tag#v}"
           IFS='.' read -r major minor patch <<< "$latest_tag_clean"
 
@@ -66,29 +67,40 @@ jobs:
 
           release_type="${{ github.event.inputs.release_type }}"
 
-          if [[ "$release_type" == "pre" ]]; then
-            # Count existing pre-releases with this base version
+          if [[ "$release_type" == "beta" ]]; then
+            # Count existing beta-releases with this base version
             existing_betas=$(echo "$release_tags" | grep -E "^${base_version}-beta[0-9]+$" | sort -V -r)
             if [[ -z "$existing_betas" ]]; then
-              beta_number=1
+              beta_version=1
             else
               last_beta=$(echo "$existing_betas" | head -n1)
               beta_suffix="${last_beta#${base_version}-beta}"
-              beta_number=$((beta_suffix + 1))
+              beta_version=$((beta_suffix + 1))
             fi
-            new_tag="${base_version}-beta${beta_number}"
+            new_tag="${base_version}-beta${beta_version}"
           else
-            # Full release
+            # stable release
             new_tag="$base_version"
           fi
 
+          echo "latest beta: $beta_version"
+
+
+          
           echo "Calculated new tag: $new_tag"
           echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
           echo "new_tag_with_v=v$new_tag" >> "$GITHUB_OUTPUT"
+          echo "base_version=$base_version" >> "$GITHUB_OUTPUT"
+          echo "beta_version=$beta_version" >> "$GITHUB_OUTPUT"
+
 
       - name: Update version in blender_manifest.toml
         run: |
-          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' blender_manifest.toml
+          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.version }}"/' blender_manifest.toml
+          sed -i 's/^beta_version = ".*"/beta_version = "${{ steps.get_tag.outputs.beta_version }}"/' blender_manifest.toml
+          sed -i 's/^release_channel = ".*"/release_channel = "${{ github.event.inputs.release_type }}"/' blender_manifest.toml
+
+
 
       - name: Create builds directory
         run: mkdir -p builds
@@ -117,7 +129,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           release_flag=""
-          if [[ "${{ github.event.inputs.release_type }}" == "pre" ]]; then
+          if [[ "${{ github.event.inputs.release_type }}" == "beta" ]]; then
             release_flag="--prerelease"
           fi
 
@@ -126,3 +138,36 @@ jobs:
             --notes "Automated release" \
             $release_flag \
             "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
+
+
+      - name: Update version in blender_manifest.toml
+        run: |
+          sed -i "s/^version = \".*\"/version = \"${{ steps.get_tag.outputs.base_version }}\"/" blender_manifest.toml
+          sed -i "s/^beta_version = \".*\"/beta_version = \"${{ steps.get_tag.outputs.beta_version }}\"/" blender_manifest.toml
+          sed -i "s/^release_channel = \".*\"/release_channel = \"${{ github.event.inputs.release_type }}\"/" blender_manifest.toml
+
+          echo "version = ${{ steps.get_tag.outputs.base_version }}"
+          echo "beta_version = ${{ steps.get_tag.outputs.beta_version }}"
+          echo "release_channel = ${{ github.event.inputs.release_type }}"
+
+      - name: Create builds directory
+        run: mkdir -p builds
+
+      - name: Create zip archive
+        run: |
+          repo_name=$(basename "$(git rev-parse --show-toplevel)")
+          zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
+          zip -r "builds/$zip_name" . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "builds/*" \
+            -x "/__pycache__/*" \
+            -x "**/__pycache__/*"
+
+      - name: Commit updated blender_manifest.toml
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add blender_manifest.toml
+          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
+          git push
