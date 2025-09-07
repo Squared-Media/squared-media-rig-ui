@@ -142,9 +142,9 @@ jobs:
           sed -i "s/^beta_version = \".*\"/beta_version = \"${{ steps.get_tag.outputs.beta_version }}\"/" blender_manifest.toml
           sed -i "s/^release_channel = \".*\"/release_channel = \"${{ github.event.inputs.release_type }}\"/" blender_manifest.toml
 
-          echo 'version = ${{ steps.get_tag.outputs.base_version }}"
-          echo 'beta_version = ${{ steps.get_tag.outputs.beta_version }}'
-          echo 'release_channel = ${{ github.event.inputs.release_type }}'
+          echo "version = ${{ steps.get_tag.outputs.base_version }}"
+          echo "beta_version = ${{ steps.get_tag.outputs.beta_version }}"
+          echo "release_channel = ${{ github.event.inputs.release_type }}"
 
       - name: Create builds directory
         run: mkdir -p builds
