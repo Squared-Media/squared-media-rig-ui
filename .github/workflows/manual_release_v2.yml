@@ -96,7 +96,11 @@ jobs:
 
       - name: Update version in blender_manifest.toml
         run: |
-          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.new_tag }}"/' blender_manifest.toml
+          sed -i 's/^version = ".*"/version = "${{ steps.get_tag.outputs.version }}"/' blender_manifest.toml
+          sed -i 's/^beta_version = ".*"/beta_version = "${{ steps.get_tag.outputs.beta_version }}"/' blender_manifest.toml
+          sed -i 's/^release_channel = ".*"/release_channel = "${{ github.event.inputs.release_type }}"/' blender_manifest.toml
+
+
 
       - name: Create builds directory
         run: mkdir -p builds
