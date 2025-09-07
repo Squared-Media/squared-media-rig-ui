@@ -33,27 +33,15 @@ jobs:
         run: |
           release_tags=$(gh api repos/${{ github.repository }}/releases --jq '.[].tag_name' 2>/dev/null)
 
-
-          #checks if there are any tags at all
           if [[ -z "$release_tags" ]]; then
             latest_stable="v0.0.0"
             latest_beta=""
           else
-          
             stable_releases=$(echo "$release_tags" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
             beta_releases=$(echo "$release_tags" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-beta[0-9]+$' | sort -V -r)
 
-            if [[ -z "$stable_releases" ]]; then
-              latest_stable="v0.0.0"
-            else
-              latest_stable=$(echo "$stable_releases" | head -n1)
-            fi
-
-            if [[ -z "$beta_releases" ]]; then
-              latest_beta=""
-            else
-              latest_beta=$(echo "$beta_releases" | head -n1)
-            fi
+            latest_stable=$( [[ -z "$stable_releases" ]] && echo "v0.0.0" || echo "$stable_releases" | head -n1 )
+            latest_beta=$( [[ -z "$beta_releases" ]] && echo "" || echo "$beta_releases" | head -n1 )
           fi
 
           echo "Latest stable tag: $latest_stable"
@@ -68,11 +56,9 @@ jobs:
           latest_stable="${{ steps.get_latest_tag.outputs.latest_stable }}"
           release_tags=$(gh api repos/${{ github.repository }}/releases --jq '.[].tag_name' 2>/dev/null)
 
-          # Strip leading v
           latest_tag_clean="${latest_stable#v}"
           IFS='.' read -r major minor patch <<< "$latest_tag_clean"
 
-          # Handle version bumps
           if [[ "${{ github.event.inputs.bump_major }}" == "true" ]]; then
             major=$((major + 1))
             minor=0
@@ -111,17 +97,17 @@ jobs:
 
       - name: Update version in blender_manifest.toml
         run: |
-          sed -i 's/^version = ".*"/version = "${{ steps.calculate_release.outputs.base_version }}"/' blender_manifest.toml
-          sed -i 's/^beta_version = ".*"/version = "${{ steps.calculate_release.outputs.beta_version }}"/' blender_manifest.toml
-          sed -i 's/^release_channel = ".*"/version = "${{github.event.inputs.release_type}}"/' blender_manifest.toml
+          sed -i "s/^version = \".*\"/version = \"${{ steps.calculate_release.outputs.version }}\"/" blender_manifest.toml
+          sed -i "s/^beta_version = \".*\"/beta_version = \"${{ steps.calculate_release.outputs.beta_version }}\"/" blender_manifest.toml
+          sed -i "s/^release_channel = \".*\"/release_channel = \"${{ github.event.inputs.release_type }}\"/" blender_manifest.toml
 
       - name: Create builds directory
         run: mkdir -p builds
 
       - name: Create zip archive
         run: |
-          repo_name=$(basename `git rev-parse --show-toplevel`)
-          zip_name="${repo_name}_${{ steps.calculate_release.outputs.base_version }}.zip"
+          repo_name=$(basename "$(git rev-parse --show-toplevel)")
+          zip_name="${repo_name}_${{ steps.calculate_release.outputs.version }}.zip"
           zip -r "builds/$zip_name" . \
             -x ".git/*" \
             -x ".github/*" \
@@ -134,7 +120,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add blender_manifest.toml
-          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
+          git commit --allow-empty -m "Update version to ${{ steps.calculate_release.outputs.tag }}"
           git push
 
       - name: Create new GitHub release
@@ -146,8 +132,9 @@ jobs:
             release_flag="--prerelease"
           fi
 
-          gh release create "${{ steps.get_tag.outputs.new_tag }}" \
-            --title "$(basename `git rev-parse --show-toplevel`) ${{ steps.get_tag.outputs.new_tag }}" \
+          repo_name=$(basename "$(git rev-parse --show-toplevel)")
+          gh release create "${{ steps.calculate_release.outputs.tag }}" \
+            --title "$repo_name ${{ steps.calculate_release.outputs.tag }}" \
             --notes "Automated release" \
             $release_flag \
-            "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
+            "builds/${repo_name}_${{ steps.calculate_release.outputs.version }}.zip"
