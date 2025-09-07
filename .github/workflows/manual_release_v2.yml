@@ -95,7 +95,7 @@ jobs:
           {
             version_csv=$(echo "${{ steps.get_tag.outputs.base_version }}" | tr '.' ',')
             echo "version = [$version_csv]"
-            if [[ "${{ steps.get_tag.outputs.beta }}" == "true" ]]; then
+            if [[ "${{ steps.get_tag.outputs.release_type }}" == "pre" ]]; then
               echo "beta = true"
               echo "beta_version = ${{ steps.get_tag.outputs.beta_version }}"
             fi
