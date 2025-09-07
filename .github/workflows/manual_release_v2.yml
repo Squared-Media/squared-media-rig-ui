@@ -12,9 +12,9 @@ on:
         required: false
         default: "false"
       release_type:
-        description: "either full or pre"
+        description: "either stable or beta"
         required: false
-        default: "full"
+        default: "stable"
 
 jobs:
   release:
@@ -26,28 +26,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get latest release tag and calculate new version
-        id: get_tag
+      - name: Get latest tags
+        id: get_latest_tag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           release_tags=$(gh api repos/${{ github.repository }}/releases --jq '.[].tag_name' 2>/dev/null)
 
+
+          #checks if there are any tags at all
           if [[ -z "$release_tags" ]]; then
-            latest_tag="v0.0.0"
+            latest_stable="v0.0.0"
+            latest_beta=""
           else
+          
             stable_releases=$(echo "$release_tags" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V -r)
+            beta_releases=$(echo "$release_tags" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-beta[0-9]+$' | sort -V -r)
+
             if [[ -z "$stable_releases" ]]; then
-              latest_tag="v0.0.0"
+              latest_stable="v0.0.0"
             else
-              latest_tag=$(echo "$stable_releases" | head -n1)
+              latest_stable=$(echo "$stable_releases" | head -n1)
+            fi
+
+            if [[ -z "$beta_releases" ]]; then
+              latest_beta=""
+            else
+              latest_beta=$(echo "$beta_releases" | head -n1)
             fi
           fi
 
-          echo "Latest stable tag: $latest_tag"
-          latest_tag_clean="${latest_tag#v}"
+          echo "Latest stable tag: $latest_stable"
+          echo "Latest beta tag: $latest_beta"
+
+          echo "latest_stable=$latest_stable" >> "$GITHUB_OUTPUT"
+          echo "latest_beta=$latest_beta" >> "$GITHUB_OUTPUT"
+
+      - name: Calculate new release tag and version
+        id: calculate_release
+        run: |
+          latest_stable="${{ steps.get_latest_tag.outputs.latest_stable }}"
+          release_tags=$(gh api repos/${{ github.repository }}/releases --jq '.[].tag_name' 2>/dev/null)
+
+          # Strip leading v
+          latest_tag_clean="${latest_stable#v}"
           IFS='.' read -r major minor patch <<< "$latest_tag_clean"
 
+          # Handle version bumps
           if [[ "${{ github.event.inputs.bump_major }}" == "true" ]]; then
             major=$((major + 1))
             minor=0
@@ -59,48 +84,36 @@ jobs:
 
           patch=$((patch + 1))
           base_version="$major.$minor.$patch"
-          release_type="${{ github.event.inputs.release_type }}"
 
-          beta=false
+          release_type="${{ github.event.inputs.release_type }}"
+          tag="$base_version"
           beta_version=0
 
-          if [[ "$release_type" == "pre" ]]; then
+          if [[ "$release_type" == "beta" ]]; then
             existing_betas=$(echo "$release_tags" | grep -E "^v${base_version}-beta[0-9]+$" | sort -V -r)
             if [[ -z "$existing_betas" ]]; then
-              beta_number=1
+              beta_version=1
             else
               last_beta=$(echo "$existing_betas" | head -n1)
               beta_suffix="${last_beta#v${base_version}-beta}"
-              beta_number=$((beta_suffix + 1))
+              beta_version=$((beta_suffix + 1))
             fi
-            new_tag="${base_version}-beta${beta_number}"
-            beta=true
-            beta_version=$beta_number
-          else
-            new_tag="$base_version"
+            tag="${base_version}-beta${beta_version}"
           fi
 
-          echo "Calculated new tag: $new_tag"
+          echo "New tag: $tag"
+          echo "Version: $base_version"
+          echo "Beta version: $beta_version"
 
-          # Export for later steps
-          echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
-          echo "new_tag_with_v=v$new_tag" >> "$GITHUB_OUTPUT"
-          echo "base_version=$base_version" >> "$GITHUB_OUTPUT"
-          echo "beta=$beta" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$base_version" >> "$GITHUB_OUTPUT"
           echo "beta_version=$beta_version" >> "$GITHUB_OUTPUT"
-
 
       - name: Update version in blender_manifest.toml
         run: |
-          {
-            version_csv=$(echo "${{ steps.get_tag.outputs.base_version }}" | tr '.' ',')
-            echo "version = [$version_csv]"
-            if [[ "${{ steps.get_tag.outputs.release_type }}" == "pre" ]]; then
-              echo "beta = true"
-              echo "beta_version = ${{ steps.get_tag.outputs.beta_version }}"
-            fi
-          } > blender_manifest.toml
-
+          sed -i 's/^version = ".*"/version = "${{ steps.calculate_release.outputs.base_version }}"/' blender_manifest.toml
+          sed -i 's/^beta_version = ".*"/version = "${{ steps.calculate_release.outputs.beta_version }}"/' blender_manifest.toml
+          sed -i 's/^release_channel = ".*"/version = "${{github.event.inputs.release_type}}"/' blender_manifest.toml
 
       - name: Create builds directory
         run: mkdir -p builds
@@ -129,7 +142,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           release_flag=""
-          if [[ "${{ github.event.inputs.release_type }}" == "pre" ]]; then
+          if [[ "${{ github.event.inputs.release_type }}" == "beta" ]]; then
             release_flag="--prerelease"
           fi
 
