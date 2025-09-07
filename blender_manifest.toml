@@ -7,7 +7,7 @@ tagline = "UI for controlling Squared Media's rigs in Blender"
 maintainer = "Fxnarji <fxn-work@proton.me>"
 type = "add-on"
 
-blender_version_min = "4.2.0"
+blender_version_min = "4.5.0"
 
 license = [
   "SPDX:GPL-3.0-or-later",
