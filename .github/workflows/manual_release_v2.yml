@@ -86,7 +86,9 @@ jobs:
           echo "Calculated new tag: $new_tag"
           echo "new_tag=$new_tag" >> "$GITHUB_OUTPUT"
           echo "new_tag_with_v=v$new_tag" >> "$GITHUB_OUTPUT"
-          echo "base_version=$new_tag" >> "$GITHUB_OUTPUT"
+          echo "base_version=$base_version" >> "$GITHUB_OUTPUT"
+          echo "beta_version=$beta_version" >> "$GITHUB_OUTPUT"
+
 
       - name: Update version in blender_manifest.toml
         run: |
