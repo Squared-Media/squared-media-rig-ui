@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_material_object
+from ..msc.utils import get_material_object, get_toml_version
 from .. import properties
 from .LAYOUT_SkinSettings   import draw_skin_settings
 from .LAYOUT_Settings       import draw_all_settings
@@ -34,6 +34,11 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
         else:
             row.label(text="Squared Media", icon="RENDER_ANIMATION")
 
+        version_tuple = get_toml_version()
+
+        row = row.row()
+        row.enabled = False
+        row.label(text=(f"v{str(version_tuple[0])}.{str(version_tuple[1])}.{str(version_tuple[2])}"))
 
         layout.separator()
         col = layout.row()

@@ -3,7 +3,7 @@ import os
 import zipfile
 import json
 import os
-
+import tomllib
 
 from .. import properties
 from enum import Enum
@@ -192,3 +192,11 @@ def load_files_from_zip(zip_path):
     except Exception as e:
         print(f"[ERROR] Failed to read zip archive {zip_path}: {e}")
         return None
+    
+def get_toml_version():
+    toml_path = os.path.join(os.path.dirname((os.path.dirname(__file__))), "blender_manifest.toml")
+    with open(toml_path, "rb") as f:
+        manifest = tomllib.load(f)
+    version_str = manifest.get("version", "0.0.0")
+    version_tuple = tuple(int(x) for x in version_str.split("."))
+    return version_tuple

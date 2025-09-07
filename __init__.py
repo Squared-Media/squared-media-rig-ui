@@ -1,6 +1,5 @@
 import bpy
-import tomllib
-import os
+from .msc.utils import get_toml_version
 
 #Operators
 from .operators.FILE_OT_load_config                import FILE_OT_LoadJsonConfig
@@ -30,12 +29,7 @@ from .msc.DATA_list_setup                             import RigListProperties, 
 from .msc.Preferences                                 import SQM_Rig_Preferences
 from .msc.IMG_load_icons                              import load_icons, unload_icons
 
-toml_path = os.path.join(os.path.dirname(__file__), "blender_manifest.toml")
-with open(toml_path, "rb") as f:
-    manifest = tomllib.load(f)
-version_str = manifest.get("version", "0.0.0")
-version_tuple = tuple(int(x) for x in version_str.split("."))
-
+version_tuple = get_toml_version()
 
 bl_info = {
     "name": "Squared Media Rig UI Addon",
