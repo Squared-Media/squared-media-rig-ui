@@ -1,5 +1,5 @@
 import bpy
-from ..msc.utils import get_library_prefix, get_rig, write_json
+from ..msc.utils import get_library_prefix, get_rig, write_json, get_preferences
 
 class FILE_OT_NameCharacter(bpy.types.Operator):
     bl_idname = "squaredmedia.namecharacter"
@@ -20,7 +20,8 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         for col in bpy.data.collections:
             print(f"found collection {col.name}")
             col.name = self.rename(context, col.name)
-
+        prefix = get_library_prefix(context)
+        collection.name = f"{prefix}" + f"{self.new_name}"
 
     def rename_objects_in_collection(self, collection, context):
         data = collection.all_objects

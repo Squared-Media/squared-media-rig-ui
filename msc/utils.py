@@ -45,11 +45,13 @@ def find_collections_in_directory(dir,prefix):
     collection_data = {}
 
     for blend_file in blend_files:
+        print(f"found: {blend_file}")
         blend_path = os.path.join(dir, blend_file)
         collections = get_collections_from_blend(blend_path)
         
         for collection in collections:
             if collection.startswith(prefix):
+                print(f"found:{collection} in {blend_file}")
                 collection_data[collection] = blend_path
 
     return collection_data
