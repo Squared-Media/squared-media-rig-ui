@@ -142,7 +142,7 @@ jobs:
           sed -i "s/^beta_version = \".*\"/beta_version = \"${{ steps.get_tag.outputs.beta_version }}\"/" blender_manifest.toml
           sed -i "s/^release_channel = \".*\"/release_channel = \"${{ github.event.inputs.release_type }}\"/" blender_manifest.toml
 
-          echo 'version = "${{ steps.get_tag.outputs.base_version }}'
+          echo 'version = ${{ steps.get_tag.outputs.base_version }}"
           echo 'beta_version = ${{ steps.get_tag.outputs.beta_version }}'
           echo 'release_channel = ${{ github.event.inputs.release_type }}'
 
@@ -165,7 +165,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add blender_manifest.toml
-          git commit --allow-empty -m "Update version to ${{ steps.calculate_release.outputs.tag }}"
+          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
           git push
 
       - name: Create new GitHub release
@@ -178,8 +178,8 @@ jobs:
           fi
 
           repo_name=$(basename "$(git rev-parse --show-toplevel)")
-          gh release create "${{ steps.calculate_release.outputs.tag }}" \
-            --title "$repo_name ${{ steps.calculate_release.outputs.tag }}" \
+          gh release create "${{ steps.get_tag.outputs.new_tag }}" \
+            --title "$repo_name ${{ steps.get_tag.outputs.new_tag }}" \
             --notes "Automated release" \
             $release_flag \
-            "builds/${repo_name}_${{ steps.calculate_release.outputs.version }}.zip"
+            "builds/${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
