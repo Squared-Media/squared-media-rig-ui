@@ -6,6 +6,7 @@ version = "1.4.4"
 beta_version = "3"
 release_channel = "beta"
 
+
 name = "Squared Media Pro Rig V1"
 tagline = "UI for controlling Squared Media's rigs in Blender"
 maintainer = "Fxnarji <fxn-work@proton.me>"
