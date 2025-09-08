@@ -39,9 +39,22 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
 
         if len(rig_props.rigs) > 0:
             sublayout = sublayout.split(factor=0.85, align=True)
-            import_op = sublayout.operator("squaredmedia.import_rig", text="Import Rig", icon="IMPORT")
+            import_row = sublayout.row(align=True)
+
+            text="Import Rig"
+
+
+            if is_file_in_library(context):
+                text = "Cannot Import into Rig files"
+                import_row.enabled = False
+            else:
+                import_row.enabled = True
+
+            import_op = import_row.operator("squaredmedia.import_rig", text = text, icon="IMPORT")
             import_op.collection_name = rig_props.rigs[rig_props.active_rig_index].name
             import_op.rig_path = rig_props.rigs[rig_props.active_rig_index].id
+
+
 
             sublayout.operator("squaredmedia.load_rigs", text="", icon="FILE_REFRESH")
 

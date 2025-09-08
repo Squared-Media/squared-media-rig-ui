@@ -85,5 +85,7 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
         row.label(text="Smart Snapping")
         row.prop(self,"Snapping",expand=True)
 
-        #row= layout.row()
-        #row.prop(self, "ShowExperimental", text= "Show Experimental", icon = "ERROR")
+        row= layout.column()
+        row.separator(factor=2, type = 'LINE')
+        row.operator("squaredmedia.check_for_updates", text= "Check for updates")
+        row.scale_y = 2

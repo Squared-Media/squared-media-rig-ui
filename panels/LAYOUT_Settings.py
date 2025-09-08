@@ -146,8 +146,3 @@ def draw_all_settings(self, context):
     draw_retargeting(self, context)
 
     draw_optimizations(self,context)
-    
-
-
-    
-    

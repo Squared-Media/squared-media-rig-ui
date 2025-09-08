@@ -49,7 +49,7 @@ class VIEW3D_CameraGizmo(bpy.types.GizmoGroup):
         mpr.use_tooltip = True
         mpr.show_drag = False
         mpr.use_draw_value = True
-        mpr.icon = "LOCKVIEW_ON"  # Default icon
+        mpr.icon = "LOCKVIEW_ON"
 
     #def draw(self, context):
         #rig = get_rig(context)

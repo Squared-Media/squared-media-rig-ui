@@ -7,7 +7,6 @@ category = properties.UIProperties.category
 
 
 def eye_settings(self, context, Eye, ParentBox, name):
-    rig = get_rig(context)
 
     ParentBox.label(text=name, icon = "HIDE_OFF")
     row = ParentBox.column(align=True)
@@ -94,7 +93,9 @@ def draw_TextureBox(self,context,layout,rig,Mat_obj):
     TexutureBox.prop(rig.pose.bones["WGT-UIProperties"],'["SkinConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["SkinConf"] else "RIGHTARROW", emboss = False, text = "Skin Selector  ")
     if rig.pose.bones["WGT-UIProperties"]["SkinConf"]:
 
-        img = Mat_obj.material_slots[Material.SKIN.value].material.node_tree.nodes["SkinTexture"].image
+        material = Mat_obj.material_slots[Material.SKIN.value]
+        node_tree = material.material.node_tree.nodes
+        img = node_tree["SkinTexture"].image
 
         left = TexutureBox.row(align=True)
         if img is None:
@@ -109,6 +110,7 @@ def draw_TextureBox(self,context,layout,rig,Mat_obj):
         main.operator("squaredmedia.imgreload", icon="FILE_REFRESH").id_name = img.name   
         
         TexutureBox.prop(rig.pose.bones["Skin_cfg"],'["Slim Arms"]', toggle = True)
+        TexutureBox.prop(node_tree["SkinShader"].inputs[8], "default_value", text = "Subsurface Scattering")
 
 def draw_proportionBox(self,context,layout,rig):
      #Proportions
@@ -145,21 +147,18 @@ def draw_proportionBox(self,context,layout,rig):
         row = Eyebox.row()
         row.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_enable"]', text="Eye R", toggle=True)
         row.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_enable"]', text="Eye L", toggle=True)
+
+        row = Eyebox.row()
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_Height"]', toggle = True, text = "Eye R Height")
+        row.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_Height"]', toggle = True, text = "Eye L Height")
+
+
+
+
         row=Eyebox.row()
         row.prop(rig.pose.bones["Skin_cfg"],'["EyeHeight"]', text="Eye Height Offset", toggle=True)
         
-        row = Eyebox.row()
-        row.prop(rig.pose.bones["Skin_cfg"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
-
-        eye_gap = rig.pose.bones["Skin_cfg"]['Eye_Gap']
-        smooth_render = rig.pose.bones["CTRL-Head"]['Smooth - Render Head']
-        smooth_viewport = rig.pose.bones["CTRL-Head"]['Smooth - Viewport Head']
-
-        if (eye_gap > 3.27 or eye_gap < 0.2) and (smooth_render or smooth_viewport):
-            warningBox = Eyebox.box()
-            warningBox.alert = True
-            warningBox.label(text="Eye Gap is high, this can affect Head Smoothing Quality", icon='ERROR')
-
+      
 
         #Mouth
         Mouthbox = ProportionsBox.box()
@@ -196,12 +195,22 @@ def draw_proportionBox(self,context,layout,rig):
 
             row = AdvancedBox.row()
             col = row.column(align=True)
-            col.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_Height"]', toggle = True, text = "Eye R Height")
             col.prop(rig.pose.bones["Skin_cfg"],'["Eye_R_Width"]', toggle = True, text = "Eye R Width")
 
             col = row.column(align=True)
-            col.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_Height"]', toggle = True, text = "Eye L Height")
             col.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_Width"]', toggle = True, text = "Eye L Width")
+
+            
+            AdvancedBox.prop(rig.pose.bones["Skin_cfg"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
+
+            eye_gap = rig.pose.bones["Skin_cfg"]['Eye_Gap']
+            smooth_render = rig.pose.bones["CTRL-Head"]['Smooth - Render Head']
+            smooth_viewport = rig.pose.bones["CTRL-Head"]['Smooth - Viewport Head']
+
+            if (eye_gap > 3.27 or eye_gap < 0.2) and (smooth_render or smooth_viewport):
+                warningBox = AdvancedBox.box()
+                warningBox.alert = True
+                warningBox.label(text="Eye Gap is high, this can affect Head Smoothing Quality", icon='ERROR')
             
 def draw_EyeBox(self,context,layout,rig,Mat_obj):
         #Eye Settings

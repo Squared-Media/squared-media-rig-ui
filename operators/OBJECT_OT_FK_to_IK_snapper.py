@@ -130,5 +130,4 @@ class OBJECT_OT_FK_to_IK_snapper(bpy.types.Operator):
                         Arm_IK.keyframe_insert(data_path=data_path, keytype = 'GENERATED', frame = bpy.context.scene.frame_current + 1)
 
 
-            print("Test")
         return {'FINISHED'}

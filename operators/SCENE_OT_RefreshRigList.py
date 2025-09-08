@@ -1,5 +1,4 @@
 import bpy
-import os
 from ..msc.utils import find_collections_in_directory
 from .. import properties
 
