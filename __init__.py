@@ -77,7 +77,7 @@ classes = [
         VIEW3D_PT_visibility_settings,
         VIEW3D_PT_ui_Main,
         VIEW3D_CameraGizmo,
-        TestPanel,
+        #TestPanel,
 
         #File Classes
         FILE_OT_SaveConfigAsTomlOperator,
