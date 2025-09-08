@@ -38,7 +38,7 @@ def get_collections_from_blend(blend_path):
     collections = []
     currentfile = bpy.data.filepath
     if blend_path == currentfile:
-       return bpy.data.collections
+       return [collection.name for collection in bpy.data.collections]
      
     with bpy.data.libraries.load(blend_path, link=False) as (data_from, _):
         collections.extend(data_from.collections)  # Extract collections
