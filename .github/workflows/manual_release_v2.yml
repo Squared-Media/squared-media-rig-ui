@@ -150,6 +150,15 @@ jobs:
           echo "beta_version = ${{ steps.get_tag.outputs.beta_version }}"
           echo "release_channel = ${{ github.event.inputs.release_type }}"
 
+
+      - name: Commit updated blender_manifest.toml
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add blender_manifest.toml
+          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
+          git push
+
       - name: Create builds directory
         run: mkdir -p builds
 
@@ -164,10 +173,3 @@ jobs:
             -x "/__pycache__/*" \
             -x "**/__pycache__/*"
 
-      - name: Commit updated blender_manifest.toml
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add blender_manifest.toml
-          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
-          git push
