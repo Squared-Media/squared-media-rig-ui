@@ -4,7 +4,7 @@ id = "squared_media_rig_ui"
 
 version = "1.4.2"
 beta_version = "1"
-release_channel = "beta"
+release_channel = "stable"
 
 name = "Squared Media Pro Rig V1"
 tagline = "UI for controlling Squared Media's rigs in Blender"
