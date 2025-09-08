@@ -2,8 +2,8 @@ schema_version = "1.0.0"
 
 id = "squared_media_rig_ui"
 
-version = "1.4.1"
-beta_version = "2"
+version = "1.4.2"
+beta_version = "1"
 release_channel = "beta"
 
 name = "Squared Media Pro Rig V1"
