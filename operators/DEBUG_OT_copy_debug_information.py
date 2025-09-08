@@ -14,6 +14,10 @@ class DEBUG_OT_copy_debug_info(bpy.types.Operator):
         addon_version = get_toml_key("version")
         addon_release_channel = get_toml_key("release_channel")
         addon_beta_version = get_toml_key("beta_version")
+        try:
+            addon_beta_version = int(addon_beta_version)
+        except: 
+            print("beta missing")
 
         #blender info
         blender_version = bpy.app.version
@@ -30,7 +34,7 @@ class DEBUG_OT_copy_debug_info(bpy.types.Operator):
         information_dict={
             "addon version": addon_version,
             "addon release": f"{addon_release_channel}",
-            "addon beta": int(addon_beta_version),
+            "addon beta": addon_beta_version,
             "Blender Version" : ".".join(map(str, blender_version)),
             "Platform": f"{platform}",
             "portable": portable,
