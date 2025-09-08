@@ -53,8 +53,6 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         rig = get_rig(context)
         DataBone = rig.data.bones["Data_Obj"]
         Collection = DataBone["Collection"]
-        prefix = get_library_prefix(context)
-        #Collection.name = prefix + self.new_name
         self.switch_names(context)
         self.rename_objects_in_collection(context = context, collection = Collection)
         self.rename_collections(context=context, collection = Collection)

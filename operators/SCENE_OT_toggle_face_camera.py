@@ -2,20 +2,22 @@ import bpy
 from .. import properties
 from ..msc.utils import get_rig
 
-blend_file = properties.Paths.blend_file
-lib_folder = properties.Paths.lib_folder
-rigID = properties.RigProperties.rigID
-
 class SCENE_OT_toggle_face_camera(bpy.types.Operator):
     bl_idname = "squaredmedia.set_camera" 
     bl_label ="sets Face Animation camera to be active"
     bl_description = "Toggles Viewport snapping to Face"
 
 
-
     def execute(self, context):
         rig = get_rig(context)
-        SQM_Camera = rig["Cam"]
+        if rig is None:
+            self.Report({'INFO'}, "No Rig Selected")
+            return
+        SQM_Camera = rig.get("Cam")
+
+        if SQM_Camera is None:
+            self.Report({'INFO'}, "No Rig Selected")
+            return
 
         if SQM_Camera.hide_viewport: 
             SQM_Camera.hide_viewport = False

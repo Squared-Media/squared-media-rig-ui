@@ -4,7 +4,6 @@ from ..msc.utils import get_rig
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
 preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name]
-parentPanel = "OBJECT_PT_SquaredMediaHeader"
 
 def drawEyeSettings(self, context):
     rig = get_rig(context)
@@ -37,10 +36,6 @@ def drawArmSettings(self, context):
     ArmBox = layout.box()
     ArmBox.prop(rig.pose.bones["WGT-UIProperties"],'["ArmRigConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"] else "RIGHTARROW", emboss = False, text = "Arm Settings")
     if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"]:
-
-        SlimArmBox = ArmBox.box()
-        SlimArmBox.label(text = "Slim Arm")
-        SlimArmBox.prop(rig.pose.bones["Settings"],'["Slim Arms"]', toggle = True)
 
         IKArmsBox = ArmBox.box()
         IKArmsBox.label(text="IK Arms")

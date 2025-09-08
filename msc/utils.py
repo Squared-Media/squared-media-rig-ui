@@ -36,6 +36,10 @@ def get_material_object(rig):
 def get_collections_from_blend(blend_path):
     """Returns a list of collections inside a .blend file."""
     collections = []
+    currentfile = bpy.data.filepath
+    if blend_path == currentfile:
+       return bpy.data.collections
+     
     with bpy.data.libraries.load(blend_path, link=False) as (data_from, _):
         collections.extend(data_from.collections)  # Extract collections
     return collections

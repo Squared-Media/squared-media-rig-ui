@@ -1,10 +1,6 @@
 import bpy
-import zipfile
-import os
 import mathutils
-import sys
-import json
-from ..msc.utils import get_material_object, get_rig, get_material, save_files_to_zip, Material
+from ..msc.utils import get_rig, get_material, save_files_to_zip, Material
 
 class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
     bl_idname = "squaredmedia.saveconfig"
@@ -110,7 +106,6 @@ class FILE_OT_SaveConfigAsTomlOperator(bpy.types.Operator):
         result = {node_name: input_data}
         print(result)
         return result
-
 
     def invoke(self, context, event):
         # Trigger the file dialog
