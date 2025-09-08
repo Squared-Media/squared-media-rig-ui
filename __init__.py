@@ -17,6 +17,7 @@ from .operators.Dummy_OT_DummyOperator                import DummyOperator
 from .operators.EXPERIMENTAL_                         import EXPERIMENTAL_OT_Null, EXPERIMENTAL_OT_set_pose
 from .operators.FILE_OT_open_rig_library              import FILE_OT_open_rig_library
 from .operators.DEBUG_OT_copy_debug_information       import DEBUG_OT_copy_debug_info
+from .operators.FILE_OT_check_for_updates             import FILE_OT_check_for_updates
 
 #UI
 from .panels.VIEW3D_PT_ui_Main                        import VIEW3D_PT_ui_Main
@@ -57,6 +58,7 @@ classes = [
         DEBUG_OT_copy_debug_info,
 
         FILE_OT_open_rig_library,
+        FILE_OT_check_for_updates,
         
         ConfirmOpenBlendFileOperator,
 
