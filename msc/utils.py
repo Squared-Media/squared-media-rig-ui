@@ -18,6 +18,16 @@ class Material(Enum):
     MOUTH_INTERIOR = 6
     DEBUG_MATERIAL = 7
 
+class Limbs(Enum):
+    LEFT_ARM = 0
+    RIGHT_ARM = 1
+    LEFT_LEG = 2
+    RIGHT_LEG = 3
+
+class IK_Mode(Enum):
+    AUTO = 0
+    ON = 1
+    OFF = 2
 
 
 
