@@ -10,14 +10,14 @@ from .operators.SCENE_OT_Open_Preset                  import SCENE_OT_Open_Prese
 from .operators.SCENE_OT_toggle_face_camera           import SCENE_OT_toggle_face_camera
 from .operators.SCENE_OT_RefreshRigList               import SCENE_OT_RefreshRigList
 from .operators.IMAGE_OT_                             import IMAGE_OT_pack, IMAGE_OT_reload
-from .operators.OBJECT_OT_keyframe_all_properties     import OBJECT_OT_keyframe_all_properties
 from .operators.OBJECT_OT_FK_to_IK_snapper            import OBJECT_OT_FK_to_IK_snapper  
 from .operators.OBJECT_OT_keyframe_all_properties     import OBJECT_OT_keyframe_all_properties
 from .operators.Dummy_OT_DummyOperator                import DummyOperator
 from .operators.EXPERIMENTAL_                         import EXPERIMENTAL_OT_Null, EXPERIMENTAL_OT_set_pose
 from .operators.FILE_OT_open_rig_library              import FILE_OT_open_rig_library
-from .operators.DEBUG_OT_copy_debug_information       import DEBUG_OT_copy_debug_info
 from .operators.FILE_OT_check_for_updates             import FILE_OT_check_for_updates
+from .operators.DEBUG_OT_copy_debug_information       import DEBUG_OT_copy_debug_info
+from .operators.RIG_OT_set_ik_display_override        import RIG_OT_set_ik_display_override
 
 #UI
 from .panels.VIEW3D_PT_ui_Main                        import VIEW3D_PT_ui_Main
@@ -70,6 +70,7 @@ classes = [
         OBJECT_OT_keyframe_all_properties,
         
         COLLECTION_OT_import_rig_collection,
+        RIG_OT_set_ik_display_override,
 
         EXPERIMENTAL_OT_Null,
         EXPERIMENTAL_OT_set_pose,
@@ -79,7 +80,7 @@ classes = [
         VIEW3D_PT_visibility_settings,
         VIEW3D_PT_ui_Main,
         VIEW3D_CameraGizmo,
-        #TestPanel,
+        TestPanel,
 
         #File Classes
         FILE_OT_SaveConfigAsTomlOperator,

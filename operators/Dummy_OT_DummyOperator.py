@@ -8,7 +8,8 @@ class DummyOperator(bpy.types.Operator):
     bl_label = "Dummy"
 
     def execute(self, context):
-        material = get_material(context, Material.SKIN)
-        print(material)
+        rig = get_rig(context)
+        properties_bone = rig.pose.bones["WGT-UIProperties"]["enum"]
+        print(properties_bone)
         return {"FINISHED"}
 

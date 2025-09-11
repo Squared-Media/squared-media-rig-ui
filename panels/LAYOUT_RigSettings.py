@@ -104,49 +104,15 @@ def drawRoundnessSettings(self, context):
     RoundnessBox = layout.box()
     RoundnessBox.prop(rig.pose.bones["WGT-UIProperties"],'["RoundnessConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["RoundnessConf"] else "RIGHTARROW", emboss = False, text = "Roundness Settings")
     if rig.pose.bones["WGT-UIProperties"]["RoundnessConf"]:
-        
-        #Head 
-        HeadArea = RoundnessBox.row()
-        Head = HeadArea.box()
-        Head.label(text="Head")
-        col = Head.column(align = True)
-        col.prop(rig.pose.bones["CTRL-Head"], '["Smooth - Viewport Head"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
-        col.prop(rig.pose.bones["CTRL-Head"], '["Smooth - Render Head"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
+        SubDBox = RoundnessBox.box()
+        SubDBox.label(text = "SubD Modifier")
+        Roundrow = SubDBox.row(align = True)
+        split = Roundrow.split(align = True)
+        split.prop(rig.pose.bones["Settings"],'["subd_viewport"]', toggle = True, icon = "RESTRICT_VIEW_OFF" if rig.pose.bones["Settings"]["subd_viewport"] else "RESTRICT_VIEW_ON", icon_only = True)
+        split.prop(rig.pose.bones["Settings"],'["subd_render"]', toggle = True, icon = "RESTRICT_RENDER_OFF" if rig.pose.bones["Settings"]["subd_render"] else "RESTRICT_RENDER_ON", icon_only = True)
 
-        #Body
-        Body = RoundnessBox.row(align = False)
-        ArmL = Body.box()
-        ArmL.label(text="Arm Left")
-        ArmL = ArmL.column(align = True)
-        ArmL.prop(rig.pose.bones["CTRL-IK-UpperArm.L"], '["Smooth - Viewport Arm.L"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
-        ArmL.prop(rig.pose.bones["CTRL-IK-UpperArm.L"], '["Smooth - Render Arm.L"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
-        
-        Torso = Body.box()
-        Torso.label(text="Torso")
-        Torso = Torso.column(align=True)
-        Torso.prop(rig.pose.bones["CTRL-Pelvis"], '["Smooth - Viewport Body"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
-        Torso.prop(rig.pose.bones["CTRL-Pelvis"], '["Smooth - Render Body"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
-        
-        ArmR = Body.box()
-        ArmR.label(text="Arm Right")
-        ArmR = ArmR.column(align=True)
-        ArmR.prop(rig.pose.bones["CTRL-IK-UpperArm.R"], '["Smooth - Viewport Arm.R"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
-        ArmR.prop(rig.pose.bones["CTRL-IK-UpperArm.R"], '["Smooth - Render Arm.R"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
-        
-        
-        #Legs
-        Legs = RoundnessBox.row(align=False)
-        LegL = Legs.box()
-        LegL.label(text="Leg Left")
-        LegL = LegL.column(align=True)
-        LegL.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Smooth - Viewport Leg.R"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
-        LegL.prop(rig.pose.bones["CTRL-UpperLeg.R"], '["Smooth - Render Leg.R"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
-
-        LegR = Legs.box()
-        LegR.label(text="Leg Right")
-        LegR = LegR.column(align=True)
-        LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Viewport Leg.L"]', toggle=True, icon="RESTRICT_VIEW_OFF", icon_only= True)
-        LegR.prop(rig.pose.bones["CTRL-UpperLeg.L"], '["Smooth - Render Leg.L"]', toggle=True, icon="RESTRICT_RENDER_OFF", icon_only= True)
+        SubDBox.prop(rig.pose.bones["Settings"],'["subd_viewport_res"]', text = "Viewport Subdivisions")
+        SubDBox.prop(rig.pose.bones["Settings"],'["subd_render_res"]', text = "Render Subdivisions")
 
 def draw_all_rig_settings(self,context):
      drawEyeSettings(self, context)
