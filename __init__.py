@@ -19,7 +19,7 @@ from .operators.FILE_OT_check_for_updates             import FILE_OT_check_for_u
 from .operators.DEBUG_OT_copy_debug_information       import DEBUG_OT_copy_debug_info
 from .operators.RIG_OT_set_ik_display_override        import RIG_OT_set_ik_display_override
 
-#UI
+#UI #something
 from .panels.VIEW3D_PT_ui_Main                        import VIEW3D_PT_ui_Main
 from .panels.VIEW3D_PT_VisibilitySettings             import VIEW3D_PT_visibility_settings
 from .panels.VIEW3D_CameraGizmo                       import VIEW3D_CameraGizmo
@@ -116,3 +116,4 @@ def unregister():
 if __name__ == "__main__":
 
     register()
+
