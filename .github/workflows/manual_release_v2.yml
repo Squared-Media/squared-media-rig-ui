@@ -153,7 +153,8 @@ jobs:
             --title "$(basename `git rev-parse --show-toplevel`) ${{ steps.get_tag.outputs.new_tag }}" \
             --notes "Automated release" \
             $release_flag \
-            "builds/$(basename `git rev-parse --show-toplevel`).zip"
+            "builds/$(basename `git rev-parse --show-toplevel`).zip" \
+            "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
 
 
 
