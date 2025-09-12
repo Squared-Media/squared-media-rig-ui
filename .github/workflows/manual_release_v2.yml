@@ -120,7 +120,7 @@ jobs:
       - name: Create zip archive
         run: |
           repo_name=$(basename `git rev-parse --show-toplevel`)
-          zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
+          zip_name="${repo_name}_.zip"
           zip -r "builds/$zip_name" . \
             -x ".git/*" \
             -x ".github/*" \
@@ -142,7 +142,7 @@ jobs:
             --title "$(basename `git rev-parse --show-toplevel`) ${{ steps.get_tag.outputs.new_tag }}" \
             --notes "Automated release" \
             $release_flag \
-            "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
+            "builds/$(basename `git rev-parse --show-toplevel`)_.zip"
 
 
 
