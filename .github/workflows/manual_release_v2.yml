@@ -120,7 +120,18 @@ jobs:
       - name: Create zip archive
         run: |
           repo_name=$(basename `git rev-parse --show-toplevel`)
-          zip_name="${repo_name}_.zip"
+          zip_name="${repo_name}.zip"
+          zip -r "builds/$zip_name" . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "builds/*" \
+            -x "/__pycache__/*" \
+            -x "**/__pycache__/*"
+
+      - name: Create versioned zip archive
+        run: |
+          repo_name=$(basename `git rev-parse --show-toplevel`)
+          zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
           zip -r "builds/$zip_name" . \
             -x ".git/*" \
             -x ".github/*" \
@@ -142,7 +153,7 @@ jobs:
             --title "$(basename `git rev-parse --show-toplevel`) ${{ steps.get_tag.outputs.new_tag }}" \
             --notes "Automated release" \
             $release_flag \
-            "builds/$(basename `git rev-parse --show-toplevel`)_.zip"
+            "builds/$(basename `git rev-parse --show-toplevel`).zip"
 
 
 
