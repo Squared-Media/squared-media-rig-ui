@@ -198,7 +198,6 @@ def draw_proportionBox(self,context,layout,rig):
 
             col = row.column(align=True)
             col.prop(rig.pose.bones["Skin_cfg"],'["Eye_L_Width"]', toggle = True, text = "Eye L Width")
-
             
             AdvancedBox.prop(rig.pose.bones["Skin_cfg"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
 
