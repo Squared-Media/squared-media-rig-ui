@@ -2,6 +2,8 @@ import bpy  # type: ignore
 import os
 from .. import properties
 
+# this is a test
+
 
 class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
     """imports the skin, armature and boneshapes into the current file according to Default Import Options in the properties"""
@@ -26,7 +28,7 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
             return {"CANCELLED"}
 
         if bpy.data.filepath == self.rig_path:
-            self.report({"WARNING"}, "cannot import rig into its own source file!")
+            self.report({"ERROR"}, "cannot import rig into its own source file!")
             return {"CANCELLED"}
 
         # using blenders default operator to link collection
