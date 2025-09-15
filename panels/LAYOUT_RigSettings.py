@@ -1,4 +1,4 @@
-import bpy
+import bpy #type: ignore
 from .. import properties
 from ..msc.utils import get_rig
 rigID = properties.RigProperties.rigID
@@ -8,6 +8,10 @@ preferences = bpy.context.preferences.addons[properties.AddonProperties.module_n
 def drawEyeSettings(self, context):
     rig = get_rig(context)
     
+    if rig is None:
+        return
+
+
     layout = self.layout
     EyeBox = layout.box()
     EyeBox.prop(rig.pose.bones["WGT-UIProperties"],'["EyeRigConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["EyeRigConf"] else "RIGHTARROW", emboss = False, text = "Eye Settings")
@@ -32,6 +36,10 @@ def drawEyeSettings(self, context):
 def drawArmSettings(self, context):
     rig = get_rig(context)
     
+    if rig is None:
+        return
+
+
     layout = self.layout
     ArmBox = layout.box()
     ArmBox.prop(rig.pose.bones["WGT-UIProperties"],'["ArmRigConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["ArmRigConf"] else "RIGHTARROW", emboss = False, text = "Arm Settings")
@@ -57,6 +65,10 @@ def drawArmSettings(self, context):
 
 def drawBodySettings(self, context):
     rig = get_rig(context)
+ 
+    if rig is None:
+        return
+
     layout = self.layout
     BodyBox = layout.box()
     BodyBox.prop(rig.pose.bones["WGT-UIProperties"],'["BodyConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["BodyConf"] else "RIGHTARROW", emboss = False, text = "Body Settings  ")
@@ -70,7 +82,12 @@ def drawBodySettings(self, context):
 
 def drawLegSettings(self, context):
     rig = get_rig(context)
+    
+    if rig is None:
+        return
+
     layout = self.layout
+
     LegBox = layout.box()
     LegBox.prop(rig.pose.bones["WGT-UIProperties"],'["LegConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["LegConf"] else "RIGHTARROW", emboss = False, text = "Leg Settings  ")
     if rig.pose.bones["WGT-UIProperties"]["LegConf"]:
@@ -99,6 +116,9 @@ def drawLegSettings(self, context):
 def drawRoundnessSettings(self, context):
     rig = get_rig(context)
     
+    if rig is None:
+        return
+
     # Roundness Settings
     layout = self.layout
     RoundnessBox = layout.box()
