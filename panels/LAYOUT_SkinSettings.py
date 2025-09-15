@@ -1,4 +1,3 @@
-import bpy
 from ..msc.utils import get_material_object, is_packed, get_rig, Material
 from .. import properties
 
