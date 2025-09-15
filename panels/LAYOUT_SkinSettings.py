@@ -202,9 +202,10 @@ def draw_proportionBox(self,context,layout,rig):
             
             AdvancedBox.prop(rig.pose.bones["Skin_cfg"],'["Eye_Gap"]', toggle = True, text = "Eye Gap")
 
+
             eye_gap = rig.pose.bones["Skin_cfg"]['Eye_Gap']
-            smooth_render = rig.pose.bones["CTRL-Head"]['Smooth - Render Head']
-            smooth_viewport = rig.pose.bones["CTRL-Head"]['Smooth - Viewport Head']
+            smooth_render = rig.pose.bones["Settings"]['subd_render']
+            smooth_viewport = rig.pose.bones["Settings"]['subd_viewport']
 
             if (eye_gap > 3.27 or eye_gap < 0.2) and (smooth_render or smooth_viewport):
                 warningBox = AdvancedBox.box()
