@@ -14,9 +14,10 @@ class Material(Enum):
     EYE_L = 2
     EYEBROW_R = 3
     EYEBROW_L = 4
-    EYE_BACKGROUND = 5
-    MOUTH_INTERIOR = 6
-    DEBUG_MATERIAL = 7
+    MOUTH_INTERIOR = 5
+    DEBUG_MATERIAL = 6
+    EYE_BACKGROUND_L = 7
+    EYE_BACKGROUND_R = 8
 
 
 class Limbs(Enum):
