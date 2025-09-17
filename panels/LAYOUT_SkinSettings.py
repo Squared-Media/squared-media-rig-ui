@@ -1,5 +1,6 @@
 from ..msc.utils import get_material_object, is_packed, get_rig, Material
 from .. import properties
+import bpy #type: ignore
 
 rigID = properties.RigProperties.rigID
 category = properties.UIProperties.category
@@ -30,8 +31,8 @@ def draw_advanced_Eyes(self, context, Eye, ParentBox, name, eye_overrides):
     col = ParentBox.column()
 
     override_box = col.box()
-    override_box.label(text = "Eyewhite")
     override_box.prop(eye_overrides[0], "default_value", text = eye_overrides[0].name)
+    override_box.prop(eye_overrides[1], "default_value", text = eye_overrides[1].name)
 
 
     Pupil = col.box()
@@ -80,12 +81,17 @@ def draw_TextureBox(self, context, layout, rig, Mat_obj):
         if rig.pose.bones["WGT-UIProperties"]["SkinConf"]
         else "RIGHTARROW",
         emboss=False,
-        text="Skin Selector  ",
+        text="Skin Selector",
     )
     if rig.pose.bones["WGT-UIProperties"]["SkinConf"]:
+
+        #Material and Node tree are needed for the SSS slider
         material = Mat_obj.material_slots[Material.SKIN.value]
         node_tree = material.material.node_tree.nodes
-        img = node_tree["SkinTexture"].image
+
+        #todo: eventually we need to rename these things to the characters name to avoid .001 clutter
+        shader_name = "Default - SkinMasterShader"
+        img = bpy.data.node_groups[shader_name].nodes["SkinTexture"].image
 
         left = TexutureBox.row(align=True)
         if img is None:
@@ -166,7 +172,7 @@ def draw_proportionBox(self, context, layout, rig):
             split = row.split(factor=0.5)
             col = split.column(align=True)
             col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_Thickness"]',text="Eyebrow R Thickness")
-            col.propo(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_Height"]',text="Eyebrow R Height",)
+            col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_Height"]',text="Eyebrow R Height",)
             col.prop(rig.pose.bones["Skin_cfg"],'["Eyebrow_R_width"]',text="Eyebrow R Width")
 
             col = split.column(align=True)
