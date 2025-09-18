@@ -38,6 +38,7 @@ from .msc.DATA_list_setup import RigListProperties, RigItem, RigListUI
 from .msc.Preferences import SQM_Rig_Preferences
 from .msc.IMG_load_icons import load_icons, unload_icons
 
+
 version_tuple = get_toml_version()
 
 bl_info = {
@@ -117,4 +118,3 @@ def unregister():
 
 if __name__ == "__main__":
     register()
-
