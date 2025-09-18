@@ -1,4 +1,4 @@
-import bpy
+import bpy #type: ignore
 from .. import properties
 from ..msc.utils import get_rig
 
@@ -10,6 +10,8 @@ def draw_phenomes(self, context):
     layout = self.layout
     PhenomesBox = layout.box()
     rig = get_rig(context)
+    if rig is None:
+        return
     PhenomesBox.prop(rig.pose.bones["WGT-UIProperties"],'["Phonemes"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Phonemes"] else "RIGHTARROW", emboss = False, text = "Phonemes (Not Functional)")
     if rig.pose.bones["WGT-UIProperties"]["Phonemes"]:
 
@@ -45,6 +47,8 @@ def draw_snapper(self, context):
     layout = self.layout
     SnapperBox = layout.box()
     rig = get_rig(context)
+    if rig is None:
+        return
     SnapperBox.prop(rig.pose.bones["WGT-UIProperties"],'["Snapping"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Snapping"] else "RIGHTARROW", emboss = False, text = "Snapping")
     if rig.pose.bones["WGT-UIProperties"]["Snapping"]:
 
@@ -81,6 +85,8 @@ def draw_retargeting(self,context):
     #Retargeting
     layout = self.layout
     rig = get_rig(context)
+    if rig is None:
+        return
     retargeting_box = layout.box()
     retargeting_box.prop(rig.pose.bones["WGT-UIProperties"],'["Retargeting"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Retargeting"] else "RIGHTARROW", emboss = False, text = "Retargeting")
     if rig.pose.bones["WGT-UIProperties"]["Retargeting"]:
@@ -98,6 +104,8 @@ def draw_retargeting(self,context):
 def draw_optimizations(self, context):
     #Optimizations
     rig = get_rig(context)
+    if rig is None:
+        return
     layout = self.layout
     optimization_box = layout.box()
     optimization_box.prop(rig.pose.bones["WGT-UIProperties"],'["Optimization"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["Optimization"] else "RIGHTARROW", emboss = False, text = "Optimization")
@@ -108,7 +116,6 @@ def draw_optimizations(self, context):
         Layer02 = rig.pose.bones["Settings"].get("Layer02", None) 
         row.prop(Layer02, "hide_viewport", text = "Layer 02 Viewport", invert_checkbox = True, icon = "LAYER_USED")
 
-        
         #subD
         row = optimization_box.row(align=False)
         row.prop(rig.pose.bones["Settings"], '["SubD Viewport"]', toggle=True)
@@ -123,8 +130,38 @@ def draw_optimizations(self, context):
         row.prop(Rendermesh, "hide_viewport", text = "Render Mesh", invert_checkbox = True, icon = "LAYER_USED")
         settings = rig.pose.bones["Settings"]
         row.prop(settings, '["ExpensiveGeoNodes"]', text = "Enable Geo Nodes", icon = "LAYER_USED")
-        
 
+        #Face Booleans
+        face_bool_box = optimization_box.box()
+        face_bool_box.label(text = "Face Mode")
+
+
+        # Render:
+        row = face_bool_box.row()
+        row.label(text = "Render")
+        property = rig.pose.bones["Settings"]["face_bool_render"]
+        if property:
+            text = "Fancy"
+            icon = 'MESH_PLANE'
+        else:
+            text = "Fast"
+            icon = 'SELECT_SET'
+        
+        row.prop(rig.pose.bones["Settings"],'["face_bool_render"]', text = text, toggle = True, emboss = False, icon = icon)
+        
+        # Viewport:
+        row = face_bool_box.row()
+        row.label(text = "Viewport")
+        property = rig.pose.bones["Settings"]["face_bool_viewport"]
+        if property:
+            text = "Fancy"
+            icon = 'MESH_PLANE'
+        else:
+            text = "Fast"
+            icon = 'SELECT_SET'
+        
+        row.prop(rig.pose.bones["Settings"],'["face_bool_viewport"]', text = text, toggle = True, emboss = False, icon = icon)
+ 
 
 
 
@@ -132,6 +169,8 @@ def draw_all_settings(self, context):
     layout = self.layout
     HelperBox = layout.box()
     rig = get_rig(context)
+    if rig is None:
+        return
     HelperBox.prop(rig.pose.bones["WGT-UIProperties"],'["HelperConf"]', toggle = True, icon = "DOWNARROW_HLT" if rig.pose.bones["WGT-UIProperties"]["HelperConf"] else "RIGHTARROW", emboss = False, text = "Helpers")
     if rig.pose.bones["WGT-UIProperties"]["HelperConf"]:
 

@@ -1,12 +1,12 @@
-import bpy
+import bpy  # type: ignore
 import os
 import zipfile
 import json
-import os
 import tomllib
 
 from .. import properties
 from enum import Enum
+
 
 class Material(Enum):
     SKIN = 0
@@ -14,9 +14,11 @@ class Material(Enum):
     EYE_L = 2
     EYEBROW_R = 3
     EYEBROW_L = 4
-    EYE_BACKGROUND = 5
-    MOUTH_INTERIOR = 6
-    DEBUG_MATERIAL = 7
+    MOUTH_INTERIOR = 5
+    DEBUG_MATERIAL = 6
+    EYE_BACKGROUND_L = 7
+    EYE_BACKGROUND_R = 8
+
 
 class Limbs(Enum):
     LEFT_ARM = 0
@@ -24,11 +26,11 @@ class Limbs(Enum):
     LEFT_LEG = 2
     RIGHT_LEG = 3
 
+
 class IK_Mode(Enum):
     AUTO = 0
     ON = 1
     OFF = 2
-
 
 
 def is_packed(img):
@@ -38,23 +40,26 @@ def is_packed(img):
     except Exception:
         return False
 
+
 def get_material_object(rig):
     """Retrieve the material object associated with the given rig."""
     Mat_Obj = rig.data.bones["Data_Obj"]["Mat_Obj"]
     return Mat_Obj
+
 
 def get_collections_from_blend(blend_path):
     """Returns a list of collections inside a .blend file."""
     collections = []
     currentfile = bpy.data.filepath
     if blend_path == currentfile:
-       return [collection.name for collection in bpy.data.collections]
-     
+        return [collection.name for collection in bpy.data.collections]
+
     with bpy.data.libraries.load(blend_path, link=False) as (data_from, _):
         collections.extend(data_from.collections)  # Extract collections
     return collections
 
-def find_collections_in_directory(dir,prefix):
+
+def find_collections_in_directory(dir, prefix):
     blend_files = [f for f in os.listdir(dir) if f.endswith(".blend")]
     collection_data = {}
 
@@ -62,7 +67,7 @@ def find_collections_in_directory(dir,prefix):
         print(f"found: {blend_file}")
         blend_path = os.path.join(dir, blend_file)
         collections = get_collections_from_blend(blend_path)
-        
+
         for collection in collections:
             if collection.startswith(prefix):
                 print(f"found:{collection} in {blend_file}")
@@ -70,19 +75,6 @@ def find_collections_in_directory(dir,prefix):
 
     return collection_data
 
-def is_file_in_library(context):
-    current_path = bpy.data.filepath
-    preferences = get_preferences(context) 
-    library_path = preferences.usr_file_path
-
-    if not current_path or not library_path:
-        return False  # Either the file hasn't been saved or the preference isn't set
-
-    current_path = os.path.abspath(current_path)
-    library_path = os.path.abspath(library_path)
-
-
-    return os.path.commonpath([current_path, library_path]) == library_path
 
 def has_name(rig):
     Name = rig.data.bones["Data_Obj"]["Name"]
@@ -92,13 +84,18 @@ def has_name(rig):
         return False
     return True
 
+
 def get_preferences(context):
-    prefernces = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+    prefernces = bpy.context.preferences.addons[
+        properties.AddonProperties.module_name
+    ].preferences
     return prefernces
 
+
 def get_library_prefix(context):
-    preferences = get_preferences(context= context)
+    preferences = get_preferences(context=context)
     return preferences.lib_prefix
+
 
 def get_material(rig, material: Material):
     if rig is None:
@@ -106,20 +103,22 @@ def get_material(rig, material: Material):
     mat_obj = get_material_object(rig)
     return mat_obj.material_slots[material.value].material
 
+
 def get_skin_texture(rig):
     mat = get_material(rig, Material.SKIN)
 
-    #setting image_node to null
+    # setting image_node to null
     image_node = ""
     if mat and mat.use_nodes:
         nodes = mat.node_tree.nodes
         image_node = nodes[properties.RigProperties.skin_node_name]
-    
+
     if image_node and image_node.image:
         return image_node.image
-       
+
+
 def get_rig(context):
-    active_object =  context.active_object
+    active_object = context.active_object
     if active_object is None:
         return None
 
@@ -129,12 +128,13 @@ def get_rig(context):
     if rig_id == "SquaredMediaDefaultRig":
         return active_object
 
+
 def save_files_to_zip(file_dict, zip_path):
     """
     Saves multiple files into a zip archive.
-    
+
     Parameters:
-        file_dict (dict): {filename_in_zip: data}  
+        file_dict (dict): {filename_in_zip: data}
                           - If `data` is a dict/list, it will be serialized to JSON.
                           - If `data` is bytes, it will be written directly.
                           - If `data` is a str path to a file, the file will be read and written.
@@ -153,7 +153,9 @@ def save_files_to_zip(file_dict, zip_path):
                 elif isinstance(data, str) and os.path.isfile(data):
                     zipf.write(data, arcname=filename)
                 else:
-                    raise TypeError(f"Unsupported data type for {filename}: {type(data)}")
+                    raise TypeError(
+                        f"Unsupported data type for {filename}: {type(data)}"
+                    )
         print(f"[INFO] Saved files to archive: {zip_path}")
     except Exception as e:
         print(f"[ERROR] Failed to save archive: {e}")
@@ -175,7 +177,6 @@ def write_json(dictionary, path):
         print(f"[ERROR] Failed to write JSON to {path}: {e}")
 
 
-
 def load_files_from_zip(zip_path):
     """
     Loads files from a zip archive into memory.
@@ -184,8 +185,8 @@ def load_files_from_zip(zip_path):
         zip_path (str): Path to the zip file.
 
     Returns:
-        dict: {filename_in_zip: data}  
-              - JSON files are deserialized into dict/list.  
+        dict: {filename_in_zip: data}
+              - JSON files are deserialized into dict/list.
               - Other files are returned as bytes.
     """
     result = {}
@@ -208,7 +209,8 @@ def load_files_from_zip(zip_path):
     except Exception as e:
         print(f"[ERROR] Failed to read zip archive {zip_path}: {e}")
         return None
-    
+
+
 def get_toml_version():
     version_str = get_toml_key("version")
     version_tuple = tuple(int(x) for x in version_str.split("."))
@@ -216,7 +218,9 @@ def get_toml_version():
 
 
 def get_toml_key(key):
-    toml_path = os.path.join(os.path.dirname((os.path.dirname(__file__))), "blender_manifest.toml")
+    toml_path = os.path.join(
+        os.path.dirname((os.path.dirname(__file__))), "blender_manifest.toml"
+    )
     with open(toml_path, "rb") as f:
         manifest = tomllib.load(f)
     value = manifest.get(key, "0.0.0")

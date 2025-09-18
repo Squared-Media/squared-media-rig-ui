@@ -1,4 +1,4 @@
-import bpy
+import bpy#type: ignore
 
 from ..msc.utils import IK_Mode, Limbs, get_rig
 
@@ -11,6 +11,8 @@ class TestPanel(bpy.types.Panel):
     
     def get_limb_state(self, context, Limb: Limbs):
         rig = get_rig(context)
+        if rig is None:
+            return
         UIProperties_bone = rig.pose.bones["WGT-UIProperties"]
         ik_array_property = UIProperties_bone["IK-Visibility-Overrides"]
         limb_index = Limb.value
