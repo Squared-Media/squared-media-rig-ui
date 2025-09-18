@@ -30,9 +30,10 @@ def draw_advanced_Eyes(self, context, Eye, ParentBox, name, eye_overrides):
     ParentBox.label(text=name, icon="HIDE_OFF")
     col = ParentBox.column()
 
+    #Overrides
     override_box = col.box()
-    override_box.prop(eye_overrides[0], "default_value", text = eye_overrides[0].name)
-    override_box.prop(eye_overrides[1], "default_value", text = eye_overrides[1].name)
+    override_box.prop(eye_overrides["EYEWHITE"].outputs[0], "default_value", text = "Eyewhite")
+    override_box.prop(eye_overrides["RIM"].outputs[0], "default_value", text = "Rim")
 
 
     Pupil = col.box()
@@ -91,12 +92,13 @@ def draw_TextureBox(self, context, layout, rig, Mat_obj):
 
         #todo: eventually we need to rename these things to the characters name to avoid .001 clutter
         shader_name = "Default - SkinMasterShader"
-        img = bpy.data.node_groups[shader_name].nodes["SkinTexture"].image
+        node_tree_skin = bpy.data.node_groups[shader_name].nodes
+        img = node_tree_skin["SkinTexture"].image
 
         left = TexutureBox.row(align=True)
         if img is None:
             left.template_ID(
-                Mat_obj.material_slots[Material.SKIN.value].material.node_tree.nodes["SkinTexture"],"image",open="image.open",)
+                node_tree_skin["SkinTexture"],"image",open="image.open",)
             return
 
         left.operator("squaredmedia.imgpack", icon="PACKAGE").id_name = img.name
@@ -266,17 +268,16 @@ def draw_advanced_EyeBox(self, context, layout, rig, Mat_obj):
         # Right Eye
         if rig.pose.bones["Skin_cfg"]["Eye_R_enable"]:
             EyeR = (Mat_obj.material_slots[Material.EYE_R.value].material.node_tree.nodes["Eye.R"].inputs)
-            eye_overridesR = (Mat_obj.material_slots[Material.EYE_BACKGROUND_R.value].material.node_tree.nodes["EyewhiteShader"].inputs)
-
-            draw_advanced_Eyes(self, context, EyeR, EyeRBox, "Right", eye_overridesR)
+            EyeWhiteShaderR = bpy.data.node_groups["SQM - EyewhiteShader.R"].nodes
+            draw_advanced_Eyes(self, context, EyeR, EyeRBox, "Right", EyeWhiteShaderR)
         else:
             EyeRBox.label(text="disabled")
 
         # Left Eye
         if rig.pose.bones["Skin_cfg"]["Eye_L_enable"]:
             EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
-            eye_overridesL = (Mat_obj.material_slots[Material.EYE_BACKGROUND_L.value].material.node_tree.nodes["EyewhiteShader"].inputs)
-            draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left", eye_overridesL)
+            EyeWhiteShaderL = bpy.data.node_groups["SQM - EyewhiteShader.L"].nodes
+            draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left", EyeWhiteShaderL)
         else:
             EyeLBox.label(text="disabled")
 
