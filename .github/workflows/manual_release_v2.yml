@@ -140,6 +140,40 @@ jobs:
             -x "**/__pycache__/*"
 
 
+      - name: Generate changelog
+        id: changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the latest release tag to generate changelog from
+          latest_release_tag=$(gh api repos/${{ github.repository }}/releases --jq '.[0].tag_name' 2>/dev/null || echo "")
+          
+          if [[ -z "$latest_release_tag" ]]; then
+            # No previous releases, get all commits
+            changelog=$(git log --pretty=format:"- %s" --reverse | grep -v "^- Update version to")
+          else
+            # Get commits since the last release, filtering out version update commits
+            changelog=$(git log ${latest_release_tag}..HEAD --pretty=format:"- %s" --reverse | grep -v "^- Update version to")
+          fi
+          
+          # If no commits after filtering, provide a default message
+          if [[ -z "$changelog" ]]; then
+            changelog="- No changes since last release"
+          fi
+          
+          # Create the release notes file
+          echo "## What's Changed" > release_notes.md
+          echo "" >> release_notes.md
+          echo "$changelog" >> release_notes.md
+          echo "" >> release_notes.md
+          
+          # Add comparison link if there was a previous release
+          if [[ -n "$latest_release_tag" ]]; then
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${latest_release_tag}...${{ steps.get_tag.outputs.new_tag }}" >> release_notes.md
+          else
+            echo "This is the first automated release with changelog." >> release_notes.md
+          fi
+
       - name: Create new GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -151,7 +185,7 @@ jobs:
 
           gh release create "${{ steps.get_tag.outputs.new_tag }}" \
             --title "$(basename `git rev-parse --show-toplevel`) ${{ steps.get_tag.outputs.new_tag }}" \
-            --notes "Automated release" \
+            --notes-file release_notes.md \
             $release_flag \
             "builds/$(basename `git rev-parse --show-toplevel`).zip" \
             "builds/$(basename `git rev-parse --show-toplevel`)_${{ steps.get_tag.outputs.new_tag }}.zip"
