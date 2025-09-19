@@ -150,13 +150,13 @@ jobs:
           
           if [[ -z "$latest_release_tag" ]]; then
             # No previous releases, get all commits
-            changelog=$(git log --pretty=format:"- %s" --reverse)
+            changelog=$(git log --pretty=format:"- %s" --reverse | grep -v "^- Update version to")
           else
-            # Get commits since the last release
-            changelog=$(git log ${latest_release_tag}..HEAD --pretty=format:"- %s" --reverse)
+            # Get commits since the last release, filtering out version update commits
+            changelog=$(git log ${latest_release_tag}..HEAD --pretty=format:"- %s" --reverse | grep -v "^- Update version to")
           fi
           
-          # If no commits, provide a default message
+          # If no commits after filtering, provide a default message
           if [[ -z "$changelog" ]]; then
             changelog="- No changes since last release"
           fi
