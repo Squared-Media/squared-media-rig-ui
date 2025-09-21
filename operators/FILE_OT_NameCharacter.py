@@ -21,6 +21,7 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         for col in bpy.data.collections:
             print(f"found collection {col.name}")
             col.name = self.rename(context, col.name)
+        return
         prefix = get_library_prefix(context)
         collection.name = f"{prefix}" + f"{self.new_name}"
 
@@ -40,7 +41,7 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         if material_holder is None:
             return
 
-        #NOTE: actual renaming going on!
+        #actual renaming going on
         for key, value in  material_holder.items():
             material_holder[key].name = self.rename(context,value.name)
         return
@@ -50,6 +51,7 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         rig = get_rig(context)
         if rig is None:
             return
+
         DataBone = rig.data.bones["Data_Obj"]
         Name = DataBone["Name"]
         OldName = DataBone["OldName"]

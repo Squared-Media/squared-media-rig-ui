@@ -1,16 +1,15 @@
-import bpy
+import bpy#type: ignore 
 from .. import properties
-import os
 
 
 class RigItem(bpy.types.PropertyGroup):
-    name: bpy.props.StringProperty(name="Rig Name")
-    id: bpy.props.StringProperty(name="Rig ID")
-    icon: bpy.props.StringProperty(name="Rig Icon")
+    name: bpy.props.StringProperty(name="Rig Name") #type: ignore 
+    id: bpy.props.StringProperty(name="Rig ID")#type: ignore 
+    icon: bpy.props.StringProperty(name="Rig Icon")#type: ignore 
 
 class RigListProperties(bpy.types.PropertyGroup):
-    rigs: bpy.props.CollectionProperty(type=RigItem)
-    active_rig_index: bpy.props.IntProperty(name="Index", default=0)
+    rigs: bpy.props.CollectionProperty(type=RigItem)#type: ignore 
+    active_rig_index: bpy.props.IntProperty(name="Index", default=0)#type: ignore 
 
 class RigListUI(bpy.types.UIList):
 
@@ -22,8 +21,10 @@ class RigListUI(bpy.types.UIList):
         else:
             label = item.name.removeprefix(prefix)
         layout.label(text=label, icon=item.icon)
-        Blendfile = layout.row()
-        Blendfile.enabled = False
 
-        Blendfile.label(text=os.path.basename(item.id))
+        #NOTE: blendfile entry has been removed due to clutter and easy access from the open operator
+
+        # Blendfile = layout.row()
+        # Blendfile.enabled = False
+        # Blendfile.label(text=os.path.basename(item.id))
         #layout.operator("squaredmedia.confirm_open_blend_file", text= "", icon = "GREASEPENCIL").filepath = item.id
