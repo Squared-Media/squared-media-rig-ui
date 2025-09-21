@@ -1,4 +1,4 @@
-from ..msc.utils import get_material_object, is_packed, get_rig, Material
+from ..msc.utils import get_material, get_material_object, is_packed, get_rig, Material
 from .. import properties
 import bpy  # type: ignore
 
@@ -93,13 +93,12 @@ def draw_TextureBox(self, context, layout, rig, Mat_obj):
     )
     if rig.pose.bones["WGT-UIProperties"]["SkinConf"]:
         # Material and Node tree are needed for the SSS slider
-        material = Mat_obj.material_slots[Material.SKIN.value]
-        node_tree = material.material.node_tree.nodes
+        material = get_material(rig, Material.SKIN) 
+        node_tree = material.node_tree.nodes
 
         # todo: eventually we need to rename these things to the characters name to avoid .001 clutter
         DataBone = rig.data.bones["Data_Obj"]
         node_tree_skin = DataBone["skin_shader_nodes"].nodes
-        print(node_tree_skin)
         img = node_tree_skin["SkinTexture"].image
 
         left = TexutureBox.row(align=True)

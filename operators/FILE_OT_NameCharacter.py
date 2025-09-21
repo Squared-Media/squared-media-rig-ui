@@ -29,7 +29,24 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         for d in data:
             d.name = self.rename(context, name=d.name)
 
-    def rename(self, context, name):
+
+    def rename_materials_and_nodetrees(self, context):
+        rig = get_rig(context=context)
+
+        # Sanity Checks
+        if rig is None:
+            return
+        material_holder = rig.pose.bones["Material_Holder"]
+        if material_holder is None:
+            return
+
+        #NOTE: actual renaming going on!
+        for key, value in  material_holder.items():
+            material_holder[key].name = self.rename(context,value.name)
+        return
+
+
+    def rename(self, context, name) -> str | None:
         rig = get_rig(context)
         if rig is None:
             return
@@ -55,11 +72,13 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
     def execute(self, context):
         rig = get_rig(context)
         if rig is None:
-            return
+            self.report({'INFO'}, "operation cancelled, likely no (valid) rig selected")
+            return{"CANCELLED"}
         DataBone = rig.data.bones["Data_Obj"]
         Collection = DataBone["Collection"]
         self.switch_names(context)
         self.rename_objects_in_collection(context=context, collection=Collection)
         self.rename_collections(context=context, collection=Collection)
+        self.rename_materials_and_nodetrees(context=context)
 
         return {"FINISHED"}
