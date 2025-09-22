@@ -131,7 +131,8 @@ jobs:
           git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
           git push
 
-      - name: Push generic build zip to gh-pages
+      - name: Push generic build zip to gh-page
+        if: ${{ github.event.inputs.release_type == 'stable' }}
         run: |
           repo_name=$(basename `git rev-parse --show-toplevel`)
           zip_name="builds/${repo_name}.zip"
@@ -142,9 +143,9 @@ jobs:
             exit 1
           fi
 
-          # Fetch gh-pages or create it if missing
-          git fetch origin gh-pages || true
-          git checkout gh-pages || git checkout --orphan gh-pages
+          # Fetch gh-page or create it if missing
+          git fetch origin gh-page || true
+          git checkout gh-page || git checkout --orphan gh-page
 
           # Make sure builds folder exists
           mkdir -p builds
@@ -156,7 +157,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git add "builds/${repo_name}.zip"
           git commit -m "Update generic build zip"
-          git push origin gh-pages
+          git push origin gh-page
             - name: Create versioned zip archive
               run: |
                 repo_name=$(basename `git rev-parse --show-toplevel`)
