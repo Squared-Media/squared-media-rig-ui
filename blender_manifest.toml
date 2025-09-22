@@ -24,3 +24,15 @@ license = [
 [permissions]
 files = "for loading rig configurations and Skins"
 clipboard = "copy debug information to your clipboard to make bug reporting easier"
+
+[build]
+paths_exclude_pattern = [
+  "builds/*",
+  ".git/*",
+  ".github/*",
+  "__pycache__/*",
+  "*.pyc",
+  "*.blend1",
+  "*.tar.xz",
+  "*.zip",
+]
