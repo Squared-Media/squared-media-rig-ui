@@ -1,0 +1,26 @@
+{
+  "version": "v1",
+  "blocklist": [],
+  "data": [
+    {
+      "schema_version": "1.0.0",
+      "id": "squared_media_rig_ui",
+      "name": "Squared Media Pro Rig V1",
+      "tagline": "UI for controlling Squared Media's rigs in Blender",
+      "version": "1.4.8",
+      "type": "add-on",
+      "maintainer": "Fxnarji <fxn-work@proton.me>",
+      "license": [
+        "SPDX:GPL-3.0-or-later"
+      ],
+      "blender_version_min": "4.5.0",
+      "permissions": {
+        "files": "for loading rig configurations and Skins",
+        "clipboard": "copy debug information to your clipboard to make bug reporting easier"
+      },
+      "archive_url": "./builds/squared-media-rig-ui.zip",
+      "archive_size": 3065218,
+      "archive_hash": "sha256:fd675cbb5f7af2fe5fa678ce4a40842c6a0a678c7ceab94bd7be143dd8c04112"
+    }
+  ]
+}
