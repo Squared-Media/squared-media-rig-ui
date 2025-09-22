@@ -3,8 +3,8 @@ schema_version = "1.0.0"
 id = "squared_media_rig_ui"
 
 
-version = "1.4.9"
-beta_version = ""
+version = "0.0.1"
+beta_version = "0"
 release_channel = "stable"
 
 
