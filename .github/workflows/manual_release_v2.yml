@@ -105,14 +105,6 @@ jobs:
           echo "beta_version = ${{ steps.get_tag.outputs.beta_version }}"
           echo "release_channel = ${{ github.event.inputs.release_type }}"
 
-      - name: Commit updated blender_manifest.toml
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add blender_manifest.toml
-          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
-          git push
-
           
       - name: Create builds directory
         run: mkdir -p builds
@@ -121,12 +113,22 @@ jobs:
         run: |
           repo_name=$(basename `git rev-parse --show-toplevel`)
           zip_name="${repo_name}.zip"
+          rm -f "builds/$zip_name"
           zip -r "builds/$zip_name" . \
             -x ".git/*" \
             -x ".github/*" \
             -x "builds/*" \
             -x "/__pycache__/*" \
             -x "**/__pycache__/*"
+            
+      - name: Commit updated files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add blender_manifest.toml
+          git add "builds/${repo_name}.zip"
+          git commit --allow-empty -m "Update version to ${{ steps.get_tag.outputs.new_tag }}"
+          git push
 
       - name: Create versioned zip archive
         run: |
