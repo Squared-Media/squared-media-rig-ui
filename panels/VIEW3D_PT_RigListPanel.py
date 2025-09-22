@@ -58,7 +58,7 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
             current_file_abs = os.path.abspath(bpy.data.filepath)
             if os.path.commonpath([current_file_abs, usr_path]) == usr_path:
                 operator = "squaredmedia.namecharacter"
-                row.operator(operator, icon="SMALL_CAPS")
+                row.operator(operator, icon="SMALL_CAPS", text="Name your character")
             else:
                 operator = "squaredmedia.create_character"
         else:

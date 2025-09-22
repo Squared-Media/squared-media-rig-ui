@@ -1,5 +1,6 @@
 import bpy  # type: ignore
 from ..msc.utils import get_library_prefix, get_rig
+import re
 
 
 class FILE_OT_NameCharacter(bpy.types.Operator):
@@ -18,10 +19,9 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         DataBone["Name"] = self.new_name
 
     def rename_collections(self, collection, context):
-        for col in bpy.data.collections:
+        for col in collection.children:
             print(f"found collection {col.name}")
             col.name = self.rename(context, col.name)
-        return
         prefix = get_library_prefix(context)
         collection.name = f"{prefix}" + f"{self.new_name}"
 
@@ -29,7 +29,6 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         data = collection.all_objects
         for d in data:
             d.name = self.rename(context, name=d.name)
-
 
     def rename_materials_and_nodetrees(self, context):
         rig = get_rig(context=context)
@@ -41,11 +40,10 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         if material_holder is None:
             return
 
-        #actual renaming going on
-        for key, value in  material_holder.items():
-            material_holder[key].name = self.rename(context,value.name)
+        # actual renaming going on
+        for key, value in material_holder.items():
+            material_holder[key].name = self.rename(context, value.name)
         return
-
 
     def rename(self, context, name) -> str | None:
         rig = get_rig(context)
@@ -63,7 +61,11 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
         second_half = name[(len(prefix)) :]
 
         new_name = f"{Name}{second_half}"
-        print(new_name)
+
+        # check if the name has numbers at the end and attempt to remove them
+        if re.search(r"\.\d{3}$", new_name):
+            return re.sub(r"\.\d{3}$", "", new_name)
+
         return new_name
 
     def invoke(self, context, event):
@@ -74,8 +76,8 @@ class FILE_OT_NameCharacter(bpy.types.Operator):
     def execute(self, context):
         rig = get_rig(context)
         if rig is None:
-            self.report({'INFO'}, "operation cancelled, likely no (valid) rig selected")
-            return{"CANCELLED"}
+            self.report({"INFO"}, "operation cancelled, likely no (valid) rig selected")
+            return {"CANCELLED"}
         DataBone = rig.data.bones["Data_Obj"]
         Collection = DataBone["Collection"]
         self.switch_names(context)
