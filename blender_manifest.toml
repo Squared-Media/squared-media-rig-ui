@@ -23,7 +23,7 @@ license = [
 
 [permissions]
 files = "for loading rig configurations and Skins"
-clipboard = "copy debug information to your clipboard to make bug reporting easier"
+clipboard = "copy debug information"
 
 [build]
 paths_exclude_pattern = [
