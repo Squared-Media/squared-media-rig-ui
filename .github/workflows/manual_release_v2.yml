@@ -128,16 +128,42 @@ jobs:
             -x "/__pycache__/*" \
             -x "**/__pycache__/*"
 
-      - name: Create versioned zip archive
+      - name: Push generic build zip to gh-pages
         run: |
           repo_name=$(basename `git rev-parse --show-toplevel`)
-          zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
-          zip -r "builds/$zip_name" . \
-            -x ".git/*" \
-            -x ".github/*" \
-            -x "builds/*" \
-            -x "/__pycache__/*" \
-            -x "**/__pycache__/*"
+          zip_name="builds/${repo_name}.zip"
+
+          # Make sure the zip exists
+          if [[ ! -f "$zip_name" ]]; then
+            echo "Error: $zip_name not found"
+            exit 1
+          fi
+
+          # Fetch gh-pages or create it if missing
+          git fetch origin gh-pages || true
+          git checkout gh-pages || git checkout --orphan gh-pages
+
+          # Make sure builds folder exists
+          mkdir -p builds
+
+          # Copy the zip (overwrite if exists)
+          cp "$zip_name" "builds/${repo_name}.zip"
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add "builds/${repo_name}.zip"
+          git commit -m "Update generic build zip"
+          git push origin gh-pages
+            - name: Create versioned zip archive
+              run: |
+                repo_name=$(basename `git rev-parse --show-toplevel`)
+                zip_name="${repo_name}_${{ steps.get_tag.outputs.new_tag }}.zip"
+                zip -r "builds/$zip_name" . \
+                  -x ".git/*" \
+                  -x ".github/*" \
+                  -x "builds/*" \
+                  -x "/__pycache__/*" \
+                  -x "**/__pycache__/*"
 
 
       - name: Create new GitHub release
