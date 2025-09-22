@@ -38,7 +38,6 @@ class VIEW3D_PT_ui_Main(bpy.types.Panel):
         version = get_toml_key("version")
         release_channel = get_toml_key("release_channel")
         beta_version = get_toml_key("beta_version")
-
         if release_channel == "stable":
             beta_version = ""
 

@@ -1,6 +1,7 @@
 import bpy  # type: ignore
 import os
 from .. import properties
+from ..msc.utils import get_preferences
 
 # this is a test
 
@@ -20,39 +21,56 @@ class COLLECTION_OT_import_rig_collection(bpy.types.Operator):
         name="Rig Path", default=properties.Paths.default_lib_path
     )  # type: ignore
 
+    invert = False
+
     def execute(self, context):
-        rig_blend_path = self.rig_path
-        collection_name = self.collection_name
-        if not os.path.exists(rig_blend_path):
-            self.report({"ERROR"}, f"Blend file not found: {rig_blend_path}")
+        # sanity checks
+        if not self.sanity_checks():
             return {"CANCELLED"}
+
+        preferences = get_preferences(context)
+        import_method = preferences.DefaultImportOption
+
+        method_map = {"LINK": self.link_rig, "APPEND": self.append_rig}
+
+        if self.invert:
+            method_map = {"LINK": self.append_rig, "APPEND": self.link_rig}
+        import_function = method_map.get(import_method)
+
+        if import_function is None:
+            return {"CANCELLED"}
+
+        import_function()
+
+        return {"FINISHED"}
+
+    def sanity_checks(self) -> bool:
+        if not os.path.exists(self.rig_path):
+            self.report({"ERROR"}, f"Blend file not found: {self.rig_path}")
+            return False
 
         if bpy.data.filepath == self.rig_path:
             self.report({"ERROR"}, "cannot import rig into its own source file!")
-            return {"CANCELLED"}
+            return False
 
-        # using blenders default operator to link collection
-        if (
-            bpy.context.preferences.addons[
-                properties.AddonProperties.module_name
-            ].preferences.DefaultImportOption
-            == "LINK"
-        ):
-            bpy.ops.wm.link(
-                filepath=rig_blend_path,
-                directory=rig_blend_path + "/Collection/",
-                filename=collection_name,
-            )
-            bpy.ops.object.make_override_library()
-        elif (
-            bpy.context.preferences.addons[
-                properties.AddonProperties.module_name
-            ].preferences.DefaultImportOption
-            == "APPEND"
-        ):
-            bpy.ops.wm.append(
-                filepath=rig_blend_path,
-                directory=rig_blend_path + "/Collection/",
-                filename=collection_name,
-            )
-        return {"FINISHED"}
+        return True
+
+    def link_rig(self):
+        bpy.ops.wm.link(
+            filepath=self.rig_path,
+            directory=self.rig_path + "/Collection/",
+            filename=self.collection_name,
+        )
+        bpy.ops.object.make_override_library()
+
+    def append_rig(self):
+        bpy.ops.wm.append(
+            filepath=self.rig_path,
+            directory=self.rig_path + "/Collection/",
+            filename=self.collection_name,
+        )
+
+    def invoke(self, context, event):
+        if event.alt:
+            self.invert = True
+        return self.execute(context)

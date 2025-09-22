@@ -9,15 +9,23 @@ from enum import Enum
 
 
 class Material(Enum):
-    SKIN = 0
-    EYE_R = 1
-    EYE_L = 2
-    EYEBROW_R = 3
-    EYEBROW_L = 4
-    MOUTH_INTERIOR = 5
-    DEBUG_MATERIAL = 6
-    EYE_BACKGROUND_L = 7
-    EYE_BACKGROUND_R = 8
+    SKIN = "skin"
+    EYE_R = "eye_r"
+    EYE_L = "eye_l"
+    EYEBROW_R = "eyebrow_r"
+    EYEBROW_L = "eyebrow_r"
+    MOUTH_INTERIOR = "mouth_interior"
+    EYE_BACKGROUND_L = "eyewhite_l"
+    EYE_BACKGROUND_R = "eyewhite_r"
+    TEETH = "teeth"
+
+
+class NodeTree(Enum):
+    SKIN = "node_group_skin"
+    EYEBROWS = "node_group_eyebrows"
+    EYE = "node_group_eye"
+    EYEWHITE_R = "node_group_eyewhite_r"
+    EYEWHITE_L = "node_group_eyewhite_l"
 
 
 class Limbs(Enum):
@@ -33,7 +41,7 @@ class IK_Mode(Enum):
     OFF = 2
 
 
-def is_packed(img):
+def is_packed(img) -> bool:
     """Check if an image is packed in the .blend file."""
     try:
         return bool(img.packed_files)
@@ -41,13 +49,13 @@ def is_packed(img):
         return False
 
 
-def get_material_object(rig):
+def get_material_object(rig) -> bpy.types.Object:
     """Retrieve the material object associated with the given rig."""
     Mat_Obj = rig.data.bones["Data_Obj"]["Mat_Obj"]
     return Mat_Obj
 
 
-def get_collections_from_blend(blend_path):
+def get_collections_from_blend(blend_path) -> list[bpy.types.Collection]:
     """Returns a list of collections inside a .blend file."""
     collections = []
     currentfile = bpy.data.filepath
@@ -59,7 +67,7 @@ def get_collections_from_blend(blend_path):
     return collections
 
 
-def find_collections_in_directory(dir, prefix):
+def find_collections_in_directory(dir, prefix) -> dict[bpy.types.Collection, str]:
     blend_files = [f for f in os.listdir(dir) if f.endswith(".blend")]
     collection_data = {}
 
@@ -72,39 +80,39 @@ def find_collections_in_directory(dir, prefix):
             if collection.startswith(prefix):
                 print(f"found:{collection} in {blend_file}")
                 collection_data[collection] = blend_path
-
     return collection_data
 
 
-def has_name(rig):
+def has_name(rig) -> bool:
     Name = rig.data.bones["Data_Obj"]["Name"]
+    has_name = True
     if not Name:
-        return False
+        has_name = False
     if Name == "SQM-Default":
-        return False
-    return True
+        has_name = False
+    return has_name
 
 
-def get_preferences(context):
-    prefernces = bpy.context.preferences.addons[
-        properties.AddonProperties.module_name
-    ].preferences
-    return prefernces
+def get_preferences(context) -> bpy.types.Preferences:
+    preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+    return preferences
 
 
-def get_library_prefix(context):
+def get_library_prefix(context) -> str | None:
     preferences = get_preferences(context=context)
     return preferences.lib_prefix
 
 
-def get_material(rig, material: Material):
+def get_material(rig, material: Material) -> bpy.types.Material:
     if rig is None:
         return None
-    mat_obj = get_material_object(rig)
-    return mat_obj.material_slots[material.value].material
+
+    mat_bone = rig.pose.bones["Material_Holder"]
+    material = mat_bone[material.value]
+    return material
 
 
-def get_skin_texture(rig):
+def get_skin_texture(rig) -> bpy.types.Image:
     mat = get_material(rig, Material.SKIN)
 
     # setting image_node to null
@@ -117,7 +125,7 @@ def get_skin_texture(rig):
         return image_node.image
 
 
-def get_rig(context):
+def get_rig(context) -> bpy.types.Object | None:
     active_object = context.active_object
     if active_object is None:
         return None
@@ -211,13 +219,13 @@ def load_files_from_zip(zip_path):
         return None
 
 
-def get_toml_version():
+def get_toml_version() -> tuple:
     version_str = get_toml_key("version")
     version_tuple = tuple(int(x) for x in version_str.split("."))
     return version_tuple
 
 
-def get_toml_key(key):
+def get_toml_key(key) -> str:
     toml_path = os.path.join(
         os.path.dirname((os.path.dirname(__file__))), "blender_manifest.toml"
     )

@@ -1,5 +1,5 @@
 
-import bpy
+import bpy #type: ignore
 from ..msc.utils import get_skin_texture, get_rig, Material, get_material
 
 
@@ -9,6 +9,8 @@ class DummyOperator(bpy.types.Operator):
 
     def execute(self, context):
         rig = get_rig(context)
+        if rig is None:
+            return
         properties_bone = rig.pose.bones["WGT-UIProperties"]["enum"]
         print(properties_bone)
         return {"FINISHED"}

@@ -1,4 +1,4 @@
-import bpy
+import bpy#type: ignore
 import os
 from .. import properties
 
@@ -32,7 +32,7 @@ class SQM_Rig_Preferences(bpy.types.AddonPreferences):
 
     usr_file_path: bpy.props.StringProperty(
         name="Library Path",
-        description="NOTE: The Collection to be appended needs to start with the prefix specified below. You can have multiple blend files with multiple characters. Subfolders are not supported",
+        description="NOTE: The Collection to be appended needs to start with the prefix specified below. You can have multiple blend files with multiple characters.",
         default= os.path.expanduser("~"),
         subtype="DIR_PATH"
     )   #type: ignore

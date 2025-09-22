@@ -1,13 +1,12 @@
-import bpy
-import json
-import mathutils
-from ..msc.utils import get_material_object, get_rig, get_material, load_files_from_zip, Material
+import bpy#type: ignore
+import mathutils #type: ignore
+from ..msc.utils import get_rig, get_material, load_files_from_zip, Material
 
 class FILE_OT_LoadJsonConfig(bpy.types.Operator):
     bl_idname = "squaredmedia.loadconfig"
     bl_label = "Load Config from File"
 
-    filepath: bpy.props.StringProperty(subtype = "FILE_PATH")
+    filepath: bpy.props.StringProperty(subtype = "FILE_PATH")#type: ignore
 
     def apply_bone_properties(self, obj, bone, properties):
         pose_bone = obj.pose.bones.get(bone)
@@ -103,8 +102,14 @@ class FILE_OT_LoadJsonConfig(bpy.types.Operator):
         rig = get_rig(context)
 
         files = load_files_from_zip(self.filepath)
+        if files is None:
+            return({'CANCELLED'},"error")
 
         config_data = files.get("config.json")
+        if config_data is None:
+            return({'CANCELLED'},"error")
+
+
 
         self.load_skin_cfg(rig, config_data)
 
