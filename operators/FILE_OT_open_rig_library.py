@@ -1,4 +1,4 @@
-import bpy
+import bpy  # type: ignore
 import os
 import platform
 import subprocess
@@ -14,10 +14,8 @@ class FILE_OT_open_rig_library(bpy.types.Operator):
         path = os.path.dirname(properties.Paths.default_lib_path)
         print(properties.Paths.default_lib_path)
         self.open_folder(path)
-        
+
         return {"FINISHED"}
-
-
 
     def open_folder(self, path):
         """
@@ -26,8 +24,9 @@ class FILE_OT_open_rig_library(bpy.types.Operator):
         path = os.path.abspath(path)
 
         if platform.system() == "Windows":
-            os.startfile(path)
+            os.startfile(path)  # type: ignore
         elif platform.system() == "Darwin":  # macOS
             subprocess.run(["open", path])
         else:  # Linux and other Unix-like
             subprocess.run(["xdg-open", path])
+

@@ -94,10 +94,8 @@ def has_name(rig) -> bool:
 
 
 def get_preferences(context) -> bpy.types.Preferences:
-    prefernces = bpy.context.preferences.addons[
-        properties.AddonProperties.module_name
-    ].preferences
-    return prefernces
+    preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+    return preferences
 
 
 def get_library_prefix(context) -> str | None:

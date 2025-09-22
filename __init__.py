@@ -20,9 +20,9 @@ from .operators.OBJECT_OT_keyframe_all_properties import (
     OBJECT_OT_keyframe_all_properties,
 )
 from .operators.Dummy_OT_DummyOperator import DummyOperator
-from .operators.EXPERIMENTAL_ import EXPERIMENTAL_OT_Null, EXPERIMENTAL_OT_set_pose
 from .operators.FILE_OT_open_rig_library import FILE_OT_open_rig_library
 from .operators.FILE_OT_check_for_updates import FILE_OT_check_for_updates
+from .operators.FILE_OT_create_new_character import FILE_OT_create_new_character
 from .operators.DEBUG_OT_copy_debug_information import DEBUG_OT_copy_debug_info
 from .operators.RIG_OT_set_ik_display_override import RIG_OT_set_ik_display_override
 
@@ -65,6 +65,7 @@ classes = [
     DEBUG_OT_copy_debug_info,
     FILE_OT_open_rig_library,
     FILE_OT_check_for_updates,
+    FILE_OT_create_new_character,
     ConfirmOpenBlendFileOperator,
     SCENE_OT_Open_Preset,
     SCENE_OT_RefreshRigList,
@@ -73,8 +74,6 @@ classes = [
     OBJECT_OT_keyframe_all_properties,
     COLLECTION_OT_import_rig_collection,
     RIG_OT_set_ik_display_override,
-    EXPERIMENTAL_OT_Null,
-    EXPERIMENTAL_OT_set_pose,
     # UI Classes
     VIEW3D_PT_RigListPanel,
     VIEW3D_PT_visibility_settings,

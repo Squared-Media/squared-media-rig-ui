@@ -1,4 +1,5 @@
-import bpy  # type: ignore
+import bpy
+from msc.utils import get_preferences  # type: ignore
 from .. import properties
 
 
@@ -43,12 +44,19 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         sublayout = layout.row(align=True)
         sublayout.scale_y = 2
 
-        # Name Character Button
+        # Name / Create Character Button
+
+        operator = "", "squaredmedia.namecharacter"
+        preferences = get_preferences(context)
+        usr_path = preferences.usr_lib_path
+        if bpy.data.filepath is usr_path:
+            operator = "squaredmedia.namecharacter"
+        else:
+            operator = "squaredmedia.create_character"
+
         row = layout.row()
         row.scale_y = 2
-        row.operator(
-            "squaredmedia.namecharacter", text="Name Your Character!", icon="SMALL_CAPS"
-        )
+        row.operator(operator, text="Name Your Character!", icon="SMALL_CAPS")
 
         if len(rig_props.rigs) > 0:
             sublayout = sublayout.split(factor=0.85, align=True)
