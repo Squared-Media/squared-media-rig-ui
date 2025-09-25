@@ -19,6 +19,7 @@ jobs:
 
       - name: Build Blender add-on
         run: |
+          rm -rf docs
           mkdir -p docs
           blender --command extension build --source-dir . --output-dir docs/ --verbose
 
