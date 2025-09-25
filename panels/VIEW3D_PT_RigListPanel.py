@@ -56,7 +56,15 @@ class VIEW3D_PT_RigListPanel(bpy.types.Panel):
         # TODO: implement the create character functionality!
         if bpy.data.filepath:
             current_file_abs = os.path.abspath(bpy.data.filepath)
-            if os.path.commonpath([current_file_abs, usr_path]) == usr_path:
+
+            # makes sure the commonpath doesnt crash when trying to compare different drives
+            drive1, _ = os.path.splitdrive(current_file_abs)
+            drive2, _ = os.path.splitdrive(usr_path)
+
+            if (
+                drive1 == drive2
+                and os.path.commonpath([current_file_abs, usr_path]) == usr_path
+            ):
                 operator = "squaredmedia.namecharacter"
                 row.operator(operator, icon="SMALL_CAPS", text="Name your character")
             else:
