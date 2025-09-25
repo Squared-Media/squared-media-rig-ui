@@ -1,4 +1,12 @@
-from ..msc.utils import get_material, get_material_object, is_packed, get_rig, Material
+from ..msc.utils import (
+    NodeTree,
+    get_material,
+    get_material_object,
+    get_node_group,
+    is_packed,
+    get_rig,
+    Material,
+)
 from .. import properties
 import bpy  # type: ignore
 
@@ -93,7 +101,7 @@ def draw_TextureBox(self, context, layout, rig, Mat_obj):
     )
     if rig.pose.bones["WGT-UIProperties"]["SkinConf"]:
         # Material and Node tree are needed for the SSS slider
-        material = get_material(rig, Material.SKIN) 
+        material = get_material(rig, Material.SKIN)
         node_tree = material.node_tree.nodes
 
         # todo: eventually we need to rename these things to the characters name to avoid .001 clutter
@@ -261,12 +269,6 @@ def draw_proportionBox(self, context, layout, rig):
                 '["Eyebrow_R_Height"]',
                 text="Eyebrow R Height",
             )
-            col.prop(
-                rig.pose.bones["Skin_cfg"],
-                '["Eyebrow_R_width"]',
-                text="Eyebrow R Width",
-            )
-
             col = split.column(align=True)
             col.prop(
                 rig.pose.bones["Skin_cfg"],
@@ -278,12 +280,6 @@ def draw_proportionBox(self, context, layout, rig):
                 '["Eyebrow_L_Height"]',
                 text="Eyebrow L Height",
             )
-            col.prop(
-                rig.pose.bones["Skin_cfg"],
-                '["Eyebrow_L_width"]',
-                text="Eyebrow L Width",
-            )
-
             row = AdvancedBox.row()
             col = row.column(align=True)
             col.prop(
@@ -356,15 +352,16 @@ def draw_EyeBox(self, context, layout, rig, Mat_obj):
         EyebrowLBox = Eyebrow.box()
         EyebrowRBox = Eyebrow.box()
 
+        nodes = get_material(rig, Material.EYEBROW_L).node_tree.nodes.get("Eyebrow.L")
+        print("##############################################")
+        print(nodes)
+        print("##############################################")
+
         EyebrowR = (
-            Mat_obj.material_slots[Material.EYEBROW_R.value]
-            .material.node_tree.nodes["Eyebrow.R"]
-            .inputs
+            get_material(rig, Material.EYEBROW_R).node_tree.nodes["Eyebrow.R"].inputs
         )
         EyebrowL = (
-            Mat_obj.material_slots[Material.EYEBROW_L.value]
-            .material.node_tree.nodes["Eyebrow.L"]
-            .inputs
+            get_material(rig, Material.EYEBROW_L).node_tree.nodes["Eyebrow.L"].inputs
         )
         if rig.pose.bones["Skin_cfg"]["Eyebrow_R_enabled"]:
             draw_eyebrowBox(self, context, EyebrowR, EyebrowRBox.box(), "Right")
@@ -404,21 +401,22 @@ def draw_advanced_EyeBox(self, context, layout, rig, Mat_obj):
 
         # Right Eye
         if rig.pose.bones["Skin_cfg"]["Eye_R_enable"]:
-            EyeR = (
-                Mat_obj.material_slots[Material.EYE_R.value]
-                .material.node_tree.nodes["Eye.R"]
-                .inputs
+            EyeR = get_material(rig, Material.EYE_R).node_tree.nodes["Eye.R"].inputs
+            EyeWhiteShaderR = get_node_group(rig, NodeTree.EYEWHITE_R)
+            print(EyeWhiteShaderR.nodes.get("EYEWHITE"))
+            draw_advanced_Eyes(
+                self, context, EyeR, EyeRBox, "Right", EyeWhiteShaderR.nodes
             )
-            EyeWhiteShaderR = bpy.data.node_groups["SQM - EyewhiteShader.R"].nodes
-            draw_advanced_Eyes(self, context, EyeR, EyeRBox, "Right", EyeWhiteShaderR)
         else:
             EyeRBox.label(text="disabled")
 
         # Left Eye
         if rig.pose.bones["Skin_cfg"]["Eye_L_enable"]:
-            EyeL = Mat_obj.material_slots[2].material.node_tree.nodes["Eye.L"].inputs
-            EyeWhiteShaderL = bpy.data.node_groups["SQM - EyewhiteShader.L"].nodes
-            draw_advanced_Eyes(self, context, EyeL, EyeLBox, "Left", EyeWhiteShaderL)
+            EyeL = get_material(rig, Material.EYE_L).node_tree.nodes["Eye.L"].inputs
+            EyeWhiteShaderL = get_node_group(rig, NodeTree.EYEWHITE_L)
+            draw_advanced_Eyes(
+                self, context, EyeL, EyeLBox, "Left", EyeWhiteShaderL.nodes
+            )
         else:
             EyeLBox.label(text="disabled")
 
