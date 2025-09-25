@@ -7,7 +7,7 @@
       "id": "squared_media_rig_ui",
       "name": "Squared Media Pro Rig V1",
       "tagline": "UI for controlling Squared Media's rigs in Blender",
-      "version": "1.4.10",
+      "version": "1.4.11",
       "type": "add-on",
       "maintainer": "Fxnarji <fxn-work@proton.me>",
       "license": [
@@ -18,9 +18,9 @@
         "files": "for loading rig configurations and Skins",
         "clipboard": "copy debug information"
       },
-      "archive_url": "./squared_media_rig_ui-1.4.10.zip",
-      "archive_size": 1555475,
-      "archive_hash": "sha256:d85fdf518ac07d59fb8b7418275d27cc1e761f00fa134f890861bfe4f6776e7a"
+      "archive_url": "./squared_media_rig_ui-1.4.11.zip",
+      "archive_size": 1555566,
+      "archive_hash": "sha256:66c300c3113eda6c38b4941cc5f5ca91a5fb4de5f48d9918cd7e95535e0bd173"
     }
   ]
 }
