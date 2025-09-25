@@ -13,7 +13,7 @@ class Material(Enum):
     EYE_R = "eye_r"
     EYE_L = "eye_l"
     EYEBROW_R = "eyebrow_r"
-    EYEBROW_L = "eyebrow_r"
+    EYEBROW_L = "eyebrow_l"
     MOUTH_INTERIOR = "mouth_interior"
     EYE_BACKGROUND_L = "eyewhite_l"
     EYE_BACKGROUND_R = "eyewhite_r"
@@ -94,7 +94,9 @@ def has_name(rig) -> bool:
 
 
 def get_preferences(context) -> bpy.types.Preferences:
-    preferences = bpy.context.preferences.addons[properties.AddonProperties.module_name].preferences
+    preferences = bpy.context.preferences.addons[
+        properties.AddonProperties.module_name
+    ].preferences
     return preferences
 
 
@@ -110,6 +112,14 @@ def get_material(rig, material: Material) -> bpy.types.Material:
     mat_bone = rig.pose.bones["Material_Holder"]
     material = mat_bone[material.value]
     return material
+
+
+def get_node_group(rig, shader_group: NodeTree) -> bpy.types.NodeTree:
+    if rig is None:
+        return None
+    mat_bone = rig.pose.bones["Material_Holder"]
+    node_group = mat_bone[shader_group.value]
+    return node_group
 
 
 def get_skin_texture(rig) -> bpy.types.Image:
