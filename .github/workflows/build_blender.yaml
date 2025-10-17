@@ -1,0 +1,36 @@
+name: Build Blender Add-on
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install Blender
+        uses: bradyajohnston/setup-blender@v4
+        with:
+          version: "4.5"  # replace with the exact Blender version you want
+
+      - name: Build Blender add-on
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          blender --command extension build --source-dir . --output-dir docs/ --verbose
+
+      - name: Generate index.json
+        run: |
+          blender --command extension server-generate --repo-dir docs/
+
+      - name: Commit and push build artifacts
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/
+          git commit -m "Update build and index.json" || echo "No changes to commit"
+          git push origin HEAD:main

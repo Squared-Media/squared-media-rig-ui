@@ -3,9 +3,9 @@ schema_version = "1.0.0"
 id = "squared_media_rig_ui"
 
 
-version = "1.4.9"
-beta_version = "2"
-release_channel = "beta"
+version = "1.4.11"
+beta_version = ""
+release_channel = "stable"
 
 
 
@@ -23,4 +23,16 @@ license = [
 
 [permissions]
 files = "for loading rig configurations and Skins"
-clipboard = "copy debug information to your clipboard to make bug reporting easier"
+clipboard = "copy debug information"
+
+[build]
+paths_exclude_pattern = [
+  "builds/*",
+  ".git/*",
+  ".github/*",
+  "__pycache__/*",
+  "*.pyc",
+  "*.blend1",
+  "*.tar.xz",
+  "*.zip",
+]
