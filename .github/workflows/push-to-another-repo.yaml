@@ -1,0 +1,69 @@
+
+name: Push to Another Repository
+on:
+  workflow_dispatch:
+    inputs:
+      directory:
+        required: true
+        default: docs
+  workflow_call:
+    inputs:
+      directory:
+        required: true
+        type: string
+    secrets:
+      PUSH_TOKEN:
+        required: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+
+      - name: Prepare files
+        env: 
+          DIRECTORY: ${{inputs.directory}}
+
+        run: |
+          mkdir temp_push
+          cd temp_push
+          git clone https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/NEONREAL/extensions.git .
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git checkout main
+
+          # Get the new addon file (assume only one file in directory)
+          NEW_FILE="$(ls "$GITHUB_WORKSPACE/$DIRECTORY")"
+          NEW_BASENAME="$(basename "$NEW_FILE")"
+
+          # Extract the addon name (everything before the last underscore + version)
+          # Example: 'blender_extension-1.1.0.zip' -> 'blender_extension'
+          ADDON_NAME="$(echo "$NEW_BASENAME" | sed -E 's/-[0-9]+\.[0-9]+\.[0-9]+\.zip$//')"
+          echo $NEW_FILE
+          echo $ADDON_NAME
+
+          # Remove any old version of this addon
+          rm -f $(ls | grep -E "^${ADDON_NAME}-[0-9]+\.[0-9]+\.[0-9]+\.zip$") || true
+
+          # Copy new addon file
+          cp "$GITHUB_WORKSPACE/$DIRECTORY/$NEW_BASENAME" .
+
+          # Commit and push
+          git add .
+          git commit -m "Update $NEW_BASENAME" || echo "No changes to commit"
+          git push origin main
+
+
+      - name: Push to target repo
+        env:
+          TARGET_REPO: "NEONREAL/extensions"
+          TARGET_BRANCH: "main"
+          TOKEN: ${{ secrets.PUSH_TOKEN }}
+        run: |
+          cd temp_push
+          git remote add dest https://x-access-token:${TOKEN}@github.com/${TARGET_REPO}.git
+          git push --force dest main:${TARGET_BRANCH}
