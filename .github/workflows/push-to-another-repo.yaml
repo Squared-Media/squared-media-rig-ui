@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir temp_push
           cd temp_push
-          git clone https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/NEONREAL/extensions.git .
+          git clone https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/Squared-Media/extensions.git .
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
@@ -60,7 +60,7 @@ jobs:
 
       - name: Push to target repo
         env:
-          TARGET_REPO: "NEONREAL/extensions"
+          TARGET_REPO: "Squared-Media/extensions"
           TARGET_BRANCH: "main"
           TOKEN: ${{ secrets.PUSH_TOKEN }}
         run: |
