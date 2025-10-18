@@ -20,7 +20,7 @@ jobs:
 
       - name: Remove old versions
         run: |
-          if [ -d builds]; then
+          if [ -d builds ]; then
             echo | ls builds/
             rm -rf builds/
           else
