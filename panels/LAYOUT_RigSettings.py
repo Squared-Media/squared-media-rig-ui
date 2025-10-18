@@ -203,7 +203,7 @@ def drawRoundnessSettings(self, context):
     )
     if rig.pose.bones["WGT-UIProperties"]["RoundnessConf"]:
         SubDBox = RoundnessBox.box()
-        SubDBox.label(text="SubD Modifier")
+        SubDBox.label(text="Roundness")
         Roundrow = SubDBox.row(align=True)
         split = Roundrow.split(align=True)
         split.prop(
